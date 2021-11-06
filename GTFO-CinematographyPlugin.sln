@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotographyPlugin", "PhotographyPlugin\PhotographyPlugin.csproj", "{3CC93051-593F-4E3A-B19D-404CBEDD1312}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CinematographyPlugin", "CinematographyPlugin\CinematographyPlugin.csproj", "{3CC93051-593F-4E3A-B19D-404CBEDD1312}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
