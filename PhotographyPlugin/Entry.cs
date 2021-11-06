@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using GTFO.API;
+using HarmonyLib;
 using PhotographyPlugin.Photography;
 using PhotographyPlugin.UserInput;
 using UnityEngine;
@@ -23,10 +24,8 @@ namespace PhotographyPlugin
                     PhotographyCore.log.LogMessage("Initializing " + PhotographyCore.NAME);
 
                     var gameObject = new GameObject(PhotographyCore.AUTHOR + " - " + PhotographyCore.NAME);
-                    gameObject.AddComponent<InputController>();
-                    gameObject.AddComponent<FirstPersonRemover>();
+                    gameObject.AddComponent<CinemaUIManager>();
                     gameObject.AddComponent<FreeCameraController>();
-                    
                     Object.DontDestroyOnLoad(gameObject);
 
                     _go = gameObject;

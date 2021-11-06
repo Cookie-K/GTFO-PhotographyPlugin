@@ -92,6 +92,9 @@
         <Reference Include="GlobalFramework-ASM, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
           <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\unhollowed\GlobalFramework-ASM.dll</HintPath>
         </Reference>
+        <Reference Include="GTFO-API, Version=0.0.1.0, Culture=neutral, PublicKeyToken=null">
+          <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\GTFOModding-GTFO_API\GTFO-API.dll</HintPath>
+        </Reference>
         <Reference Include="GUIX-ASM, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
           <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\unhollowed\GUIX-ASM.dll</HintPath>
         </Reference>
@@ -152,6 +155,12 @@
         <Reference Include="LogUtils, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
           <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\unhollowed\LogUtils.dll</HintPath>
         </Reference>
+        <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
+          <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\GTFOModding-GTFO_API\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.CSharp, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+          <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\GTFOModding-GTFO_API\Microsoft.CSharp.dll</HintPath>
+        </Reference>
         <Reference Include="Modules-ASM, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
           <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\unhollowed\Modules-ASM.dll</HintPath>
         </Reference>
@@ -167,11 +176,23 @@
         <Reference Include="Mono.Cecil.Rocks, Version=0.11.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e">
           <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\core\Mono.Cecil.Rocks.dll</HintPath>
         </Reference>
+        <Reference Include="Mono.Posix, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
+          <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\GTFOModding-GTFO_API\Mono.Posix.dll</HintPath>
+        </Reference>
+        <Reference Include="Mono.Security, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
+          <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\GTFOModding-GTFO_API\Mono.Security.dll</HintPath>
+        </Reference>
         <Reference Include="MonoMod.RuntimeDetour, Version=21.9.19.1, Culture=neutral, PublicKeyToken=null">
           <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\core\MonoMod.RuntimeDetour.dll</HintPath>
         </Reference>
         <Reference Include="MonoMod.Utils, Version=21.9.19.1, Culture=neutral, PublicKeyToken=null">
           <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\core\MonoMod.Utils.dll</HintPath>
+        </Reference>
+        <Reference Include="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\GTFOModding-GTFO_API\mscorlib.dll</HintPath>
+        </Reference>
+        <Reference Include="netstandard, Version=2.1.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
+          <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\GTFOModding-GTFO_API\netstandard.dll</HintPath>
         </Reference>
         <Reference Include="Newtonsoft.Json, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
           <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\unhollowed\Newtonsoft.Json.dll</HintPath>
@@ -219,9 +240,72 @@
           <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\unhollowed\SteamWorks_ASM.dll</HintPath>
         </Reference>
         <Reference Include="System" />
+        <Reference Include="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\GTFOModding-GTFO_API\System.dll</HintPath>
+        </Reference>
+        <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
+          <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\GTFOModding-GTFO_API\System.Buffers.dll</HintPath>
+        </Reference>
+        <Reference Include="System.Configuration, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+          <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\GTFOModding-GTFO_API\System.Configuration.dll</HintPath>
+        </Reference>
         <Reference Include="System.Core" />
+        <Reference Include="System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\GTFOModding-GTFO_API\System.Core.dll</HintPath>
+        </Reference>
         <Reference Include="System.Data" />
+        <Reference Include="System.Data, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\GTFOModding-GTFO_API\System.Data.dll</HintPath>
+        </Reference>
+        <Reference Include="System.IO.Compression, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\GTFOModding-GTFO_API\System.IO.Compression.dll</HintPath>
+        </Reference>
+        <Reference Include="System.IO.Compression.FileSystem, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\GTFOModding-GTFO_API\System.IO.Compression.FileSystem.dll</HintPath>
+        </Reference>
+        <Reference Include="System.Memory, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
+          <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\GTFOModding-GTFO_API\System.Memory.dll</HintPath>
+        </Reference>
+        <Reference Include="System.Net.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+          <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\GTFOModding-GTFO_API\System.Net.Http.dll</HintPath>
+        </Reference>
+        <Reference Include="System.Numerics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\GTFOModding-GTFO_API\System.Numerics.dll</HintPath>
+        </Reference>
+        <Reference Include="System.Numerics.Vectors, Version=4.1.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+          <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\GTFOModding-GTFO_API\System.Numerics.Vectors.dll</HintPath>
+        </Reference>
+        <Reference Include="System.Reflection.Emit, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+          <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\GTFOModding-GTFO_API\System.Reflection.Emit.dll</HintPath>
+        </Reference>
+        <Reference Include="System.Reflection.Emit.ILGeneration, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+          <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\GTFOModding-GTFO_API\System.Reflection.Emit.ILGeneration.dll</HintPath>
+        </Reference>
+        <Reference Include="System.Reflection.Emit.Lightweight, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+          <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\GTFOModding-GTFO_API\System.Reflection.Emit.Lightweight.dll</HintPath>
+        </Reference>
+        <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+          <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\GTFOModding-GTFO_API\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+        </Reference>
+        <Reference Include="System.Runtime.Serialization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\GTFOModding-GTFO_API\System.Runtime.Serialization.dll</HintPath>
+        </Reference>
+        <Reference Include="System.Text.Encodings.Web, Version=5.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
+          <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\GTFOModding-GTFO_API\System.Text.Encodings.Web.dll</HintPath>
+        </Reference>
+        <Reference Include="System.Text.Json, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
+          <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\GTFOModding-GTFO_API\System.Text.Json.dll</HintPath>
+        </Reference>
+        <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
+          <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\GTFOModding-GTFO_API\System.Threading.Tasks.Extensions.dll</HintPath>
+        </Reference>
         <Reference Include="System.Xml" />
+        <Reference Include="System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\GTFOModding-GTFO_API\System.Xml.dll</HintPath>
+        </Reference>
+        <Reference Include="ToggleUIPlugin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\Cookie_K-ToggleUIPlugin\ToggleUIPlugin.dll</HintPath>
+        </Reference>
         <Reference Include="ToolBuddy.Curvy, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
           <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\unhollowed\ToolBuddy.Curvy.dll</HintPath>
         </Reference>
@@ -541,10 +625,10 @@
     <ItemGroup>
         <Compile Include="Entry.cs" />
         <Compile Include="Photography\FreeCameraController.cs" />
-        <Compile Include="UI\InputController.cs" />
+        <Compile Include="UI\CinemaUIManager.cs" />
         <Compile Include="PhotographyCore.cs" />
-        <Compile Include="Photography\FirstPersonRemover.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
+        <Compile Include="UI\UIPatches.cs" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <PropertyGroup>

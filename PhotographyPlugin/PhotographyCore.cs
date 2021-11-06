@@ -28,8 +28,7 @@ namespace PhotographyPlugin
         {
             log = Log;
 
-            ClassInjector.RegisterTypeInIl2Cpp<InputController>();
-            ClassInjector.RegisterTypeInIl2Cpp<FirstPersonRemover>();
+            ClassInjector.RegisterTypeInIl2Cpp<CinemaUIManager>();
             ClassInjector.RegisterTypeInIl2Cpp<FreeCameraController>();
 
             HarmonyPatches = new Harmony(GUID);
