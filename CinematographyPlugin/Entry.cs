@@ -1,10 +1,10 @@
-﻿using GTFO.API;
+﻿using CinematographyPlugin.Photography;
+using CinematographyPlugin.UI;
+using GTFO.API;
 using HarmonyLib;
-using PhotographyPlugin.Photography;
-using PhotographyPlugin.UserInput;
 using UnityEngine;
 
-namespace PhotographyPlugin
+namespace CinematographyPlugin
 {
     
     [HarmonyPatch]
@@ -12,18 +12,17 @@ namespace PhotographyPlugin
     {
         private static GameObject _go;
 
+        [HarmonyPostfix]
         [HarmonyPatch(typeof(GameStateManager), "ChangeState", typeof(eGameStateName))]
-        public static void Postfix(eGameStateName nextState) => AddWeaponRandomizerComponents(nextState);
-
-        private static void AddWeaponRandomizerComponents(eGameStateName state)
+        private static void Postfix_InitOrDestroyCinematographyPlugin(eGameStateName nextState)
         {
-            switch (state)
+            switch (nextState)
             {
                 case eGameStateName.InLevel:
                 {
-                    PhotographyCore.log.LogMessage("Initializing " + PhotographyCore.NAME);
+                    CinematographyCore.log.LogMessage("Initializing " + CinematographyCore.NAME);
 
-                    var gameObject = new GameObject(PhotographyCore.AUTHOR + " - " + PhotographyCore.NAME);
+                    var gameObject = new GameObject(CinematographyCore.AUTHOR + " - " + CinematographyCore.NAME);
                     gameObject.AddComponent<CinemaUIManager>();
                     gameObject.AddComponent<FreeCameraController>();
                     Object.DontDestroyOnLoad(gameObject);
@@ -32,7 +31,7 @@ namespace PhotographyPlugin
                     break;
                 }
                 case eGameStateName.AfterLevel:
-                    PhotographyCore.log.LogMessage("Closing " + PhotographyCore.NAME);
+                    CinematographyCore.log.LogMessage("Closing " + CinematographyCore.NAME);
                     Object.Destroy(_go);
                     break;
             }

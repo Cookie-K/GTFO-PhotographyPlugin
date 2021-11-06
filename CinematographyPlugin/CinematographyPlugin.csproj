@@ -7,7 +7,7 @@
         <ProjectGuid>{3CC93051-593F-4E3A-B19D-404CBEDD1312}</ProjectGuid>
         <OutputType>Library</OutputType>
         <AppDesignerFolder>Properties</AppDesignerFolder>
-        <RootNamespace>GTFO-PhotographyPlugin</RootNamespace>
+        <RootNamespace>CinematographyPlugin</RootNamespace>
         <AssemblyName>CinematographyPlugin</AssemblyName>
         <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
@@ -628,11 +628,18 @@
         <Compile Include="UI\CinemaUIManager.cs" />
         <Compile Include="CinematographyCore.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
+        <Compile Include="UI\Enums\OptionType.cs" />
+        <Compile Include="UI\Enums\UIOptions.cs" />
+        <Compile Include="UI\Option.cs" />
+        <Compile Include="UI\SliderOption.cs" />
+        <Compile Include="UI\ToggleOption.cs" />
+        <Compile Include="UI\UIFactory.cs" />
         <Compile Include="UI\UIPatches.cs" />
+        <Compile Include="UI\UIUtils.cs" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <PropertyGroup>
-        <PostBuildEvent>xcopy "$(ProjectDir)\bin\Debug\$(ProjectName).dll" "C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\Cookie_K-PhotographyPlugin" /F /Y</PostBuildEvent>
+        <PostBuildEvent>xcopy "$(ProjectDir)\bin\Debug\$(ProjectName).dll" "C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\Cookie_K-CinematographyPlugin" /F /Y</PostBuildEvent>
     </PropertyGroup>
 
 </Project>

@@ -1,8 +1,8 @@
-﻿using HarmonyLib;
-using PhotographyPlugin.UserInput;
+﻿using CinematographyPlugin.UI;
+using HarmonyLib;
 using UnityEngine;
 
-namespace PhotographyPlugin
+namespace CinematographyPlugin.UI
 {
     [HarmonyPatch]
     public class UIPatches
@@ -11,11 +11,11 @@ namespace PhotographyPlugin
         // Force Curosr lock to none when cinema menu is open 
         [HarmonyPrefix]
         [HarmonyPatch(typeof(Cursor), "lockState", MethodType.Setter)]
-        private static void Prefix_setLockState(ref CursorLockMode value)
+        private static void Prefix_SetLockState(ref CursorLockMode value)
         {
-            if (CinemaUIManager.menuOpen)
+            if (CinemaUIManager.MenuOpen)
             {
-                CinemaUIManager.cursorLastMode = value;
+                CinemaUIManager.CursorLockLastMode = value;
                 value = CursorLockMode.None;
             }
         }
@@ -25,9 +25,9 @@ namespace PhotographyPlugin
         [HarmonyPatch(typeof(Cursor), "visible", MethodType.Setter)]
         private static void Prefix_setVisible(ref bool value)
         {
-            if (CinemaUIManager.menuOpen)
+            if (CinemaUIManager.MenuOpen)
             {
-                CinemaUIManager.cursorLastVisible = value;
+                CinemaUIManager.CursorLastVisible = value;
                 value = true;
             }
         }

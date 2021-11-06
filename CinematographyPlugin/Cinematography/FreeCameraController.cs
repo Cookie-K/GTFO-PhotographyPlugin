@@ -4,7 +4,7 @@ using Globals;
 using Player;
 using UnityEngine;
 
-namespace PhotographyPlugin.Photography
+namespace CinematographyPlugin.Photography
 {
     public class FreeCameraController : MonoBehaviour
     {
@@ -55,7 +55,7 @@ namespace PhotographyPlugin.Photography
 					
 					_playerLocomotion.enabled = false;
 					Global.EnemyPlayerDetectionEnabled = false;
-					PhotographyCore.log.LogMessage("NoClip Enabled");
+					CinematographyCore.log.LogMessage("NoClip Enabled");
 				}
 				else
 				{
@@ -64,7 +64,7 @@ namespace PhotographyPlugin.Photography
 
 					_playerLocomotion.enabled = true;
 					Global.EnemyPlayerDetectionEnabled = true;
-					PhotographyCore.log.LogMessage("NoClip Disabled");
+					CinematographyCore.log.LogMessage("NoClip Disabled");
 				}
 			}
 
@@ -72,9 +72,8 @@ namespace PhotographyPlugin.Photography
 			{
 				UpdateMovement();
 			}
-
 		}
-		
+
 		public static void ToggleNoClip()
 		{
 			_currState = !_noClipEnabled;
