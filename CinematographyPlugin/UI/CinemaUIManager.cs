@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using CinematographyPlugin.Photography;
 using CinematographyPlugin.UI.Enums;
+using Gear;
 using GTFO.API;
+using Player;
+using SNetwork;
 using ToggleUIPlugin.Managers;
 using UnityEngine;
 using UnityEngine.Events;
@@ -13,11 +15,10 @@ namespace CinematographyPlugin.UI
     public class CinemaUIManager : MonoBehaviour
     {
         private const string PrefabPath = "Assets/UI/CinemaUI.prefab";
-        private const KeyCode HideUIKey = KeyCode.F1;
-        private const KeyCode HideBodyKey = KeyCode.F2;
-        private const KeyCode FreeCameraKey = KeyCode.F3;
         private const KeyCode UIOpenKey = KeyCode.F4;
-        private Dictionary<UIOption, Option> Options { get; set; }
+        private const KeyCode Test1 = KeyCode.F5;
+        private const KeyCode Test2 = KeyCode.F6;
+        internal static Dictionary<UIOption, Option> Options { get; set; }
 
         internal static CursorLockMode CursorLockLastMode { get; set; }
         internal static bool CursorLastVisible { get; set; }
@@ -44,8 +45,18 @@ namespace CinematographyPlugin.UI
             {
                 _init = true;
                 _cinemaUIgo.active = false;
-                Options = UIFactory.BuildOptions(_cinemaUIgo);
+                // CinemaUI/Canvas/Window
+                var canvas = _cinemaUIgo.transform.GetChild(0);
+                var window = canvas.GetChild(0);
+                window.gameObject.AddComponent<UIWindow>();
+                
+                var resetButton = _cinemaUIgo.GetComponentInChildren<Button>();;
+                resetButton.onClick.AddListener((UnityAction) OnCloseButton);
+                
+                Options = UIUtils.BuildOptions(_cinemaUIgo);
 
+                ((ToggleOption) Options[UIOption.ToggleUI]).Toggle.onValueChanged.AddListener((UnityAction<bool>) OnUIToggle);
+                ((ToggleOption) Options[UIOption.ToggleBody]).Toggle.onValueChanged.AddListener((UnityAction<bool>) OnBodyToggle);
                 ((ToggleOption) Options[UIOption.ToggleFreeCamera]).Toggle.onValueChanged.AddListener((UnityAction<bool>) OnFreeCameraToggle);
                 ((ToggleOption) Options[UIOption.ToggleLookSmoothing]).Toggle.onValueChanged.AddListener((UnityAction<bool>) OnLookSmoothingToggle);
                 ((ToggleOption) Options[UIOption.ToggleCameraTilt]).Toggle.onValueChanged.AddListener((UnityAction<bool>) OnCameraTiltToggle);
@@ -56,22 +67,6 @@ namespace CinematographyPlugin.UI
         public void Update()
         {
             if (!_init) return;
-            
-            if (Input.GetKeyDown(HideUIKey))
-            {
-                ToggleUIManager.ToggleUI();
-            }
-            
-            if (Input.GetKeyDown(HideBodyKey))
-            {
-                ToggleUIManager.ToggleUI();
-            }
-            
-            if (Input.GetKeyDown(FreeCameraKey))
-            {
-                FreeCameraController.ToggleNoClip();
-            }
-            
             if (Input.GetKeyDown(UIOpenKey))
             {
                 if (MenuOpen)
@@ -85,8 +80,41 @@ namespace CinematographyPlugin.UI
             }
         }
 
+        public void OnCloseButton()
+        {
+            CloseUI();
+        }
+        
+        public void OnUIToggle(bool state)
+        {
+            if (state)
+            {
+                ToggleUIManager.ShowUI();
+            }
+            else
+            {
+                ToggleUIManager.HideUI();
+            }
+        }
+        
+        public void OnBodyToggle(bool state)
+        {
+            if (state)
+            {
+                ToggleUIManager.ShowBody();
+            }
+            else
+            {
+                ToggleUIManager.HideBody();
+            }
+        }
+
         public void OnFreeCameraToggle(bool state)
         {
+            OnBodyToggle(!state);
+            ((ToggleOption) Options[UIOption.ToggleBody]).Toggle.isOn = !state;
+            ((ToggleOption) Options[UIOption.ToggleBody]).Disable(state);
+            
             Options[UIOption.MovementSpeedSlider].SetActive(state);
             Options[UIOption.MovementSmoothingSlider].SetActive(state);
         }

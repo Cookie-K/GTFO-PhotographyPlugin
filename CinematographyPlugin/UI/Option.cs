@@ -5,7 +5,7 @@ namespace CinematographyPlugin.UI
 {
     public abstract class Option
     {
-        private GameObject Root { get; }
+        internal GameObject Root { get; }
         private OptionType OptionType { get; }
         private bool StartActive { get; }
         private string Name { get; }

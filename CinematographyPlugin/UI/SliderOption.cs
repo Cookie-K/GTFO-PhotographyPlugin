@@ -1,24 +1,45 @@
 ﻿using CinematographyPlugin.UI.Enums;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace CinematographyPlugin.UI
 {
     public class SliderOption : Option
     {
-        private Slider _slider;
+        internal Slider Slider { get; }
 
-        public SliderOption(GameObject root, bool startActive, float initialValue, float maxValue, float minValue) : base(root, OptionType.Slider, startActive)
+        private readonly float _initialValue;
+
+        private readonly TMP_Text _valueText;
+
+        public SliderOption(GameObject root, bool startActive, float initialValue, float minValue, float maxValue) : base(root, OptionType.Slider, startActive)
         {
-            _slider = root.GetComponentInChildren<Slider>();
-            _slider.value = initialValue;
-            _slider.maxValue = maxValue;
-            _slider.minValue = minValue;
+            Slider = root.GetComponentInChildren<Slider>();
+            _valueText = root.transform.GetChild(1).GetComponentInChildren<TMP_Text>();
+            var resetButton = root.transform.GetChild(3).GetComponentInChildren<Button>();
+
+            Slider.onValueChanged.AddListener((UnityAction<float>) UpdateSliderVal);
+            resetButton.onClick.AddListener((UnityAction) OnReset);
+
+            _initialValue = initialValue;
+            Slider.value = initialValue;
+            Slider.maxValue = maxValue;
+            Slider.minValue = minValue;
+
+            UpdateSliderVal(initialValue);
         }
 
-        public float GetValue()
+        private void UpdateSliderVal(float value)
         {
-            return _slider.value;
+            _valueText.text = value.ToString("0.00");
         }
+
+        private void OnReset()
+        {
+            Slider.value = _initialValue;
+        }
+
     }
 }

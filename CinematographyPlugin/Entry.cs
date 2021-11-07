@@ -1,4 +1,4 @@
-﻿using CinematographyPlugin.Photography;
+﻿using CinematographyPlugin.Cinematography;
 using CinematographyPlugin.UI;
 using GTFO.API;
 using HarmonyLib;
