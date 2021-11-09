@@ -623,6 +623,7 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="Cinematography\LookSmoothingController.cs" />
         <Compile Include="Entry.cs" />
         <Compile Include="Cinematography\FreeCameraController.cs" />
         <Compile Include="UI\CinemaUIManager.cs" />

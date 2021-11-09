@@ -1,5 +1,4 @@
-﻿using CinematographyPlugin.UI;
-using HarmonyLib;
+﻿using HarmonyLib;
 using UnityEngine;
 
 namespace CinematographyPlugin.UI

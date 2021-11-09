@@ -20,7 +20,7 @@ namespace CinematographyPlugin.UI
             options.Add(UIOption.MovementSmoothingSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.MovementSmoothingSlider), false, FreeCameraController.SmoothTimeDefault, FreeCameraController.SmoothTimeMin, FreeCameraController.SmoothTimeMax));
             
             options.Add(UIOption.ToggleLookSmoothing, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleLookSmoothing), false, true));
-            options.Add(UIOption.LookSmoothingSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.LookSmoothingSlider), false, 0, 0, 1));
+            options.Add(UIOption.LookSmoothingSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.LookSmoothingSlider), false, LookSmoothingController.SmoothDefault, LookSmoothingController.SmoothMin, LookSmoothingController.SmoothMax));
             
             options.Add(UIOption.ToggleCameraTilt, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleCameraTilt), false, true));
             options.Add(UIOption.CameraTiltSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.CameraTiltSlider), false, 0, 0, 1));

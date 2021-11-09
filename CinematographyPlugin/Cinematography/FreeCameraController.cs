@@ -1,12 +1,16 @@
 ﻿using System;
+using Agents;
 using CinematographyPlugin.UI;
 using CinematographyPlugin.UI.Enums;
 using CullingSystem;
+using Enemies;
 using Globals;
 using Player;
 using ToggleUIPlugin.Managers;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.PostProcessing;
+using Object = System.Object;
 
 namespace CinematographyPlugin.Cinematography
 {
@@ -30,7 +34,9 @@ namespace CinematographyPlugin.Cinematography
         private static Vector3 _targetPosition;
         
         private static bool _noClipEnabled;
-        
+
+        // private Camera _pluginCamera;
+        // private PostProcessingBehaviour _pluginPostProcess;
         private FPSCamera _fpsCamera;
         private FPSCameraHolder _fpsCamHolder;
         private GameObject _player;
@@ -44,9 +50,10 @@ namespace CinematographyPlugin.Cinematography
         }
         
         public void Start()
-		{
+        {
 			_fpsCamera = FindObjectOfType<FPSCamera>();
 			_fpsCamHolder = FindObjectOfType<FPSCameraHolder>();
+
 			_fpArms = PlayerManager.GetLocalPlayerAgent().FPItemHolder.gameObject;
 
 			_player = _fpsCamHolder.m_owner.gameObject;
@@ -125,11 +132,11 @@ namespace CinematographyPlugin.Cinematography
 			
 			var position = Vector3.SmoothDamp(_player.transform.position, _targetPosition, ref _smoothVelocity, _smoothTime);
 
-			_playerLocomotion.SyncedSetPosition(position);
 			_playerAgent.TeleportTo(position);
-			// _playerAgent.m_movingCuller.WarpPosition(position);
-			// _playerAgent.m_movingCuller.UpdatePosition(position);
-			_playerAgent.Sync.SendLocomotion(_playerLocomotion.m_currentStateEnum, (_playerAgent).transform.position, _fpsCamera.Forward, 0.0f, 0.0f);
+			_playerLocomotion.SyncedSetPosition(position);
+			_playerAgent.m_movingCuller.WarpPosition(position);
+			_playerAgent.m_movingCuller.UpdatePosition(position);
+			_playerAgent.Sync.SendLocomotion(_playerLocomotion.m_currentStateEnum, position, _fpsCamera.Forward, 0.0f, 0.0f);
 		}
 
 		private Vector3 CalculateTargetPosition()
@@ -144,12 +151,11 @@ namespace CinematographyPlugin.Cinematography
 			var y = Input.GetKey(KeyCode.LeftControl) ? -1 : Input.GetKey(KeyCode.Space) ? 1 : 0;
 			var z = Input.GetKey(KeyCode.W) ? 1 : Input.GetKey(KeyCode.S) ? -1 : 0;
 
-			delta += Time.deltaTime * (_movementSpeed * speedMulti) * z * _fpsCamera.transform.forward;
-			delta += Time.deltaTime * (_movementSpeed * speedMulti) * x * _player.transform.right;
+			delta += Time.deltaTime * _movementSpeed * speedMulti * x * _player.transform.right;
 			delta += Time.deltaTime * _movementSpeed * speedMulti * y * _player.transform.up;
-			
+			delta += Time.deltaTime * _movementSpeed * speedMulti * z * _fpsCamera.transform.forward;
+
 			return delta;
 		}
-        
     }
 }
