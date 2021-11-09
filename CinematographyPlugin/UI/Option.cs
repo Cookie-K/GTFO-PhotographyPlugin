@@ -24,5 +24,7 @@ namespace CinematographyPlugin.UI
         {
             Root.active = state;
         }
+
+        public abstract void OnReset();
     }
 }

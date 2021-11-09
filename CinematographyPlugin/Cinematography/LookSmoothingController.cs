@@ -19,8 +19,6 @@ namespace CinematographyPlugin.Cinematography
         public const float SmoothMax = 1f;
         public const float SmoothMin = 0f;
                
-        private bool smoothingOn;
-        
         private FPSCamera _fpsCamera;
 
         public LookSmoothingController(IntPtr intPtr) : base(intPtr)
@@ -38,7 +36,6 @@ namespace CinematographyPlugin.Cinematography
 
         private void OnSmoothToggle(bool value)
         {
-            smoothingOn = value;
             _fpsCamera.MouseSmoother.m_curve = SmoothDefault;
         }
         

@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CinematographyPlugin.UI.Enums;
-using Gear;
 using GTFO.API;
-using Player;
-using SNetwork;
 using ToggleUIPlugin.Managers;
 using UnityEngine;
 using UnityEngine.Events;
@@ -59,8 +56,10 @@ namespace CinematographyPlugin.UI
                 ((ToggleOption) Options[UIOption.ToggleBody]).Toggle.onValueChanged.AddListener((UnityAction<bool>) OnBodyToggle);
                 ((ToggleOption) Options[UIOption.ToggleFreeCamera]).Toggle.onValueChanged.AddListener((UnityAction<bool>) OnFreeCameraToggle);
                 ((ToggleOption) Options[UIOption.ToggleLookSmoothing]).Toggle.onValueChanged.AddListener((UnityAction<bool>) OnLookSmoothingToggle);
-                ((ToggleOption) Options[UIOption.ToggleCameraTilt]).Toggle.onValueChanged.AddListener((UnityAction<bool>) OnCameraTiltToggle);
+                ((ToggleOption) Options[UIOption.ToggleDynamicRoll]).Toggle.onValueChanged.AddListener((UnityAction<bool>) OnDynamicRollToggle);
+                ((ToggleOption) Options[UIOption.ToggleCameraRoll]).Toggle.onValueChanged.AddListener((UnityAction<bool>) OnCameraRollToggle);
                 ((ToggleOption) Options[UIOption.ToggleTimeScale]).Toggle.onValueChanged.AddListener((UnityAction<bool>) OnTimeScaleToggle);
+                ((ToggleOption) Options[UIOption.ToggleFoV]).Toggle.onValueChanged.AddListener((UnityAction<bool>) OnFoVToggle);
             }
         }
         
@@ -112,26 +111,81 @@ namespace CinematographyPlugin.UI
         public void OnFreeCameraToggle(bool state)
         {
             OnBodyToggle(!state);
-            ((ToggleOption) Options[UIOption.ToggleBody]).Toggle.isOn = !state;
+            ((ToggleOption) Options[UIOption.ToggleBody]).Toggle.Set(!state);
             ((ToggleOption) Options[UIOption.ToggleBody]).Disable(state);
+
+            var movSpeedSlider = Options[UIOption.MovementSpeedSlider];
+            var movSmoothing = Options[UIOption.MovementSmoothingSlider];
+            var dynRoll = Options[UIOption.ToggleDynamicRoll];
+            var miCtrl = Options[UIOption.ToggleMouseIndependentCtrl];
             
-            Options[UIOption.MovementSpeedSlider].SetActive(state);
-            Options[UIOption.MovementSmoothingSlider].SetActive(state);
+            movSpeedSlider.SetActive(state);
+            movSmoothing.SetActive(state);
+            dynRoll.SetActive(state);
+            miCtrl.SetActive(state);
+            
+            ResetIfClose(state, movSpeedSlider);
+            ResetIfClose(state, movSmoothing);
+            ResetIfClose(state, dynRoll);
+            ResetIfClose(state, miCtrl);
+        }
+
+        public void OnDynamicRollToggle(bool state)
+        {
+            var rollToggle = ((ToggleOption) Options[UIOption.ToggleCameraRoll]);
+            var rollSlider = ((SliderOption) Options[UIOption.CameraRollSlider]);
+
+            var dynRoll = Options[UIOption.ToggleDynamicRoll];
+            var dynRollSlider = Options[UIOption.DynamicRollIntensitySlider];
+            
+            rollToggle.Toggle.Set(state);
+            rollToggle.Disable(state);
+            rollSlider.SetActive(!state);
+            rollSlider.Disable(state);
+            
+            dynRoll.SetActive(state);
+            dynRollSlider.SetActive(state);
+
+            ResetIfClose(state, rollToggle);
+            ResetIfClose(state, rollSlider);
+            ResetIfClose(state, dynRoll);
+            ResetIfClose(state, dynRollSlider);
         }
         
         public void OnLookSmoothingToggle(bool state)
         {
-            Options[UIOption.LookSmoothingSlider].SetActive(state);
+            var option = Options[UIOption.LookSmoothingSlider];
+            option.SetActive(state);
+            ResetIfClose(state, option);
         }
         
-        public void OnCameraTiltToggle(bool state)
+        public void OnCameraRollToggle(bool state)
         {
-            Options[UIOption.CameraTiltSlider].SetActive(state);
+            var option = Options[UIOption.CameraRollSlider];
+            option.SetActive(state);
+            ResetIfClose(state, option);
         }
         
         public void OnTimeScaleToggle(bool state)
         {
-            Options[UIOption.TimeScaleSlider].SetActive(state);
+            var option = Options[UIOption.TimeScaleSlider];
+            option.SetActive(state);
+            ResetIfClose(state, option);
+        }
+        
+        public void OnFoVToggle(bool state)
+        {
+            var option = Options[UIOption.FoVSlider];
+            option.SetActive(state);
+            ResetIfClose(state, option);
+        }
+
+        private void ResetIfClose(bool state, Option option)
+        {
+            if (!state)
+            {
+                option.OnReset();
+            }
         }
         
         public void OpenUI()

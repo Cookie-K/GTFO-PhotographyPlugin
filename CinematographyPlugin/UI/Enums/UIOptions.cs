@@ -7,11 +7,16 @@
         ToggleFreeCamera,
         MovementSpeedSlider,
         MovementSmoothingSlider,
+        ToggleDynamicRoll,
+        DynamicRollIntensitySlider,
+        ToggleMouseIndependentCtrl,
         ToggleLookSmoothing,
         LookSmoothingSlider,
-        ToggleCameraTilt,
-        CameraTiltSlider,
+        ToggleCameraRoll,
+        CameraRollSlider,
         ToggleTimeScale,
-        TimeScaleSlider
+        TimeScaleSlider,
+        ToggleFoV,
+        FoVSlider
     }
 }

@@ -23,22 +23,28 @@ namespace CinematographyPlugin.UI
             Slider.onValueChanged.AddListener((UnityAction<float>) UpdateSliderVal);
             resetButton.onClick.AddListener((UnityAction) OnReset);
 
-            _initialValue = initialValue;
-            Slider.value = initialValue;
             Slider.maxValue = maxValue;
             Slider.minValue = minValue;
+            Slider.Set(initialValue);
+            _initialValue = initialValue;
 
             UpdateSliderVal(initialValue);
         }
 
         private void UpdateSliderVal(float value)
         {
-            _valueText.text = value.ToString("0.00");
+            _valueText.text = value.ToString(value < 100 ? "0.00" : "0.0");
         }
 
-        private void OnReset()
+        public void Disable(bool state)
         {
-            Slider.value = _initialValue;
+            Slider.enabled = state;
+            Slider.interactable = state;
+        }
+
+        public override void OnReset()
+        {
+            Slider.Set(_initialValue);
         }
 
     }

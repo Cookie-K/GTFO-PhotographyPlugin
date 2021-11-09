@@ -10,14 +10,17 @@ namespace CinematographyPlugin.UI
     {
         internal Toggle Toggle { get; }
 
-        internal readonly TMP_Text TMP;
+        private bool InitalVal;
+
+        private readonly TMP_Text TMP;
 
         public ToggleOption(GameObject root, bool initialValue, bool startActive) : base(root, OptionType.Toggle, startActive)
         {
             Toggle = root.GetComponentInChildren<Toggle>();
             Toggle.onValueChanged.AddListener((UnityAction<bool>) ChangeText);
             TMP = Toggle.transform.GetComponentInChildren<TMP_Text>();
-            Toggle.isOn = initialValue;
+            Toggle.Set(initialValue);
+            InitalVal = initialValue;
         }
         
         public void Disable(bool state)
@@ -36,6 +39,11 @@ namespace CinematographyPlugin.UI
         private void ChangeText(bool state)
         {
             TMP.text = state ? "ON" : "OFF";
+        }
+
+        public override void OnReset()
+        {
+            Toggle.Set(InitalVal);
         }
 
     }
