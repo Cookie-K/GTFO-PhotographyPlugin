@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using CinematographyPlugin.Cinematography;
 using CinematographyPlugin.UI.Enums;
 using GTFO.API;
 using ToggleUIPlugin.Managers;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.PostProcessing;
 using UnityEngine.UI;
 
 namespace CinematographyPlugin.UI
@@ -15,6 +17,7 @@ namespace CinematographyPlugin.UI
         private const KeyCode UIOpenKey = KeyCode.F4;
         private const KeyCode Test1 = KeyCode.F5;
         private const KeyCode Test2 = KeyCode.F6;
+       
         internal static Dictionary<UIOption, Option> Options { get; set; }
 
         internal static CursorLockMode CursorLockLastMode { get; set; }
@@ -51,18 +54,17 @@ namespace CinematographyPlugin.UI
                 resetButton.onClick.AddListener((UnityAction) OnCloseButton);
                 
                 Options = UIUtils.BuildOptions(_cinemaUIgo);
-
-                ((ToggleOption) Options[UIOption.ToggleUI]).Toggle.onValueChanged.AddListener((UnityAction<bool>) OnUIToggle);
-                ((ToggleOption) Options[UIOption.ToggleBody]).Toggle.onValueChanged.AddListener((UnityAction<bool>) OnBodyToggle);
-                ((ToggleOption) Options[UIOption.ToggleFreeCamera]).Toggle.onValueChanged.AddListener((UnityAction<bool>) OnFreeCameraToggle);
-                ((ToggleOption) Options[UIOption.ToggleLookSmoothing]).Toggle.onValueChanged.AddListener((UnityAction<bool>) OnLookSmoothingToggle);
-                ((ToggleOption) Options[UIOption.ToggleDynamicRoll]).Toggle.onValueChanged.AddListener((UnityAction<bool>) OnDynamicRollToggle);
-                ((ToggleOption) Options[UIOption.ToggleCameraRoll]).Toggle.onValueChanged.AddListener((UnityAction<bool>) OnCameraRollToggle);
-                ((ToggleOption) Options[UIOption.ToggleTimeScale]).Toggle.onValueChanged.AddListener((UnityAction<bool>) OnTimeScaleToggle);
-                ((ToggleOption) Options[UIOption.ToggleFoV]).Toggle.onValueChanged.AddListener((UnityAction<bool>) OnFoVToggle);
             }
         }
-        
+
+        public void Start()
+        {
+            ((ToggleOption) Options[UIOption.ToggleUI]).OnValueChanged += OnUIToggle;
+            ((ToggleOption) Options[UIOption.ToggleBody]).OnValueChanged += OnBodyToggle;
+            CinemaNetworkingManager.OnFreeCamEnableOrDisable += OnFreeCamEnableOrDisable;
+            CinemaNetworkingManager.OnTimeScaleEnableOrDisable += OnTimeScaleEnableOrDisable;
+        }
+
         public void Update()
         {
             if (!_init) return;
@@ -108,86 +110,32 @@ namespace CinematographyPlugin.UI
             }
         }
 
-        public void OnFreeCameraToggle(bool state)
+        private void OnFreeCamEnableOrDisable(bool enable)
         {
-            OnBodyToggle(!state);
-            ((ToggleOption) Options[UIOption.ToggleBody]).Toggle.Set(!state);
-            ((ToggleOption) Options[UIOption.ToggleBody]).Disable(state);
-
-            var movSpeedSlider = Options[UIOption.MovementSpeedSlider];
-            var movSmoothing = Options[UIOption.MovementSmoothingSlider];
-            var dynRoll = Options[UIOption.ToggleDynamicRoll];
-            var miCtrl = Options[UIOption.ToggleMouseIndependentCtrl];
-            
-            movSpeedSlider.SetActive(state);
-            movSmoothing.SetActive(state);
-            dynRoll.SetActive(state);
-            miCtrl.SetActive(state);
-            
-            ResetIfClose(state, movSpeedSlider);
-            ResetIfClose(state, movSmoothing);
-            ResetIfClose(state, dynRoll);
-            ResetIfClose(state, miCtrl);
-        }
-
-        public void OnDynamicRollToggle(bool state)
-        {
-            var rollToggle = ((ToggleOption) Options[UIOption.ToggleCameraRoll]);
-            var rollSlider = ((SliderOption) Options[UIOption.CameraRollSlider]);
-
-            var dynRoll = Options[UIOption.ToggleDynamicRoll];
-            var dynRollSlider = Options[UIOption.DynamicRollIntensitySlider];
-            
-            rollToggle.Toggle.Set(state);
-            rollToggle.Disable(state);
-            rollSlider.SetActive(!state);
-            rollSlider.Disable(state);
-            
-            dynRoll.SetActive(state);
-            dynRollSlider.SetActive(state);
-
-            ResetIfClose(state, rollToggle);
-            ResetIfClose(state, rollSlider);
-            ResetIfClose(state, dynRoll);
-            ResetIfClose(state, dynRollSlider);
-        }
-        
-        public void OnLookSmoothingToggle(bool state)
-        {
-            var option = Options[UIOption.LookSmoothingSlider];
-            option.SetActive(state);
-            ResetIfClose(state, option);
-        }
-        
-        public void OnCameraRollToggle(bool state)
-        {
-            var option = Options[UIOption.CameraRollSlider];
-            option.SetActive(state);
-            ResetIfClose(state, option);
-        }
-        
-        public void OnTimeScaleToggle(bool state)
-        {
-            var option = Options[UIOption.TimeScaleSlider];
-            option.SetActive(state);
-            ResetIfClose(state, option);
-        }
-        
-        public void OnFoVToggle(bool state)
-        {
-            var option = Options[UIOption.FoVSlider];
-            option.SetActive(state);
-            ResetIfClose(state, option);
-        }
-
-        private void ResetIfClose(bool state, Option option)
-        {
-            if (!state)
+            var option = (ToggleOption) Options[UIOption.ToggleFreeCamera];
+            if (enable)
             {
-                option.OnReset();
+                option.Enable(option.Toggle.isOn);
+            }
+            else
+            {
+                option.Disable(false);
             }
         }
         
+        private void OnTimeScaleEnableOrDisable(bool enable)
+        {
+            var option = (ToggleOption) Options[UIOption.ToggleTimeScale];
+            if (enable)
+            {
+                option.Enable(option.Toggle.isOn);
+            }
+            else
+            {
+                option.Disable(false);
+            }
+        }
+
         public void OpenUI()
         {
             CursorLockLastMode = Cursor.lockState;
@@ -209,11 +157,16 @@ namespace CinematographyPlugin.UI
 
         public void OnDestroy()
         {
+            ((ToggleOption) Options[UIOption.ToggleUI]).OnValueChanged -= OnUIToggle;
+            ((ToggleOption) Options[UIOption.ToggleBody]).OnValueChanged -= OnBodyToggle;
+            CinemaNetworkingManager.OnFreeCamEnableOrDisable -= OnFreeCamEnableOrDisable;
+            CinemaNetworkingManager.OnTimeScaleEnableOrDisable -= OnTimeScaleEnableOrDisable;
+            
             if (MenuOpen)
             {
                 CloseUI();
             }
-            
+
             Destroy(_cinemaUIgo);
         }
     }

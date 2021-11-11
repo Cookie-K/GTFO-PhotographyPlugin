@@ -1,4 +1,6 @@
-﻿using CinematographyPlugin.UI.Enums;
+﻿using System;
+using System.Collections.Generic;
+using CinematographyPlugin.UI.Enums;
 using UnityEngine;
 
 namespace CinematographyPlugin.UI
@@ -9,6 +11,10 @@ namespace CinematographyPlugin.UI
         private OptionType OptionType { get; }
         private bool StartActive { get; }
         private string Name { get; }
+
+        internal List<Option> SubOptions { get; } = new List<Option>();
+
+        internal Dictionary<Option, bool> StateByDisableOnSelectOptions { get; } = new Dictionary<Option, bool>();
 
         protected Option(GameObject root, OptionType optionType, bool startActive)
         {
@@ -24,6 +30,9 @@ namespace CinematographyPlugin.UI
         {
             Root.active = state;
         }
+
+        public abstract void Disable(bool state);
+        public abstract void Enable(bool state);
 
         public abstract void OnReset();
     }

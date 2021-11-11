@@ -17,6 +17,11 @@
         ToggleTimeScale,
         TimeScaleSlider,
         ToggleFoV,
-        FoVSlider
+        FoVSlider,
+        ToggleVignette,
+        ToggleDoF,
+        FocusDistanceSlider,
+        ApertureSlider,
+        FocalLenghtSlider
     }
 }

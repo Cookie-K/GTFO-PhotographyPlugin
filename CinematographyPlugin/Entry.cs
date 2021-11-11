@@ -24,9 +24,12 @@ namespace CinematographyPlugin
 
                     var gameObject = new GameObject(CinematographyCore.AUTHOR + " - " + CinematographyCore.NAME);
                     gameObject.AddComponent<CinemaUIManager>();
+                    gameObject.AddComponent<FoVController>();
+                    gameObject.AddComponent<TimeScaleController>();
                     gameObject.AddComponent<FreeCameraController>();
                     gameObject.AddComponent<CameraRollController>();
                     gameObject.AddComponent<LookSmoothingController>();
+                    gameObject.AddComponent<PostProcessingController>();
                     Object.DontDestroyOnLoad(gameObject);
 
                     _go = gameObject;

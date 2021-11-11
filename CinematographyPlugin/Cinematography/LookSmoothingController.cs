@@ -15,9 +15,13 @@ namespace CinematographyPlugin.Cinematography
 {
     public class LookSmoothingController : MonoBehaviour
     {
+        public static LookSmoothingController Current;
         public const float SmoothDefault = 0.2f;
-        public const float SmoothMax = 1f;
+        public const float SmoothMax = 2f;
         public const float SmoothMin = 0f;
+
+        private float _currVal;
+        private int _samples = 8;
                
         private FPSCamera _fpsCamera;
 
@@ -26,22 +30,43 @@ namespace CinematographyPlugin.Cinematography
             // For Il2CppAssemblyUnhollower
         }
 
-        public void Start()
+        public void Awake()
         {
-            _fpsCamera = FindObjectOfType<FPSCamera>();
+            Current = this;
 
-            ((ToggleOption) CinemaUIManager.Options[UIOption.ToggleLookSmoothing]).Toggle.onValueChanged.AddListener((UnityAction<bool>) OnSmoothToggle);
-            ((SliderOption) CinemaUIManager.Options[UIOption.LookSmoothingSlider]).Slider.onValueChanged.AddListener((UnityAction<float>) OnSmoothTimeChange);
+            _fpsCamera = FindObjectOfType<FPSCamera>();
         }
 
-        private void OnSmoothToggle(bool value)
+        public void Start()
         {
+            ((ToggleOption) CinemaUIManager.Options[UIOption.ToggleLookSmoothing]).OnValueChanged += OnSmoothToggle;
+            ((SliderOption) CinemaUIManager.Options[UIOption.LookSmoothingSlider]).OnValueChanged += OnSmoothValChange;
+            ((SliderOption) CinemaUIManager.Options[UIOption.TimeScaleSlider]).OnValueChanged += OnTimeScaleChange;
+        }
+
+        public void OnSmoothToggle(bool value)
+        {
+            _currVal = SmoothDefault;
             _fpsCamera.MouseSmoother.m_curve = SmoothDefault;
         }
         
-        private void OnSmoothTimeChange(float value)
+        public void OnSmoothValChange(float value)
         {
-            _fpsCamera.MouseSmoother.m_curve = value;
+            _currVal = value;
+            _fpsCamera.MouseSmoother.m_curve = _currVal;
+            _fpsCamera.MouseSmoother.Samples = Mathf.RoundToInt(_samples / Time.timeScale);
+        }
+        
+        public void OnTimeScaleChange(float value)
+        {
+            OnSmoothValChange(_currVal);
+        }
+
+        private void OnDestroy()
+        {
+            ((ToggleOption) CinemaUIManager.Options[UIOption.ToggleLookSmoothing]).OnValueChanged -= OnSmoothToggle;
+            ((SliderOption) CinemaUIManager.Options[UIOption.LookSmoothingSlider]).OnValueChanged -= OnSmoothValChange;
+            ((SliderOption) CinemaUIManager.Options[UIOption.TimeScaleSlider]).OnValueChanged -= OnTimeScaleChange;
         }
     }
 }

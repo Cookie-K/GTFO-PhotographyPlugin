@@ -30,9 +30,12 @@ namespace CinematographyPlugin
 
             ClassInjector.RegisterTypeInIl2Cpp<UIWindow>();
             ClassInjector.RegisterTypeInIl2Cpp<CinemaUIManager>();
+            ClassInjector.RegisterTypeInIl2Cpp<FoVController>();
+            ClassInjector.RegisterTypeInIl2Cpp<TimeScaleController>();
             ClassInjector.RegisterTypeInIl2Cpp<FreeCameraController>();
             ClassInjector.RegisterTypeInIl2Cpp<CameraRollController>();
             ClassInjector.RegisterTypeInIl2Cpp<LookSmoothingController>();
+            ClassInjector.RegisterTypeInIl2Cpp<PostProcessingController>();
 
             HarmonyPatches = new Harmony(GUID);
             HarmonyPatches.PatchAll();
