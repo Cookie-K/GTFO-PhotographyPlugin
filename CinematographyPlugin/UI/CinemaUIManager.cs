@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using CinematographyPlugin.Cinematography;
 using CinematographyPlugin.UI.Enums;
 using GTFO.API;
+using Player;
 using ToggleUIPlugin.Managers;
 using UnityEngine;
 using UnityEngine.Events;
@@ -165,6 +166,11 @@ namespace CinematographyPlugin.UI
             if (MenuOpen)
             {
                 CloseUI();
+            }
+            
+            foreach (var keyValuePair in Options)
+            {
+                keyValuePair.Value.OnReset();
             }
 
             Destroy(_cinemaUIgo);

@@ -29,12 +29,16 @@ namespace CinematographyPlugin
                     gameObject.AddComponent<FreeCameraController>();
                     gameObject.AddComponent<CameraRollController>();
                     gameObject.AddComponent<LookSmoothingController>();
+                    gameObject.AddComponent<CinemaNetworkingManager>();
                     gameObject.AddComponent<PostProcessingController>();
                     Object.DontDestroyOnLoad(gameObject);
 
                     _go = gameObject;
                     break;
                 }
+                case eGameStateName.ExpeditionAbort:
+                case eGameStateName.ExpeditionFail:
+                case eGameStateName.ExpeditionSuccess:
                 case eGameStateName.AfterLevel:
                     CinematographyCore.log.LogMessage("Closing " + CinematographyCore.NAME);
                     Object.Destroy(_go);

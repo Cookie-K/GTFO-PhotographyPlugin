@@ -10,6 +10,7 @@ namespace CinematographyPlugin.Cinematography
     {
         public const float FovMin = 1f;
         public const float FovMax = 160f;
+        private static float _foVDefault;
         
         private FPSCamera _fpsCamera;
         
@@ -30,7 +31,11 @@ namespace CinematographyPlugin.Cinematography
 
         public static float GetDefaultFoV()
         {
-            return FindObjectOfType<FPSCamera>().m_camera.fieldOfView;
+            if (_foVDefault < 0.01)
+            {
+                _foVDefault = FindObjectOfType<FPSCamera>().m_camera.fieldOfView;
+            }
+            return _foVDefault;
         }
 
         public void OnFoVChange(float value)

@@ -35,15 +35,11 @@ namespace CinematographyPlugin
             ClassInjector.RegisterTypeInIl2Cpp<FreeCameraController>();
             ClassInjector.RegisterTypeInIl2Cpp<CameraRollController>();
             ClassInjector.RegisterTypeInIl2Cpp<LookSmoothingController>();
+            ClassInjector.RegisterTypeInIl2Cpp<CinemaNetworkingManager>();
             ClassInjector.RegisterTypeInIl2Cpp<PostProcessingController>();
 
             HarmonyPatches = new Harmony(GUID);
             HarmonyPatches.PatchAll();
-            //
-            // foreach (var method in HarmonyPatches.GetPatchedMethods())
-            // {
-            //     log.LogInfo("Patched method: " + method);
-            // }
         }
     }
 }

@@ -30,6 +30,7 @@ namespace CinematographyPlugin.Cinematography
 
         private void OnDestroy()
         {
+            Time.timeScale = 1;
             ((SliderOption) CinemaUIManager.Options[UIOption.TimeScaleSlider]).OnValueChanged -=  OnTimeScaleChange;
             CinemaNetworkingManager.OnTimeScaleChangedByOtherPlayer -= OnTimeScaleChange;
         }

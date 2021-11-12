@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using CinematographyPlugin.UI;
+using CinematographyPlugin.UI.Enums;
 using Nidhogg.Managers;
 using Player;
 using UnityEngine;
@@ -26,9 +27,9 @@ namespace CinematographyPlugin.Cinematography
         
         public static readonly Dictionary<string, PlayerAgent> PlayersNotInTimeScaleByName = new Dictionary<string, PlayerAgent>();
 
-        private const string SyncCinemaStateEventName = "Sync_CinemaPlugin_States";
+        private const string SyncCinemaStateEvent = "Sync_CinemaPlugin_States";
         
-        private const string SyncCinemaTimeScaleEventName = "Sync_CinemaPlugin_Time_Scale";
+        private const string SyncCinemaAlterTimeScaleEvent = "Sync_CinemaPlugin_Time_Scale";
 
         private static bool _prevCanUseFreeCam = true;
         
@@ -79,17 +80,21 @@ namespace CinematographyPlugin.Cinematography
 
         private void Start()
         {
-            if (!NetworkingManager.IsEventRegistered(SyncCinemaStateEventName))
+            ((ToggleOption) CinemaUIManager.Options[UIOption.ToggleFreeCamera]).OnValueChanged += SyncLocalPlayerEnterExitFreeCam;
+            ((ToggleOption) CinemaUIManager.Options[UIOption.ToggleTimeScale]).OnValueChanged += SyncLocalPlayerEnterExitTimeScale;
+            ((SliderOption) CinemaUIManager.Options[UIOption.TimeScaleSlider]).OnValueChanged += SyncLocalPlayerAlterTimeScale;
+
+            if (!NetworkingManager.IsEventRegistered(SyncCinemaStateEvent))
             {
-                NetworkingManager.RegisterEvent<CinemaPluginStateData>(SyncCinemaStateEventName,  (senderId, packet) => 
+                NetworkingManager.RegisterEvent<CinemaPluginStateData>(SyncCinemaStateEvent,  (senderId, packet) => 
                 {
                     UpdateStates(packet);
                 });
             }
             
-            if (!NetworkingManager.IsEventRegistered(SyncCinemaTimeScaleEventName))
+            if (!NetworkingManager.IsEventRegistered(SyncCinemaAlterTimeScaleEvent))
             {
-                NetworkingManager.RegisterEvent<CinemaPluginTimeScaleData>(SyncCinemaTimeScaleEventName,  (senderId, packet) => 
+                NetworkingManager.RegisterEvent<CinemaPluginTimeScaleData>(SyncCinemaAlterTimeScaleEvent,  (senderId, packet) => 
                 {
                     OnTimeScaleSetByOtherPlayer(packet);
                 });
@@ -110,7 +115,7 @@ namespace CinematographyPlugin.Cinematography
                 var agent = GetAgentFromName(stateData.PlayerName);
                 if (agent != null)
                 {
-                    PlayersInFreeCamByName.Add(stateData.PlayerName, agent);
+                    PlayersInFreeCamByName.TryAdd(stateData.PlayerName, agent);
                     PlayersNotInFreeCamByName.Remove(stateData.PlayerName);
                     OnOtherPlayerEnterExitFreeCam?.Invoke(agent, true);
                 }
@@ -122,7 +127,7 @@ namespace CinematographyPlugin.Cinematography
                 if (agent != null)
                 {
                     PlayersInFreeCamByName.Remove(stateData.PlayerName);
-                    PlayersNotInFreeCamByName.Add(stateData.PlayerName, agent);
+                    PlayersNotInFreeCamByName.TryAdd(stateData.PlayerName, agent);
                     OnOtherPlayerEnterExitFreeCam?.Invoke(agent, false);
                 }
             }
@@ -132,7 +137,7 @@ namespace CinematographyPlugin.Cinematography
                 var agent = GetAgentFromName(stateData.PlayerName);
                 if (agent != null)
                 {
-                    PlayersInTimeScaleByName.Add(stateData.PlayerName, agent);
+                    PlayersInTimeScaleByName.TryAdd(stateData.PlayerName, agent);
                     PlayersNotInTimeScaleByName.Remove(stateData.PlayerName);
                 }
             }
@@ -143,7 +148,7 @@ namespace CinematographyPlugin.Cinematography
                 if (agent != null)
                 {
                     PlayersInTimeScaleByName.Remove(stateData.PlayerName);
-                    PlayersNotInTimeScaleByName.Add(stateData.PlayerName, agent);
+                    PlayersNotInTimeScaleByName.TryAdd(stateData.PlayerName, agent);
                 }
             }
 
@@ -180,6 +185,39 @@ namespace CinematographyPlugin.Cinematography
             }
         }
 
+        public void SyncLocalPlayerEnterExitFreeCam(bool enteringFreeCam)
+        {
+            var data = new CinemaPluginStateData
+            {
+                PlayerName = PlayerManager.GetLocalPlayerAgent().Sync.PlayerNick,
+                StartingFreeCam = enteringFreeCam,
+                StoppingFreeCam = !enteringFreeCam
+            };
+            CinematographyCore.log.LogInfo($"{data.PlayerName} broadcasting free cam {enteringFreeCam}");
+            NetworkingManager.InvokeEvent(SyncCinemaStateEvent, data);
+        }
+        
+        public void SyncLocalPlayerEnterExitTimeScale(bool alteringTimeScale)
+        {
+            var data = new CinemaPluginStateData
+            {
+                PlayerName = PlayerManager.GetLocalPlayerAgent().Sync.PlayerNick,
+                StartingTimeScale = alteringTimeScale,
+                StoppingTimeScale = !alteringTimeScale
+            };
+            CinematographyCore.log.LogInfo($"{data.PlayerName} broadcasting time scale {alteringTimeScale}");
+            NetworkingManager.InvokeEvent(SyncCinemaStateEvent, data);
+        }
+        
+        public void SyncLocalPlayerAlterTimeScale(float timeScale)
+        {
+            var data = new CinemaPluginTimeScaleData
+            {
+                PlayerName = PlayerManager.GetLocalPlayerAgent().Sync.PlayerNick, TimeScale = timeScale
+            };
+            NetworkingManager.InvokeEvent(SyncCinemaAlterTimeScaleEvent, data);
+        }
+
         private PlayerAgent GetAgentFromName(string playerName)
         {
             foreach (var agent in PlayerManager.PlayerAgentsInLevel)
@@ -192,6 +230,13 @@ namespace CinematographyPlugin.Cinematography
             CinematographyCore.log.LogWarning($"Could not find player agent with the name {playerName}");
             return null;
         }
-        
+
+
+        private void OnDestroy()
+        {
+            ((ToggleOption) CinemaUIManager.Options[UIOption.ToggleFreeCamera]).OnValueChanged -= SyncLocalPlayerEnterExitFreeCam;
+            ((ToggleOption) CinemaUIManager.Options[UIOption.ToggleTimeScale]).OnValueChanged -= SyncLocalPlayerEnterExitTimeScale;
+            ((SliderOption) CinemaUIManager.Options[UIOption.TimeScaleSlider]).OnValueChanged -= SyncLocalPlayerAlterTimeScale;
+        }
     }
 }

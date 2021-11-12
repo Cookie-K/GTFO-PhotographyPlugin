@@ -53,11 +53,19 @@ namespace CinematographyPlugin.Cinematography
         public void OnRollToggle(bool value)
         {
             _rollOn = value;
+            if (!value)
+            {
+                _currAngle = 0f;
+            }
         }
         
         public void OnDynamicRollToggle(bool value)
         {
             _dynamicRollOn = value;
+            if (!value)
+            {
+                _currAngle = 0f;
+            }
         }
         
         public void OnRollAngleChange(float value)

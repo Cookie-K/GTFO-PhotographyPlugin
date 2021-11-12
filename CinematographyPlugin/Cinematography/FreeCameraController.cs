@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Agents;
 using CinematographyPlugin.UI;
 using CinematographyPlugin.UI.Enums;
 using CullingSystem;
@@ -19,7 +20,7 @@ namespace CinematographyPlugin.Cinematography
         private const float FastMoveFactor = 2;
         private const float SlowMoveFactor = 1f/2f;
         
-        public const float SmoothTimeDefault = 0.25f;
+        public const float SmoothTimeDefault = 1f;
         public const float SmoothTimeMin = 0f;
         public const float SmoothTimeMax = 2f;
 
@@ -31,7 +32,7 @@ namespace CinematographyPlugin.Cinematography
         public const float DynamicRollIntensityMin = 1f;
         public const float DynamicRollIntensityMax = 10f;
         
-        private const float DynamicRollSmoothTime = 1;
+        private const float DynamicRollSmoothTimeDefault = 1;
         private const float DynamicRollMax = 90f;
 
         private static readonly Dictionary<string, float> PlayerPrevMaxHealthByName = new Dictionary<string, float>();
@@ -40,6 +41,7 @@ namespace CinematographyPlugin.Cinematography
         
         private static float _smoothTime = SmoothTimeDefault;
         private static float _rollIntensity = DynamicRollIntensityDefault;
+        private static float _dynamicRollSmoothTime = DynamicRollSmoothTimeDefault;
         private static float _movementSpeed = MovementSpeedDefault;
         private static float _prevRoll;
         private static float _rollVelocity;
@@ -52,13 +54,17 @@ namespace CinematographyPlugin.Cinematography
         private static bool _freeCamEnabled;
         private static bool _dynamicRollEnabled;
         private static bool _mouseIndependentCtrlEnabled;
+        private static bool _prevFreeCamDisabled;
+        private static float _prevFreeCamDisabledTime;
+        private static float _delayBeforeLocomotionEnable = 0.1f;
 
 
         private FPSCamera _fpsCamera;
-        private FPSCameraHolder _fpsCamHolder;
         private GameObject _player;
         private GameObject _fpArms;
-        private GameObject _ui;
+        private GameObject _uiPlayerLayer;
+        private GameObject _uiInteractionLayer;
+        private GameObject _uiNavMarkerLayer;
         private PlayerAgent _playerAgent;
 
         // Toggle comps when free cam enabled
@@ -75,10 +81,12 @@ namespace CinematographyPlugin.Cinematography
         public void Awake()
         {
 	        _fpsCamera = FindObjectOfType<FPSCamera>();
-			_fpsCamHolder = FindObjectOfType<FPSCameraHolder>();
 			_fpArms = PlayerManager.GetLocalPlayerAgent().FPItemHolder.gameObject;
-			_ui = GuiManager.PlayerLayer.Root.FindChild("PlayerLayer").gameObject;
-			_player = _fpsCamHolder.m_owner.gameObject;
+			_uiPlayerLayer = GuiManager.PlayerLayer.Root.FindChild("PlayerLayer").gameObject;
+			_uiInteractionLayer = GuiManager.PlayerLayer.Root.FindChild("InteractionLayer").gameObject;
+			_uiNavMarkerLayer = GuiManager.PlayerLayer.Root.FindChild("NavMarkerLayer").gameObject;
+
+			_player = _fpsCamera.m_owner.gameObject;
 			_damageFeedback = _fpsCamera.gameObject.GetComponent<PE_FPSDamageFeedback>();
 			_playerAgent = PlayerManager.GetLocalPlayerAgent();
 			_playerVoice = _player.GetComponent<PlayerVoice>();
@@ -102,22 +110,51 @@ namespace CinematographyPlugin.Cinematography
 
         public void Update()
         {
-	        if (_freeCamEnabled && !CinemaUIManager.MenuOpen)
+	        if (_freeCamEnabled)
 	        {
-		        if (_fpArms.active || _ui.active)
+		        if (_fpArms.active || _uiPlayerLayer.active)
 		        {
-			        ToggleUIManager.HideBody();
-			        ToggleUIManager.HideUI();
+			        // force hide all ui when in free cam
+			        ToggleAllUIExceptWaterMark(false);
 		        }
-		        UpdateMovement();
+
+		        if (!CinemaUIManager.MenuOpen)
+		        {
+			        UpdateMovement();
+		        }
 		        DivertEnemiesAwayFromCameraMan();
 	        }
+
+	        // Update locomotion a frame after to avoid rubber banding 
+	        if (_prevFreeCamDisabled && Time.realtimeSinceStartup - _prevFreeCamDisabledTime > _delayBeforeLocomotionEnable / Time.timeScale)
+	        {
+		        _playerLocomotion.enabled = true;
+		        _prevFreeCamDisabled = false;
+	        }
+        }
+
+        private void ToggleAllUIExceptWaterMark(bool value)
+        {
+	        if (value)
+	        {
+		        ToggleUIManager.ShowBody();
+		        ToggleUIManager.ShowUI();
+	        }
+	        else
+	        {
+		        ToggleUIManager.HideBody();
+		        ToggleUIManager.HideUI();
+	        }
+
+	        _uiPlayerLayer.active = value;
+	        _uiInteractionLayer.active = value;
+	        _uiNavMarkerLayer.active = value;
         }
 
 		public void OnFreeCameraToggle(bool value)
 		{
 			_freeCamEnabled = value;
-			EnableFreeCam(value);
+			EnableOrDisableFreeCam(value);
 		}
 
 		public void OnSmoothTimeChange(float value)
@@ -133,6 +170,11 @@ namespace CinematographyPlugin.Cinematography
 		public void OnDynamicRollToggle(bool value)
 		{
 			_dynamicRollEnabled = value;
+			if (!value)
+			{
+				_rollVelocity = 0;
+				_prevRoll = 0;
+			}
 		}
 
 		public void OnMouseIndependentCtrlToggle(bool value)
@@ -145,36 +187,52 @@ namespace CinematographyPlugin.Cinematography
 			_rollIntensity = value;
 		}
 
-		private void EnableFreeCam(bool enable)
+		private void EnableOrDisableFreeCam(bool enable)
 		{
 			SetCameraManHealth(_playerAgent, enable);
+			ToggleAllUIExceptWaterMark(!enable);
 
 			var initPosition = _player.transform.position;
-			_targetPosition = enable ? initPosition : _startingPosition;
-			_startingPosition = enable ? initPosition : _startingPosition;
-			
+			_playerInteraction.enabled = !enable;
+			_damageFeedback.enabled = !enable;
+			Global.EnemyPlayerDetectionEnabled = !enable;
 			C_CullingManager.CullingEnabled = !enable;
+			
 			if (enable)
 			{
+				_playerLocomotion.enabled = false;
 				C_CullingManager.ShowAll();
+				_targetPosition = initPosition;
+				_startingPosition = initPosition;
+				_dynamicRollSmoothTime = DynamicRollSmoothTimeDefault;
 			}
 			else
 			{
 				C_CullingManager.HideAll();
+				_targetPosition = _startingPosition;
+				_smoothTime = 0;
+				_dynamicRollSmoothTime = 0;
+				UpdateMovement();
+				_prevFreeCamDisabledTime = Time.realtimeSinceStartup;
+				_prevFreeCamDisabled = true;
 			}
-					
-			_playerLocomotion.enabled = !enable;
-			_playerInteraction.enabled = !enable;
-			_damageFeedback.enabled = !enable;
-			Global.EnemyPlayerDetectionEnabled = !enable;
+
 			CinematographyCore.log.LogMessage(enable ? "Free cam enabled" : "Free cam disabled");
+		}
+
+		private void SetPlayerPosition(Vector3 position)
+		{
+			_playerAgent.TeleportTo(position);
+			_playerLocomotion.SyncedSetPosition(position);
+			_playerAgent.Sync.SendLocomotion(_playerLocomotion.m_currentStateEnum, position, _fpsCamera.Forward, 0.0f, 0.0f);
 		}
 
 		private void UpdateMovement()
 		{
-			_targetPosition += CalculateTargetPosition();
+			_targetPosition += CalculateTargetPositionDelta();
 			var position = Vector3.SmoothDamp(_player.transform.position, _targetPosition, ref _smoothVelocity, _smoothTime * Time.timeScale);
-
+			SetPlayerPosition(position);
+			
 			if (_dynamicRollEnabled)
 			{
 				OnDynamicRollAngleChange?.Invoke(CalculateDynamicRoll());
@@ -183,10 +241,6 @@ namespace CinematographyPlugin.Cinematography
 			var cullPosition = CalculateCullerPosition();
 			_playerAgent.m_movingCuller.WarpPosition(cullPosition);
 			_playerAgent.m_movingCuller.UpdatePosition(cullPosition);
-			
-			_playerAgent.TeleportTo(position);
-			_playerLocomotion.SyncedSetPosition(position);
-			_playerAgent.Sync.SendLocomotion(_playerLocomotion.m_currentStateEnum, position, _fpsCamera.Forward, 0.0f, 0.0f);
 		}
 
 		private float CalculateDynamicRoll()
@@ -195,7 +249,7 @@ namespace CinematographyPlugin.Cinematography
 			var prep = Vector3.Cross(_fpsCamera.Forward, projection);
 			var dir = Vector3.Dot(prep, _fpsCamera.transform.up);
 			var roll = Mathf.Clamp(projection.magnitude * Time.timeScale, -DynamicRollMax, DynamicRollMax) * Mathf.Sign(dir);
-			roll = Mathf.SmoothDampAngle(_prevRoll, roll, ref _rollVelocity , DynamicRollSmoothTime * Time.timeScale);
+			roll = Mathf.SmoothDampAngle(_prevRoll, roll, ref _rollVelocity , _dynamicRollSmoothTime * Time.timeScale);
 			_prevRoll = roll;
 			return roll * _rollIntensity;
 		}
@@ -207,7 +261,7 @@ namespace CinematographyPlugin.Cinematography
 				out var hit) ? hit.point : _fpsCamera.Position;
 		}
 
-		private Vector3 CalculateTargetPosition()
+		private Vector3 CalculateTargetPositionDelta()
 		{
 			var delta = Vector3.zero;
 			
@@ -259,12 +313,18 @@ namespace CinematographyPlugin.Cinematography
 				PlayerPrevMaxHealthByName.Remove(playerName);
 				PlayerPrevHealthByName.Remove(playerName);
 				PlayerPrevInfectionByName.Remove(playerName);
+
+				if (player.IsLocallyOwned)
+				{
+					damage.TryCast<Dam_PlayerDamageLocal>().UpdateHealthGui();
+				}
 			}
 		}
 		
 		private void ShowOrHideFreeCamPlayer(PlayerAgent player, bool enteringFreeCam)
 		{
 			player.AnimatorBody.gameObject.active = !enteringFreeCam;
+			player.NavMarker.enabled = !enteringFreeCam;
 		}
 
 		private void OnOtherPlayerEnterOrExitFreeCam(PlayerAgent playerAgent, bool enteringFreeCam)
@@ -277,13 +337,15 @@ namespace CinematographyPlugin.Cinematography
 		private void DivertEnemiesAwayFromCameraMan()
 		{
 			if (PlayerManager.PlayerAgentsInLevel.Count == 1) return;
+			
 			foreach (var playerAgent in CinemaNetworkingManager.PlayersInFreeCamByName.Values)
 			{
-				var i = 0;
-				foreach (var attacker in playerAgent.GetAttackers())
+				foreach (var attacker in new List<Agent>(playerAgent.GetAttackers().ToArray()))
 				{
-					i = i < CinemaNetworkingManager.PlayersNotInFreeCamByName.Count ? i + 1 : 0;
-					attacker.TryCast<EnemyAgent>().AI.SetTarget(CinemaNetworkingManager.PlayersNotInFreeCamByName.ElementAt(i).Value);
+					var delegateAgent = CinemaNetworkingManager.PlayersNotInFreeCamByName.Values.Aggregate(
+							(currMin, pa) => pa.GetAttackersScore() < currMin.GetAttackersScore() ? pa : currMin);
+					CinematographyCore.log.LogInfo($"Diverting {attacker.name} to {delegateAgent}");
+					attacker.TryCast<EnemyAgent>().AI.SetTarget(delegateAgent);
 				}
 			}
 		}
