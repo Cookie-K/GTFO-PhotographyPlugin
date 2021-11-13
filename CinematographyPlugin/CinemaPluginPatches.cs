@@ -18,6 +18,8 @@ namespace CinematographyPlugin
 
         public static event Action<bool> OnLocalPlayerDieOrRevive;
         
+        public static event Action<CP_Bioscan_Core> OnTeamScanStartedDuringFreeCam;
+        
         private static List<int> PrevRequiredTeamScanIDs = new List<int>();
 
         // Force Curosr lock to none when cinema menu is open 
@@ -78,40 +80,18 @@ namespace CinematographyPlugin
             pBioscanState oldState,
             pBioscanState newState,
             bool isDropinState,
-            CP_Bioscan_Sync __instance) => ReduceTeamScanSizeIfPlayerInFreeCam(
-            newState,
+            CP_Bioscan_Sync __instance) => CheckIfTeamScanStartWhilePlayerInFreeCam(
             __instance);
         
-        private static void ReduceTeamScanSizeIfPlayerInFreeCam(
-            pBioscanState newState,
+        private static void CheckIfTeamScanStartWhilePlayerInFreeCam(
             CP_Bioscan_Sync __instance)
         {
             if (CinemaNetworkingManager.PlayersNotInFreeCamByName.Count == 0) return;
             
             var core = __instance.GetComponent<CP_Bioscan_Core>();
-            var agentsInScanAndNotInFreeCam = new List<PlayerAgent>();
-            foreach (var agent in core.m_playerAgents)
+            if (core.m_playerScanner.RequireAllPlayers && CinemaNetworkingManager.PlayersInFreeCamByName.ContainsKey(PlayerManager.GetLocalPlayerAgent().Sync.PlayerNick))
             {
-                if (CinemaNetworkingManager.PlayersNotInFreeCamByName.ContainsKey(agent.Sync.PlayerNick))
-                {
-                    agentsInScanAndNotInFreeCam.Add(agent);
-                }
-            }
-            
-            if (core.m_playerScanner.RequireAllPlayers)
-            {
-                if (agentsInScanAndNotInFreeCam.Count == CinemaNetworkingManager.PlayersNotInFreeCamByName.Count)
-                {
-                    CinematographyCore.log.LogInfo("Adjusting team scan to account for free cam players");
-                    core.GetComponent<CP_PlayerScanner>().m_requireAllPlayers = false;
-                    PrevRequiredTeamScanIDs.Add(__instance.GetInstanceID());
-                }
-            } 
-            else if (PrevRequiredTeamScanIDs.Contains(__instance.GetInstanceID()) && newState.playersInScan < CinemaNetworkingManager.PlayersNotInFreeCamByName.Count) 
-            {
-                CinematographyCore.log.LogInfo("Reverting team scan to require all players");
-                core.GetComponent<CP_PlayerScanner>().m_requireAllPlayers = true;
-                PrevRequiredTeamScanIDs.Remove(__instance.GetInstanceID());
+                OnTeamScanStartedDuringFreeCam?.Invoke(core);
             }
         }
     }

@@ -21,12 +21,12 @@ namespace CinematographyPlugin.UI
             
             options.Add(UIOption.ToggleDynamicRoll, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleDynamicRoll), false, false));
             options.Add(UIOption.DynamicRollIntensitySlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.DynamicRollIntensitySlider), false, FreeCameraController.DynamicRollIntensityDefault, FreeCameraController.DynamicRollIntensityMin, FreeCameraController.DynamicRollIntensityMax));
-            options.Add(UIOption.ToggleMouseIndependentCtrl, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleMouseIndependentCtrl), false, false));
-            
+            options.Add(UIOption.ToggleMouseCtrlAltitude, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleMouseCtrlAltitude), true, false));
+
             options.Add(UIOption.ToggleLookSmoothing, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleLookSmoothing), false, true));
             options.Add(UIOption.LookSmoothingSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.LookSmoothingSlider), false, LookSmoothingController.SmoothDefault, LookSmoothingController.SmoothMin, LookSmoothingController.SmoothMax));
             
-            options.Add(UIOption.ToggleCameraRoll, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleCameraRoll), false, true));
+            options.Add(UIOption.ToggleCameraRoll, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleCameraRoll), false, false));
             options.Add(UIOption.CameraRollSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.CameraRollSlider), false, CameraRollController.RollDefault, CameraRollController.RollMin, CameraRollController.RollMax));
             
             options.Add(UIOption.ToggleTimeScale, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleTimeScale), false, true));
@@ -49,10 +49,12 @@ namespace CinematographyPlugin.UI
                 options[UIOption.MovementSpeedSlider],
                 options[UIOption.MovementSmoothingSlider],
                 options[UIOption.ToggleDynamicRoll],
-                options[UIOption.ToggleMouseIndependentCtrl]
+                options[UIOption.ToggleCameraRoll],
+                options[UIOption.ToggleMouseCtrlAltitude],
             });
             
             options[UIOption.ToggleDynamicRoll].SubOptions.Add(options[UIOption.DynamicRollIntensitySlider]);
+            
             options[UIOption.ToggleLookSmoothing].SubOptions.Add(options[UIOption.LookSmoothingSlider]);
             options[UIOption.ToggleCameraRoll].SubOptions.Add(options[UIOption.CameraRollSlider]);
             options[UIOption.ToggleTimeScale].SubOptions.Add(options[UIOption.TimeScaleSlider]);

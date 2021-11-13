@@ -58,7 +58,6 @@ namespace CinematographyPlugin.UI
         public override void Disable(bool state)
         {
             _nDisabled++;
-            OnReset();
             Toggle.Set(state);
             Toggle.enabled = false;
             TMP.text = $"<s>{TMP.text}</s>";

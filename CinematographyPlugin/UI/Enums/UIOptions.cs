@@ -9,7 +9,7 @@
         MovementSmoothingSlider,
         ToggleDynamicRoll,
         DynamicRollIntensitySlider,
-        ToggleMouseIndependentCtrl,
+        ToggleMouseCtrlAltitude,
         ToggleLookSmoothing,
         LookSmoothingSlider,
         ToggleCameraRoll,
