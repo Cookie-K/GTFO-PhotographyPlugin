@@ -1,6 +1,8 @@
 ﻿using System;
 using CinematographyPlugin.UI;
 using CinematographyPlugin.UI.Enums;
+using Enemies;
+using Globals;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -23,7 +25,7 @@ namespace CinematographyPlugin.Cinematography
             CinemaNetworkingManager.OnTimeScaleChangedByOtherPlayer += OnTimeScaleChange;
         }
 
-        public void OnTimeScaleChange(float value)
+        private void OnTimeScaleChange(float value)
         {
             Time.timeScale = value;
         }

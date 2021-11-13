@@ -42,10 +42,24 @@ namespace CinematographyPlugin.UI
             exit.callback.AddListener((UnityAction<BaseEventData>) OnExit);
             trigger.triggers.Add(exit);
         }
+        
+        Rect ClampToScreen(Rect r)
+        {
+            r.x = Mathf.Clamp(r.x,0,Screen.width-r.width);
+            r.y = Mathf.Clamp(r.y,0,Screen.height-r.height);
+            return r;
+        }
 
         public void OnDrag(BaseEventData data)
         {
             _dragRectTransform.anchoredPosition += data.TryCast<PointerEventData>().delta / _canvas.scaleFactor;
+
+            var rect = _dragRectTransform;
+            var apos = rect.anchoredPosition;
+            var xpos = apos.x;
+            xpos = Mathf.Clamp(xpos, 0, Screen.width - rect.sizeDelta.x);
+            apos.x = xpos;
+            rect.anchoredPosition = apos;
         }
         
         public void OnEnter(BaseEventData data)

@@ -5,8 +5,11 @@ using Agents;
 using CinematographyPlugin.UI;
 using CinematographyPlugin.UI.Enums;
 using CullingSystem;
+using Detection;
 using Enemies;
+using GameData;
 using Globals;
+using LibCpp2IL;
 using Player;
 using ToggleUIPlugin.Managers;
 using UnityEngine;
@@ -20,7 +23,7 @@ namespace CinematographyPlugin.Cinematography
         private const float FastMoveFactor = 2;
         private const float SlowMoveFactor = 1f/2f;
         
-        public const float SmoothTimeDefault = 1f;
+        public const float SmoothTimeDefault = 0.2f;
         public const float SmoothTimeMin = 0f;
         public const float SmoothTimeMax = 2f;
 
@@ -34,6 +37,8 @@ namespace CinematographyPlugin.Cinematography
         
         private const float DynamicRollSmoothTimeDefault = 1;
         private const float DynamicRollMax = 90f;
+        
+        private const float DelayBeforeLocomotionEnable = 0.1f;
 
         private static readonly Dictionary<string, float> PlayerPrevMaxHealthByName = new Dictionary<string, float>();
         private static readonly Dictionary<string, float> PlayerPrevHealthByName = new Dictionary<string, float>();
@@ -56,8 +61,6 @@ namespace CinematographyPlugin.Cinematography
         private static bool _mouseIndependentCtrlEnabled;
         private static bool _prevFreeCamDisabled;
         private static float _prevFreeCamDisabledTime;
-        private static float _delayBeforeLocomotionEnable = 0.1f;
-
 
         private FPSCamera _fpsCamera;
         private GameObject _player;
@@ -77,8 +80,8 @@ namespace CinematographyPlugin.Cinematography
         {
             // For Il2CppAssemblyUnhollower
         }
-        
-        public void Awake()
+
+        private void Awake()
         {
 	        _fpsCamera = FindObjectOfType<FPSCamera>();
 			_fpArms = PlayerManager.GetLocalPlayerAgent().FPItemHolder.gameObject;
@@ -94,7 +97,7 @@ namespace CinematographyPlugin.Cinematography
 			_playerLocomotion = _player.GetComponent<PlayerLocomotion>();
 		}
 
-        public void Start()
+        private void Start()
         {
 	        ((ToggleOption) CinemaUIManager.Options[UIOption.ToggleFreeCamera]).OnValueChanged += OnFreeCameraToggle;
 	        ((SliderOption) CinemaUIManager.Options[UIOption.MovementSpeedSlider]).OnValueChanged += OnMovementSpeedChange;
@@ -108,7 +111,7 @@ namespace CinematographyPlugin.Cinematography
 	        CinemaNetworkingManager.OnOtherPlayerEnterExitFreeCam += OnOtherPlayerEnterOrExitFreeCam;
         }
 
-        public void Update()
+        private void Update()
         {
 	        if (_freeCamEnabled)
 	        {
@@ -126,7 +129,7 @@ namespace CinematographyPlugin.Cinematography
 	        }
 
 	        // Update locomotion a frame after to avoid rubber banding 
-	        if (_prevFreeCamDisabled && Time.realtimeSinceStartup - _prevFreeCamDisabledTime > _delayBeforeLocomotionEnable / Time.timeScale)
+	        if (_prevFreeCamDisabled && Time.realtimeSinceStartup - _prevFreeCamDisabledTime > DelayBeforeLocomotionEnable / Time.timeScale)
 	        {
 		        _playerLocomotion.enabled = true;
 		        _prevFreeCamDisabled = false;
@@ -151,23 +154,23 @@ namespace CinematographyPlugin.Cinematography
 	        _uiNavMarkerLayer.active = value;
         }
 
-		public void OnFreeCameraToggle(bool value)
+        private void OnFreeCameraToggle(bool value)
 		{
 			_freeCamEnabled = value;
 			EnableOrDisableFreeCam(value);
 		}
 
-		public void OnSmoothTimeChange(float value)
+        private void OnSmoothTimeChange(float value)
 		{
 			_smoothTime = value;
 		}
 
-		public void OnMovementSpeedChange(float value)
+        private void OnMovementSpeedChange(float value)
 		{
 			_movementSpeed = value;
 		}
 
-		public void OnDynamicRollToggle(bool value)
+        private void OnDynamicRollToggle(bool value)
 		{
 			_dynamicRollEnabled = value;
 			if (!value)
@@ -177,12 +180,12 @@ namespace CinematographyPlugin.Cinematography
 			}
 		}
 
-		public void OnMouseIndependentCtrlToggle(bool value)
+        private void OnMouseIndependentCtrlToggle(bool value)
 		{
 			_mouseIndependentCtrlEnabled = value;
 		}
 
-		public void OnDynamicRollIntensityChange(float value)
+        private void OnDynamicRollIntensityChange(float value)
 		{
 			_rollIntensity = value;
 		}
@@ -195,8 +198,8 @@ namespace CinematographyPlugin.Cinematography
 			var initPosition = _player.transform.position;
 			_playerInteraction.enabled = !enable;
 			_damageFeedback.enabled = !enable;
-			Global.EnemyPlayerDetectionEnabled = !enable;
-			C_CullingManager.CullingEnabled = !enable;
+			// Global.EnemyPlayerDetectionEnabled = !enable;
+			// DetectionManager.Current.
 			
 			if (enable)
 			{
@@ -256,7 +259,7 @@ namespace CinematographyPlugin.Cinematography
 
 		private Vector3 CalculateCullerPosition()
 		{
-			var raycastOrigWithOffset = _fpsCamera.Position + new Vector3(0, 0, -1);
+			var raycastOrigWithOffset = _fpsCamera.Position + _fpsCamera.Forward.normalized;
 			return Physics.Raycast(raycastOrigWithOffset, Vector3.Cross(_fpsCamera.FlatRight, _fpsCamera.FlatForward),
 				out var hit) ? hit.point : _fpsCamera.Position;
 		}
@@ -296,15 +299,15 @@ namespace CinematographyPlugin.Cinematography
 			CinematographyCore.log.LogInfo($"setting health for {playerName} entering free cam : {enteringFreeCam}");
 			if (enteringFreeCam)
 			{
-				PlayerPrevMaxHealthByName.Add(playerName, damage.HealthMax);
-				PlayerPrevHealthByName.Add(playerName, damage.Health);
-				PlayerPrevInfectionByName.Add(playerName, damage.Infection);
+				PlayerPrevMaxHealthByName.TryAdd(playerName, damage.HealthMax);
+				PlayerPrevHealthByName.TryAdd(playerName, damage.Health);
+				PlayerPrevInfectionByName.TryAdd(playerName, damage.Infection);
 
 				damage.HealthMax = 999999;
 				damage.Health = 999999;
 				damage.Infection = 0;
 			}
-			else
+			else if (PlayerPrevMaxHealthByName.ContainsKey(playerName))
 			{
 				damage.HealthMax = PlayerPrevMaxHealthByName[playerName];
 				damage.Health = PlayerPrevHealthByName[playerName];
@@ -330,6 +333,7 @@ namespace CinematographyPlugin.Cinematography
 		private void OnOtherPlayerEnterOrExitFreeCam(PlayerAgent playerAgent, bool enteringFreeCam)
 		{
 			CinematographyCore.log.LogInfo($"{playerAgent.Sync.PlayerNick} entering free cam : {enteringFreeCam}");
+			Global.EnemyPlayerDetectionEnabled = !enteringFreeCam;
 			SetCameraManHealth(playerAgent, enteringFreeCam);
 			ShowOrHideFreeCamPlayer(playerAgent, enteringFreeCam);
 		}
@@ -342,6 +346,7 @@ namespace CinematographyPlugin.Cinematography
 			{
 				foreach (var attacker in new List<Agent>(playerAgent.GetAttackers().ToArray()))
 				{
+					playerAgent.UnregisterAttacker(attacker);
 					var delegateAgent = CinemaNetworkingManager.PlayersNotInFreeCamByName.Values.Aggregate(
 							(currMin, pa) => pa.GetAttackersScore() < currMin.GetAttackersScore() ? pa : currMin);
 					CinematographyCore.log.LogInfo($"Diverting {attacker.name} to {delegateAgent}");

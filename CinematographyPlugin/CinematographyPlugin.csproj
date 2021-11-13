@@ -93,7 +93,7 @@
           <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\unhollowed\GlobalFramework-ASM.dll</HintPath>
         </Reference>
         <Reference Include="GTFO-API, Version=0.0.1.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\GTFOModding-GTFO_API\GTFO-API.dll</HintPath>
+          <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\GTFO-API.dll</HintPath>
         </Reference>
         <Reference Include="GUIX-ASM, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
           <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\unhollowed\GUIX-ASM.dll</HintPath>
@@ -191,8 +191,8 @@
         <Reference Include="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\GTFOModding-GTFO_API\mscorlib.dll</HintPath>
         </Reference>
-        <Reference Include="netstandard, Version=2.1.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
-          <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\GTFOModding-GTFO_API\netstandard.dll</HintPath>
+        <Reference Include="MTFO, Version=4.3.0.0, Culture=neutral, PublicKeyToken=null">
+          <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\plugins\dakkhuza-MTFO\MTFO.dll</HintPath>
         </Reference>
         <Reference Include="Newtonsoft.Json, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
           <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\playGround\BepInEx\unhollowed\Newtonsoft.Json.dll</HintPath>
@@ -634,7 +634,7 @@
         <Compile Include="Cinematography\TimeScaleController.cs" />
         <Compile Include="Entry.cs" />
         <Compile Include="Cinematography\FreeCameraController.cs" />
-        <Compile Include="Patches.cs" />
+        <Compile Include="CinemaPluginPatches.cs" />
         <Compile Include="UI\CinemaUIManager.cs" />
         <Compile Include="CinematographyCore.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />

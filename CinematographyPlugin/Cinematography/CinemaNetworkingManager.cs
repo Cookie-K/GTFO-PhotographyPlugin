@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using CinematographyPlugin.UI;
 using CinematographyPlugin.UI.Enums;
+using LibCpp2IL;
 using Nidhogg.Managers;
 using Player;
 using UnityEngine;
@@ -40,7 +41,7 @@ namespace CinematographyPlugin.Cinematography
         private static bool _canUseTimeScale;
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        public struct CinemaPluginStateData {
+        private struct CinemaPluginStateData {
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 50)]
             public string PlayerName;
 
@@ -65,7 +66,7 @@ namespace CinematographyPlugin.Cinematography
         
                 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        public struct CinemaPluginTimeScaleData {
+        private struct CinemaPluginTimeScaleData {
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 50)]
             public string PlayerName;
 
@@ -102,8 +103,8 @@ namespace CinematographyPlugin.Cinematography
             
             foreach (var agent in PlayerManager.PlayerAgentsInLevel)
             {
-                PlayersNotInFreeCamByName.Add(agent.Sync.PlayerNick, agent);
-                PlayersNotInTimeScaleByName.Add(agent.Sync.PlayerNick, agent);
+                PlayersNotInFreeCamByName.TryAdd(agent.Sync.PlayerNick, agent);
+                PlayersNotInTimeScaleByName.TryAdd(agent.Sync.PlayerNick, agent);
             }
         }
 
@@ -185,7 +186,7 @@ namespace CinematographyPlugin.Cinematography
             }
         }
 
-        public void SyncLocalPlayerEnterExitFreeCam(bool enteringFreeCam)
+        private void SyncLocalPlayerEnterExitFreeCam(bool enteringFreeCam)
         {
             var data = new CinemaPluginStateData
             {
@@ -196,8 +197,8 @@ namespace CinematographyPlugin.Cinematography
             CinematographyCore.log.LogInfo($"{data.PlayerName} broadcasting free cam {enteringFreeCam}");
             NetworkingManager.InvokeEvent(SyncCinemaStateEvent, data);
         }
-        
-        public void SyncLocalPlayerEnterExitTimeScale(bool alteringTimeScale)
+
+        private void SyncLocalPlayerEnterExitTimeScale(bool alteringTimeScale)
         {
             var data = new CinemaPluginStateData
             {
@@ -208,8 +209,8 @@ namespace CinematographyPlugin.Cinematography
             CinematographyCore.log.LogInfo($"{data.PlayerName} broadcasting time scale {alteringTimeScale}");
             NetworkingManager.InvokeEvent(SyncCinemaStateEvent, data);
         }
-        
-        public void SyncLocalPlayerAlterTimeScale(float timeScale)
+
+        private void SyncLocalPlayerAlterTimeScale(float timeScale)
         {
             var data = new CinemaPluginTimeScaleData
             {

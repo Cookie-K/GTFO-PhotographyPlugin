@@ -37,7 +37,6 @@ namespace CinematographyPlugin.Cinematography
         private void Start()
         {
             ((ToggleOption) CinemaUIManager.Options[UIOption.ToggleVignette]).OnValueChanged += OnVignetteToggle;
-            // ((ToggleOption) CinemaUIManager.Options[UIOption.ToggleDoF]).OnValueChanged += OnDoFChange;
             ((SliderOption) CinemaUIManager.Options[UIOption.FocusDistanceSlider]).OnValueChanged +=  OnFocusDistanceChange;
             ((SliderOption) CinemaUIManager.Options[UIOption.ApertureSlider]).OnValueChanged +=  OnApertureChange;
             ((SliderOption) CinemaUIManager.Options[UIOption.FocalLenghtSlider]).OnValueChanged +=  OnFocalLenghtChange;
@@ -79,14 +78,7 @@ namespace CinematographyPlugin.Cinematography
         {
             _ppp.vignette.enabled = value;
         }
-        
-        // private void OnDoFChange(bool value)
-        // {
-        //     var newSettings = _ppp.depthOfField.settings;
-        //     newSettings.focusDistance = GetDefaultFocusDistance();
-        //     _ppp.depthOfField.settings = newSettings;
-        // }
-        
+
         private void OnFocusDistanceChange(float value)
         {
             var newSettings = _ppp.depthOfField.settings;
@@ -111,7 +103,6 @@ namespace CinematographyPlugin.Cinematography
         private void OnDestroy()
         {
             ((ToggleOption) CinemaUIManager.Options[UIOption.ToggleVignette]).OnValueChanged -= OnVignetteToggle;
-            // ((ToggleOption) CinemaUIManager.Options[UIOption.ToggleDoF]).OnValueChanged -= OnDoFChange;
             ((SliderOption) CinemaUIManager.Options[UIOption.FocusDistanceSlider]).OnValueChanged -=  OnFocusDistanceChange;
             ((SliderOption) CinemaUIManager.Options[UIOption.ApertureSlider]).OnValueChanged -=  OnApertureChange;
             ((SliderOption) CinemaUIManager.Options[UIOption.FocalLenghtSlider]).OnValueChanged -=  OnFocalLenghtChange;

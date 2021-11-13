@@ -38,7 +38,7 @@ namespace CinematographyPlugin.Cinematography
             return _foVDefault;
         }
 
-        public void OnFoVChange(float value)
+        private void OnFoVChange(float value)
         {
             _fpsCamera.m_camera.fieldOfView = value;
         }

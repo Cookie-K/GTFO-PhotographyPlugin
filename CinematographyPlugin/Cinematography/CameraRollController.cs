@@ -35,40 +35,47 @@ namespace CinematographyPlugin.Cinematography
             ((ToggleOption) CinemaUIManager.Options[UIOption.ToggleCameraRoll]).OnValueChanged += OnRollToggle;
             ((SliderOption) CinemaUIManager.Options[UIOption.CameraRollSlider]).OnValueChanged += OnRollAngleChange;
             ((ToggleOption) CinemaUIManager.Options[UIOption.ToggleDynamicRoll]).OnValueChanged += OnDynamicRollToggle;
+            ((ToggleOption) CinemaUIManager.Options[UIOption.ToggleFreeCamera]).OnValueChanged += OnFreeCamToggle;
             FreeCameraController.OnDynamicRollAngleChange += OnRollAngleChange;
         }
 
         private void Update()
         {
-            if (_rollOn || _dynamicRollOn)
+            if (!_rollOn && !_dynamicRollOn) return;
+            
+            _fpsCamHolder.transform.rotation = Quaternion.identity;
+            if (_currAngle != 0)
             {
-                _fpsCamHolder.transform.rotation = Quaternion.identity;
-                if (_currAngle != 0)
-                {
-                    _fpsCamHolder.transform.RotateAround(_fpsCamera.Position, _fpsCamera.Forward, _currAngle);
-                }
+                _fpsCamHolder.transform.RotateAround(_fpsCamera.Position, _fpsCamera.Forward, _currAngle);
             }
         }
 
-        public void OnRollToggle(bool value)
+        private void OnRollToggle(bool value)
         {
             _rollOn = value;
-            if (!value)
-            {
-                _currAngle = 0f;
-            }
+            ResetAngle(value);
         }
-        
-        public void OnDynamicRollToggle(bool value)
+
+        private void OnDynamicRollToggle(bool value)
         {
             _dynamicRollOn = value;
-            if (!value)
+            ResetAngle(value);
+        }
+
+        private void OnFreeCamToggle(bool value)
+        {
+            ResetAngle(!value);
+        }
+
+        private void ResetAngle(bool reset)
+        {
+            if (reset)
             {
                 _currAngle = 0f;
             }
         }
-        
-        public void OnRollAngleChange(float value)
+
+        private void OnRollAngleChange(float value)
         {
             _currAngle = value;
         }

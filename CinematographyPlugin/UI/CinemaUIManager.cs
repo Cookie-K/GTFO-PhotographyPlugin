@@ -1,23 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using BepInEx;
 using CinematographyPlugin.Cinematography;
 using CinematographyPlugin.UI.Enums;
 using GTFO.API;
-using Player;
+using HarmonyLib;
 using ToggleUIPlugin.Managers;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.PostProcessing;
 using UnityEngine.UI;
 
 namespace CinematographyPlugin.UI
 {
+    [BepInDependency("dev.gtfomodding.gtfo-api", BepInDependency.DependencyFlags.HardDependency)]
     public class CinemaUIManager : MonoBehaviour
     {
         private const string PrefabPath = "Assets/UI/CinemaUI.prefab";
         private const KeyCode UIOpenKey = KeyCode.F4;
         private const KeyCode Test1 = KeyCode.F5;
         private const KeyCode Test2 = KeyCode.F6;
+
+        private static bool Test1_state;
+        private static GameObject Test1_go;
+        
        
         internal static Dictionary<UIOption, Option> Options { get; set; }
 
@@ -64,6 +69,7 @@ namespace CinematographyPlugin.UI
             ((ToggleOption) Options[UIOption.ToggleBody]).OnValueChanged += OnBodyToggle;
             CinemaNetworkingManager.OnFreeCamEnableOrDisable += OnFreeCamEnableOrDisable;
             CinemaNetworkingManager.OnTimeScaleEnableOrDisable += OnTimeScaleEnableOrDisable;
+            CinemaPluginPatches.OnLocalPlayerDieOrRevive += OnFreeCamEnableOrDisable;
         }
 
         public void Update()
