@@ -11,7 +11,10 @@ namespace CinematographyPlugin.Cinematography
         public const float RollDefault = 0f;
         public const float RollMax = 180f;
         public const float RollMin = -180f;
-               
+
+        private bool _rollSet;
+        private bool _dynRollSet;
+        private float _currAngle;
         private FPSCamera _fpsCamera;
 
         public CameraRollController(IntPtr intPtr) : base(intPtr)
@@ -33,13 +36,23 @@ namespace CinematographyPlugin.Cinematography
             FreeCameraController.OnRollAngleChange += OnRollAngleChange;
         }
 
+        private void Update()
+        {
+            if (_rollSet || _dynRollSet)
+            {
+                FreeCameraController.FreeCam.rotation = Quaternion.AngleAxis(_currAngle, _fpsCamera.Forward);
+            }
+        }
+
         private void OnRollToggle(bool value)
         {
+            _rollSet = value;
             ResetAngle(value);
         }
 
         private void OnDynamicRollToggle(bool value)
         {
+            _dynRollSet = value;
             ResetAngle(value);
         }
 
@@ -52,19 +65,13 @@ namespace CinematographyPlugin.Cinematography
         {
             if (reset)
             {
-                SetRoll(0);
+                FreeCameraController.FreeCam.rotation = Quaternion.identity;
             }
         }
 
         private void OnRollAngleChange(float value)
         {
-            SetRoll(value);
-        }
-
-        private void SetRoll(float value)
-        {
-            FreeCameraController.FreeCam.rotation = Quaternion.identity;
-            FreeCameraController.FreeCam.RotateAround(FreeCameraController.FreeCam.position, _fpsCamera.Forward, value);
+            _currAngle = value;
         }
 
         private void OnDestroy()

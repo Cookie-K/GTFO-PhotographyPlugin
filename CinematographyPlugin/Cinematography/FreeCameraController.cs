@@ -30,11 +30,11 @@ namespace CinematographyPlugin.Cinematography
         public const float SmoothTimeMax = 2f;
 
         public const float MovementSpeedDefault = 5f;
-        public const float MovementSpeedMin = 0.01f;
+        public const float MovementSpeedMin = 0f;
         public const float MovementSpeedMax = 10f;
         
         public const float DynamicRollIntensityDefault = 5f;
-        public const float DynamicRollIntensityMin = 0.01f;
+        public const float DynamicRollIntensityMin = 0f;
         public const float DynamicRollIntensityMax = 10f;
 
         private const float DynamicRollSmoothTimeDefault = 1;
@@ -53,7 +53,6 @@ namespace CinematographyPlugin.Cinematography
         
         private static float _prevRoll;
         private static float _rollVelocity;
-        private static float _targetRoll;
         private static float _lastInterval;
 
         private static Vector3 _smoothVelocity;
@@ -66,7 +65,6 @@ namespace CinematographyPlugin.Cinematography
         
         private static bool _freeCamEnabled;
         private static bool _dynamicRollEnabled;
-        private static bool _keyCtrlRollEnabled;
         private static bool _mouseCtrlAltitudeEnabled;
         private static bool _prevFreeCamDisabled;
         private static float _prevFreeCamDisabledTime;
@@ -192,11 +190,6 @@ namespace CinematographyPlugin.Cinematography
 			}
 		}
 
-        private void OnKeysCtrlRollToggle(bool value)
-        {
-	        _keyCtrlRollEnabled = value;
-        }
-
         private void OnMouseIndependentCtrlToggle(bool value)
 		{
 			_mouseCtrlAltitudeEnabled = value;
@@ -218,7 +211,6 @@ namespace CinematographyPlugin.Cinematography
 				_prevParent = _fpsCamera.m_orgParent.parent;
 				_startingPosition = _prevParent.position;
 				_targetPosition = _startingPosition;
-				_targetRoll = 0;
 
 				FreeCam.position = _startingPosition;
 				_fpsCamera.m_orgParent.parent = _fpsCamHolderSubstitute.transform;
@@ -232,9 +224,9 @@ namespace CinematographyPlugin.Cinematography
 				_fpsCamera.m_orgParent.parent = _prevParent;
 				
 				_targetPosition = _startingPosition;
-				_targetRoll = 0;
 				_smoothTime = 0;
 				_dynamicRollSmoothTime = 0;
+				FreeCam.rotation = Quaternion.identity;
 				UpdateMovement();
 				
 				_fpsCamera.ResetPitchLimit();
@@ -261,7 +253,7 @@ namespace CinematographyPlugin.Cinematography
 			_playerAgent.m_movingCuller.WarpPosition(cullPosition);
 			_playerAgent.m_movingCuller.UpdatePosition(cullPosition);
 		}
-
+	
 		private float CalculateDynamicRoll()
 		{
 			var projection = Vector3.Project(_smoothVelocity, _fpsCamera.FlatRight);
@@ -277,7 +269,7 @@ namespace CinematographyPlugin.Cinematography
 		{
 			var currPosition = FreeCam.position;
 			var raycastOrigWithOffset = currPosition + _fpsCamera.FlatForward.normalized;
-			return Physics.Raycast(raycastOrigWithOffset, Vector3.Cross(_fpsCamera.FlatRight, _fpsCamera.FlatForward),
+			return Physics.Raycast(raycastOrigWithOffset, Vector3.down,
 				out var hit) ? hit.point : currPosition;
 		}
 
@@ -286,10 +278,10 @@ namespace CinematographyPlugin.Cinematography
 			var delta = Vector3.zero;
 			
 			var speedMulti = 
-				Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) ? FastMoveFactor : 
-				Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt) ? SlowMoveFactor : 1;
+				Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt) ? SlowMoveFactor : 
+			Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) ? FastMoveFactor : 1;
 
-			var x = _keyCtrlRollEnabled ? 0f : Input.GetKey(KeyCode.D) ? 1f : Input.GetKey(KeyCode.A) ? -1f : 0f;
+			var x = Input.GetKey(KeyCode.D) ? 1f : Input.GetKey(KeyCode.A) ? -1f : 0f;
 			var y = Input.GetKey(KeyCode.LeftControl) ? -1f : Input.GetKey(KeyCode.Space) ? 1f : 0f;
 			var z = Input.GetKey(KeyCode.W) ? 1f : Input.GetKey(KeyCode.S) ? -1f : 0f;
 			
@@ -313,7 +305,6 @@ namespace CinematographyPlugin.Cinematography
 			var playerName = player.Sync.PlayerNick;
 			var damage = player.Damage;
 
-			CinematographyCore.log.LogInfo($"setting health for {playerName} entering free cam : {enteringFreeCam}");
 			if (enteringFreeCam)
 			{
 				PlayerPrevMaxHealthByName.TryAdd(playerName, damage.HealthMax);
@@ -371,9 +362,9 @@ namespace CinematographyPlugin.Cinematography
 			}
 		}
 
-		private void OnTeamScanStarted(CP_Bioscan_Core core)
+		private void OnTeamScanStarted(Vector3 position)
 		{
-			_player.transform.position = core.transform.position;
+			_player.transform.position = position;
 		}
 
 		private void OnDestroy()

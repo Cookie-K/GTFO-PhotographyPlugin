@@ -19,6 +19,7 @@ namespace CinematographyPlugin.Cinematography
         public const float SmoothMax = 2f;
         public const float SmoothMin = 0f;
 
+        private bool _inCtrlOfTime;
         private float _currVal;
         private int _initialSamples = 8;
                
@@ -39,6 +40,7 @@ namespace CinematographyPlugin.Cinematography
         {
             ((ToggleOption) CinemaUIManager.Options[UIOption.ToggleLookSmoothing]).OnValueChanged += OnSmoothToggle;
             ((SliderOption) CinemaUIManager.Options[UIOption.LookSmoothingSlider]).OnValueChanged += OnSmoothValChange;
+            ((ToggleOption) CinemaUIManager.Options[UIOption.ToggleTimeScale]).OnValueChanged += OnTimeCtrlToggle;
             ((SliderOption) CinemaUIManager.Options[UIOption.TimeScaleSlider]).OnValueChanged += OnTimeScaleChange;
         }
 
@@ -48,10 +50,15 @@ namespace CinematographyPlugin.Cinematography
             _fpsCamera.MouseSmoother.m_curve = SmoothDefault;
         }
 
+        private void OnTimeCtrlToggle(bool value)
+        {
+            _inCtrlOfTime = value;
+        }
+
         private void OnSmoothValChange(float value)
         {
             _currVal = value;
-            _fpsCamera.MouseSmoother.m_curve = _currVal;
+            _fpsCamera.MouseSmoother.Curve = _currVal + (_inCtrlOfTime ? 0 : 2 * (1 - Time.timeScale));
             _fpsCamera.MouseSmoother.Samples = Mathf.RoundToInt(_initialSamples / Time.timeScale);
         }
 

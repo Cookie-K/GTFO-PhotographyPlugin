@@ -18,10 +18,8 @@ namespace CinematographyPlugin
 
         public static event Action<bool> OnLocalPlayerDieOrRevive;
         
-        public static event Action<CP_Bioscan_Core> OnTeamScanStartedDuringFreeCam;
+        public static event Action<Vector3> OnTeamScanStartedDuringFreeCam;
         
-        private static List<int> PrevRequiredTeamScanIDs = new List<int>();
-
         // Force Curosr lock to none when cinema menu is open 
         [HarmonyPrefix]
         [HarmonyPatch(typeof(Cursor), "lockState", MethodType.Setter)]
@@ -48,6 +46,18 @@ namespace CinematographyPlugin
                 value = true;
             }
         }
+        
+        // Mirror mouse input when upside down
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(LookCameraController), "MouseLookUpdate", typeof(float), typeof(float))]
+        private static void Prefix_invertXonUpsideDown(ref float axisHor, float axisVer, LookCameraController __instance)
+        {
+            var upsideDown = Math.Sign(Vector3.Dot(__instance.transform.up, Vector3.up)) < 0;
+            if (upsideDown)
+            {
+                axisHor *= -1;
+            }
+        }
 
         [HarmonyPostfix]
         [HarmonyPatch(typeof(PlayerAgent), "Alive", MethodType.Setter)]
@@ -72,26 +82,19 @@ namespace CinematographyPlugin
         }
         
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(CP_Bioscan_Sync), "OnStateChange",
-            typeof(pBioscanState),
-            typeof(pBioscanState),
-            typeof(bool))]
+        [HarmonyPatch(typeof(CP_PlayerScanner), "StartScan")]
         private static void Prefix_OnStateChange(
-            pBioscanState oldState,
-            pBioscanState newState,
-            bool isDropinState,
-            CP_Bioscan_Sync __instance) => CheckIfTeamScanStartWhilePlayerInFreeCam(
+            CP_PlayerScanner __instance) => CheckIfTeamScanStartWhilePlayerInFreeCam(
             __instance);
         
         private static void CheckIfTeamScanStartWhilePlayerInFreeCam(
-            CP_Bioscan_Sync __instance)
+            CP_PlayerScanner __instance)
         {
             if (CinemaNetworkingManager.PlayersNotInFreeCamByName.Count == 0) return;
             
-            var core = __instance.GetComponent<CP_Bioscan_Core>();
-            if (core.m_playerScanner.RequireAllPlayers && CinemaNetworkingManager.PlayersInFreeCamByName.ContainsKey(PlayerManager.GetLocalPlayerAgent().Sync.PlayerNick))
+            if (__instance.RequireAllPlayers && CinemaNetworkingManager.PlayersInFreeCamByName.ContainsKey(PlayerManager.GetLocalPlayerAgent().Sync.PlayerNick))
             {
-                OnTeamScanStartedDuringFreeCam?.Invoke(core);
+                OnTeamScanStartedDuringFreeCam?.Invoke(__instance.transform.position);
             }
         }
     }

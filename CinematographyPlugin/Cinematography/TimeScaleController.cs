@@ -12,7 +12,7 @@ namespace CinematographyPlugin.Cinematography
     {
         public const float TimeScaleDefault = 1;
         public const float TimeScaleMin = 0.01f;
-        public const float TimeScaleMax = 2;
+        public const float TimeScaleMax = 1;
         
         public TimeScaleController(IntPtr intPtr) : base(intPtr)
         {

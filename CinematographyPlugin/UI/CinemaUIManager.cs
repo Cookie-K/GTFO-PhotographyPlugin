@@ -12,17 +12,11 @@ using UnityEngine.UI;
 
 namespace CinematographyPlugin.UI
 {
-    [BepInDependency("dev.gtfomodding.gtfo-api", BepInDependency.DependencyFlags.HardDependency)]
+    [BepInDependency("dev.gtfomodding.gtfo-api")]
     public class CinemaUIManager : MonoBehaviour
     {
         private const string PrefabPath = "Assets/UI/CinemaUI.prefab";
         private const KeyCode UIOpenKey = KeyCode.F4;
-        private const KeyCode Test1 = KeyCode.F5;
-        private const KeyCode Test2 = KeyCode.F6;
-
-        private static bool Test1_state;
-        private static GameObject Test1_go;
-        
        
         internal static Dictionary<UIOption, Option> Options { get; set; }
 
@@ -178,6 +172,8 @@ namespace CinematographyPlugin.UI
             {
                 keyValuePair.Value.OnReset();
             }
+            
+            ToggleUIManager.HideUI();
 
             Destroy(_cinemaUIgo);
         }

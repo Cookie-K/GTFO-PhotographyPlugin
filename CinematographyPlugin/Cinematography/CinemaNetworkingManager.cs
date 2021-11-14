@@ -194,6 +194,14 @@ namespace CinematographyPlugin.Cinematography
                 StartingFreeCam = enteringFreeCam,
                 StoppingFreeCam = !enteringFreeCam
             };
+            if (enteringFreeCam)
+            {
+                PlayersInFreeCamByName.TryAdd(data.PlayerName, PlayerManager.GetLocalPlayerAgent());
+            }
+            else
+            {
+                PlayersInFreeCamByName.Remove(data.PlayerName);
+            }
             CinematographyCore.log.LogInfo($"{data.PlayerName} broadcasting free cam {enteringFreeCam}");
             NetworkingManager.InvokeEvent(SyncCinemaStateEvent, data);
         }
@@ -206,6 +214,14 @@ namespace CinematographyPlugin.Cinematography
                 StartingTimeScale = alteringTimeScale,
                 StoppingTimeScale = !alteringTimeScale
             };
+            if (alteringTimeScale)
+            {
+                PlayersInTimeScaleByName.TryAdd(data.PlayerName, PlayerManager.GetLocalPlayerAgent());
+            }
+            else
+            {
+                PlayersInTimeScaleByName.Remove(data.PlayerName);
+            }
             CinematographyCore.log.LogInfo($"{data.PlayerName} broadcasting time scale {alteringTimeScale}");
             NetworkingManager.InvokeEvent(SyncCinemaStateEvent, data);
         }
