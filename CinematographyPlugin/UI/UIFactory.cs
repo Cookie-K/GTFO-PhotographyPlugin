@@ -28,12 +28,16 @@ namespace CinematographyPlugin.UI
             
             options.Add(UIOption.ToggleCameraRoll, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleCameraRoll), false, false));
             options.Add(UIOption.CameraRollSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.CameraRollSlider), false, CameraRollController.RollDefault, CameraRollController.RollMin, CameraRollController.RollMax));
+            options.Add(UIOption.CameraRollSpeedSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.CameraRollSpeedSlider), false, CameraRollController.RollSpeedDefault, CameraRollController.RollSpeedMin, CameraRollController.RollSpeedMax));
+            options.Add(UIOption.CameraRollSmoothingSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.CameraRollSmoothingSlider), false, CameraRollController.RollTimeDefault, CameraRollController.RollTimeMin, CameraRollController.RollTimeMax));
             
             options.Add(UIOption.ToggleTimeScale, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleTimeScale), false, true));
             options.Add(UIOption.TimeScaleSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.TimeScaleSlider), false, TimeScaleController.TimeScaleDefault, TimeScaleController.TimeScaleMin, TimeScaleController.TimeScaleMax));
             
             options.Add(UIOption.ToggleFoV, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleFoV), false, true));
             options.Add(UIOption.FoVSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.FoVSlider), false, FoVController.GetDefaultFoV(), FoVController.FovMin, FoVController.FovMax));
+            options.Add(UIOption.FoVSpeedSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.FoVSpeedSlider), false, FoVController.FovSpeedDefault, FoVController.FovSpeedMin, FoVController.FovSpeedMax));
+            options.Add(UIOption.FoVSmoothingSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.FoVSmoothingSlider), false, FoVController.FoVTimeDefault, FoVController.FoVTimeMin, FoVController.FoVTimeMax));
             
             options.Add(UIOption.ToggleVignette, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleVignette), true, true));
             
@@ -56,9 +60,22 @@ namespace CinematographyPlugin.UI
             options[UIOption.ToggleDynamicRoll].SubOptions.Add(options[UIOption.DynamicRollIntensitySlider]);
             
             options[UIOption.ToggleLookSmoothing].SubOptions.Add(options[UIOption.LookSmoothingSlider]);
-            options[UIOption.ToggleCameraRoll].SubOptions.Add(options[UIOption.CameraRollSlider]);
+            
+            options[UIOption.ToggleCameraRoll].SubOptions.AddRange(new []
+            {
+                options[UIOption.CameraRollSlider],   
+                options[UIOption.CameraRollSpeedSlider],
+                options[UIOption.CameraRollSmoothingSlider],
+            });
+            
             options[UIOption.ToggleTimeScale].SubOptions.Add(options[UIOption.TimeScaleSlider]);
-            options[UIOption.ToggleFoV].SubOptions.Add(options[UIOption.FoVSlider]);
+            
+            options[UIOption.ToggleFoV].SubOptions.AddRange(new []
+            {
+                options[UIOption.FoVSlider],  
+                options[UIOption.FoVSpeedSlider],  
+                options[UIOption.FoVSmoothingSlider],  
+            });
             
             options[UIOption.ToggleDoF].SubOptions.AddRange(new []
             {
@@ -71,8 +88,6 @@ namespace CinematographyPlugin.UI
             options[UIOption.ToggleFreeCamera].StateByDisableOnSelectOptions.Add(options[UIOption.ToggleUI], false);
             options[UIOption.ToggleFreeCamera].StateByDisableOnSelectOptions.Add(options[UIOption.ToggleBody], false);
             options[UIOption.ToggleDynamicRoll].StateByDisableOnSelectOptions.Add(options[UIOption.ToggleCameraRoll], false);
-            options[UIOption.ToggleDoF].StateByDisableOnSelectOptions.Add(options[UIOption.ToggleUI], false);
-            options[UIOption.ToggleDoF].StateByDisableOnSelectOptions.Add(options[UIOption.ToggleBody], false);
             
             return options;
         }

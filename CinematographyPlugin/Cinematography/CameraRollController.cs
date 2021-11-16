@@ -1,6 +1,7 @@
 ﻿using System;
 using CinematographyPlugin.UI;
 using CinematographyPlugin.UI.Enums;
+using Il2CppSystem.Linq.Expressions.Interpreter;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -11,10 +12,24 @@ namespace CinematographyPlugin.Cinematography
         public const float RollDefault = 0f;
         public const float RollMax = 180f;
         public const float RollMin = -180f;
-
+        
+        public const float RollSpeedDefault = 5f;
+        public const float RollSpeedScaling = 5f;
+        public const float RollSpeedMin = 0f;
+        public const float RollSpeedMax = 10f;
+        
+        public const float RollTimeDefault = 0.2f;
+        public const float RollTimeMin = 0f;
+        public const float RollTimeMax = 2f;
+        
         private bool _rollSet;
         private bool _dynRollSet;
         private float _currAngle;
+        private float _targetAngle;
+        private float _speed;
+        private float _velocity;
+        private float _smoothTime;
+
         private FPSCamera _fpsCamera;
 
         public CameraRollController(IntPtr intPtr) : base(intPtr)
@@ -31,6 +46,8 @@ namespace CinematographyPlugin.Cinematography
         {
             ((ToggleOption) CinemaUIManager.Options[UIOption.ToggleCameraRoll]).OnValueChanged += OnRollToggle;
             ((SliderOption) CinemaUIManager.Options[UIOption.CameraRollSlider]).OnValueChanged += OnRollAngleChange;
+            ((SliderOption) CinemaUIManager.Options[UIOption.CameraRollSpeedSlider]).OnValueChanged += OnRollSpeedChange;
+            ((SliderOption) CinemaUIManager.Options[UIOption.CameraRollSmoothingSlider]).OnValueChanged += OnRollSmoothChange;
             ((ToggleOption) CinemaUIManager.Options[UIOption.ToggleDynamicRoll]).OnValueChanged += OnDynamicRollToggle;
             ((ToggleOption) CinemaUIManager.Options[UIOption.ToggleFreeCamera]).OnValueChanged += OnFreeCamToggle;
             FreeCameraController.OnRollAngleChange += OnRollAngleChange;
@@ -38,10 +55,25 @@ namespace CinematographyPlugin.Cinematography
 
         private void Update()
         {
-            if (_rollSet || _dynRollSet)
-            {
-                FreeCameraController.FreeCam.rotation = Quaternion.AngleAxis(_currAngle, _fpsCamera.Forward);
-            }
+            if (!_rollSet && !_dynRollSet) return;
+            _targetAngle = _currAngle + _speed * RollSpeedScaling * (Input.GetKey(KeyCode.LeftArrow) ? 1f : Input.GetKey(KeyCode.RightArrow) ? -1f : 0f);
+            _currAngle = Mathf.SmoothDampAngle(_currAngle, _targetAngle, ref _velocity, _smoothTime * Time.timeScale);
+
+            WrapAngle();
+            
+            FreeCameraController.FreeCam.rotation = Quaternion.identity;
+            FreeCameraController.FreeCam.Rotate(_fpsCamera.Forward, _currAngle);
+            ((SliderOption) CinemaUIManager.Options[UIOption.CameraRollSlider]).Slider.Set(_currAngle);
+        }
+
+        // set angle at +-180
+        private void WrapAngle()
+        {
+            _currAngle = (_currAngle + 180f) % 360f;
+            _currAngle += _currAngle < 0 ? 180 : -180;
+            
+            _targetAngle = (_targetAngle + 180f) % 360f;
+            _targetAngle += _targetAngle < 0 ? 180 : -180;
         }
 
         private void OnRollToggle(bool value)
@@ -54,6 +86,10 @@ namespace CinematographyPlugin.Cinematography
         {
             _dynRollSet = value;
             ResetAngle(value);
+            if (!value)
+            {
+                _smoothTime = 0;
+            }
         }
 
         private void OnFreeCamToggle(bool value)
@@ -61,11 +97,16 @@ namespace CinematographyPlugin.Cinematography
             ResetAngle(!value);
         }
 
-        private void ResetAngle(bool reset)
+        private void ResetAngle(bool toggleValue)
         {
-            if (reset)
+            if (!toggleValue)
             {
                 FreeCameraController.FreeCam.rotation = Quaternion.identity;
+                _currAngle = 0;
+                _speed = RollSpeedDefault;
+                _smoothTime = RollTimeDefault;
+                _velocity = 0f;
+                Update();
             }
         }
 
@@ -74,10 +115,22 @@ namespace CinematographyPlugin.Cinematography
             _currAngle = value;
         }
 
+        private void OnRollSpeedChange(float value)
+        {
+            _speed = value;
+        }
+        
+        private void OnRollSmoothChange(float value)
+        {
+            _smoothTime = value;
+        }
+
         private void OnDestroy()
         {
             ((ToggleOption) CinemaUIManager.Options[UIOption.ToggleCameraRoll]).OnValueChanged -= OnRollToggle;
             ((SliderOption) CinemaUIManager.Options[UIOption.CameraRollSlider]).OnValueChanged -= OnRollAngleChange;
+            ((SliderOption) CinemaUIManager.Options[UIOption.CameraRollSpeedSlider]).OnValueChanged -= OnRollSpeedChange;
+            ((SliderOption) CinemaUIManager.Options[UIOption.CameraRollSmoothingSlider]).OnValueChanged -= OnRollSmoothChange;
             ((ToggleOption) CinemaUIManager.Options[UIOption.ToggleDynamicRoll]).OnValueChanged -= OnDynamicRollToggle;
             FreeCameraController.OnRollAngleChange -= OnRollAngleChange;
         }

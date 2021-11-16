@@ -57,7 +57,8 @@ namespace CinematographyPlugin.Cinematography
 
         private static Vector3 _smoothVelocity;
         private static Vector3 _targetPosition;
-        private static Vector3 _startingPosition;
+        private static Vector3 _fpsStartingPosition;
+        private static Vector3 _bodyStartingPosition;
 
         private static Transform _prevParent;
         public static Transform FreeCam;
@@ -116,7 +117,6 @@ namespace CinematographyPlugin.Cinematography
 	        ((ToggleOption) CinemaUIManager.Options[UIOption.ToggleMouseCtrlAltitude]).OnValueChanged += OnMouseIndependentCtrlToggle;
 
 	        CinemaNetworkingManager.OnOtherPlayerEnterExitFreeCam += OnOtherPlayerEnterOrExitFreeCam;
-	        CinemaPluginPatches.OnTeamScanStartedDuringFreeCam += OnTeamScanStarted;
         }
 
         private void Update()
@@ -139,6 +139,7 @@ namespace CinematographyPlugin.Cinematography
 	        // Update locomotion a frame after to avoid rubber banding 
 	        if (_prevFreeCamDisabled && Time.realtimeSinceStartup - _prevFreeCamDisabledTime > DelayBeforeLocomotionEnable / Time.timeScale)
 	        {
+		        _fpsCamera.m_orgParent.localPosition = Vector3.zero;
 		        _playerLocomotion.enabled = true;
 		        _prevFreeCamDisabled = false;
 	        }
@@ -209,21 +210,22 @@ namespace CinematographyPlugin.Cinematography
 			{
 				_playerLocomotion.enabled = false;
 				_prevParent = _fpsCamera.m_orgParent.parent;
-				_startingPosition = _prevParent.position;
-				_targetPosition = _startingPosition;
+				_fpsStartingPosition = _prevParent.position;
+				_targetPosition = _fpsStartingPosition;
+				_bodyStartingPosition = _player.transform.position;
 
-				FreeCam.position = _startingPosition;
+				FreeCam.position = _fpsStartingPosition;
 				_fpsCamera.m_orgParent.parent = _fpsCamHolderSubstitute.transform;
 
+				_prevParent.gameObject.active = false;
+				_player.transform.position = Vector3.Scale(_bodyStartingPosition, new Vector3(1, -3, 1));
 				_fpsCamera.SetPitchLimit(new Vector2(360, -360));
 				_dynamicRollSmoothTime = DynamicRollSmoothTimeDefault;
 			}
 			else
 			{
-				FreeCam.position = _startingPosition;
-				_fpsCamera.m_orgParent.parent = _prevParent;
-				
-				_targetPosition = _startingPosition;
+				_targetPosition = _fpsStartingPosition;
+				_movementSpeed = 1;
 				_smoothTime = 0;
 				_dynamicRollSmoothTime = 0;
 				FreeCam.rotation = Quaternion.identity;
@@ -231,6 +233,9 @@ namespace CinematographyPlugin.Cinematography
 				
 				_fpsCamera.ResetPitchLimit();
 
+				_player.transform.position = _bodyStartingPosition;
+				_prevParent.gameObject.active = true;
+				_fpsCamera.m_orgParent.parent = _prevParent;
 				_prevFreeCamDisabledTime = Time.realtimeSinceStartup;
 				_prevFreeCamDisabled = true;
 			}
@@ -259,10 +264,10 @@ namespace CinematographyPlugin.Cinematography
 			var projection = Vector3.Project(_smoothVelocity, _fpsCamera.FlatRight);
 			var prep = Vector3.Cross(_fpsCamera.Forward, projection);
 			var dir = Vector3.Dot(prep, _fpsCamera.transform.up);
-			var roll = Mathf.Clamp(projection.magnitude * Time.timeScale, -DynamicRollMax, DynamicRollMax) * Mathf.Sign(dir);
-			roll = Mathf.SmoothDampAngle(_prevRoll, roll, ref _rollVelocity , _dynamicRollSmoothTime * Time.timeScale);
+			var roll = Mathf.Clamp(projection.magnitude * Time.timeScale, -DynamicRollMax, DynamicRollMax);
+			roll = Mathf.SmoothDampAngle(_prevRoll, roll, ref _rollVelocity, _dynamicRollSmoothTime * Time.timeScale);
 			_prevRoll = roll;
-			return roll * _rollIntensity;
+			return roll * _rollIntensity * Mathf.Sign(dir);
 		}
 
 		private Vector3 CalculateCullerPosition()
@@ -362,11 +367,6 @@ namespace CinematographyPlugin.Cinematography
 			}
 		}
 
-		private void OnTeamScanStarted(Vector3 position)
-		{
-			_player.transform.position = position;
-		}
-
 		private void OnDestroy()
 		{
 			((ToggleOption) CinemaUIManager.Options[UIOption.ToggleFreeCamera]).OnValueChanged -= OnFreeCameraToggle;
@@ -379,7 +379,6 @@ namespace CinematographyPlugin.Cinematography
 			((ToggleOption) CinemaUIManager.Options[UIOption.ToggleMouseCtrlAltitude]).OnValueChanged -= OnMouseIndependentCtrlToggle;
 			
 			CinemaNetworkingManager.OnOtherPlayerEnterExitFreeCam -= OnOtherPlayerEnterOrExitFreeCam;
-			CinemaPluginPatches.OnTeamScanStartedDuringFreeCam -= OnTeamScanStarted;
 		}
     }
 }
