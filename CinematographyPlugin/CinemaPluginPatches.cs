@@ -99,6 +99,7 @@ namespace CinematographyPlugin
             {
                 CinematographyCore.log.LogInfo("Reverting team scan to require all players");
                 __instance.GetComponent<CP_PlayerScanner>().m_requireAllPlayers = true;
+                PrevRequiredTeamScanIDs.Remove(__instance.GetInstanceID());
             }
         }
     }
