@@ -264,10 +264,10 @@ namespace CinematographyPlugin.Cinematography
 			var projection = Vector3.Project(_smoothVelocity, _fpsCamera.FlatRight);
 			var prep = Vector3.Cross(_fpsCamera.Forward, projection);
 			var dir = Vector3.Dot(prep, _fpsCamera.transform.up);
-			var roll = Mathf.Clamp(projection.magnitude * Time.timeScale, -DynamicRollMax, DynamicRollMax);
-			roll = Mathf.SmoothDampAngle(_prevRoll, roll, ref _rollVelocity, _dynamicRollSmoothTime * Time.timeScale);
+			var roll = Mathf.Clamp(projection.magnitude * Time.timeScale, -DynamicRollMax, DynamicRollMax) * Mathf.Sign(dir);
+			roll = Utils.SmoothDampNoOvershootProtection(_prevRoll, roll, ref _rollVelocity, _dynamicRollSmoothTime * Time.timeScale);
 			_prevRoll = roll;
-			return roll * _rollIntensity * Mathf.Sign(dir);
+			return roll * _rollIntensity;
 		}
 
 		private Vector3 CalculateCullerPosition()

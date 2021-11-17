@@ -87,7 +87,9 @@ namespace CinematographyPlugin.UI
             // Add options to disable on select
             options[UIOption.ToggleFreeCamera].StateByDisableOnSelectOptions.Add(options[UIOption.ToggleUI], false);
             options[UIOption.ToggleFreeCamera].StateByDisableOnSelectOptions.Add(options[UIOption.ToggleBody], false);
+            options[UIOption.ToggleCameraRoll].StateByDisableOnSelectOptions.Add(options[UIOption.ToggleBody], false);
             options[UIOption.ToggleDynamicRoll].StateByDisableOnSelectOptions.Add(options[UIOption.ToggleCameraRoll], false);
+            options[UIOption.ToggleFoV].StateByDisableOnSelectOptions.Add(options[UIOption.ToggleBody], false);
             
             return options;
         }

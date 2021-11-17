@@ -52,9 +52,9 @@ namespace CinematographyPlugin.Cinematography
         {
             if (!_fovChangeOn) return;
 
-            var dir = (Input.GetKey(KeyCode.UpArrow) ? 1f : Input.GetKey(KeyCode.DownArrow) ? -1f : 0f);
+            var dir = Input.GetKey(KeyCode.UpArrow) ? 1f : Input.GetKey(KeyCode.DownArrow) ? -1f : 0f;
             _targetFov = _currFoV + _speed * FovSpeedScaling * dir;
-            _currFoV = Mathf.Clamp(Mathf.SmoothDamp(_currFoV, _targetFov, ref _velocity, _smoothTime * Time.timeScale), FovMin, FovMax);
+            _currFoV = Mathf.Clamp(Utils.SmoothDampNoOvershootProtection(_currFoV, _targetFov, ref _velocity, _smoothTime * Time.timeScale), FovMin, FovMax);
             _fpsCamera.m_camera.fieldOfView = _currFoV;
             ((SliderOption) CinemaUIManager.Options[UIOption.FoVSlider]).Slider.Set(_currFoV);
         }
@@ -73,8 +73,9 @@ namespace CinematographyPlugin.Cinematography
             _fovChangeOn = value;
             if (!value)
             {
-                _currFoV = GetDefaultFoV();
+                _targetFov = GetDefaultFoV();
                 _speed = 1;
+                _velocity = 0;
                 Update();
             }
         }

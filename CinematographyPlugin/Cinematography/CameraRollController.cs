@@ -56,18 +56,22 @@ namespace CinematographyPlugin.Cinematography
         private void Update()
         {
             if (!_rollSet && !_dynRollSet) return;
-            _targetAngle = _currAngle + _speed * RollSpeedScaling * (Input.GetKey(KeyCode.LeftArrow) ? 1f : Input.GetKey(KeyCode.RightArrow) ? -1f : 0f);
-            _currAngle = Mathf.SmoothDampAngle(_currAngle, _targetAngle, ref _velocity, _smoothTime * Time.timeScale);
+            if (_rollSet)
+            {
+                var dir = Input.GetKey(KeyCode.LeftArrow) ? 1f : Input.GetKey(KeyCode.RightArrow) ? -1f : 0f;
+                _targetAngle = _currAngle + _speed * RollSpeedScaling * dir;
+                _currAngle = Utils.SmoothDampNoOvershootProtection(_currAngle, _targetAngle, ref _velocity, _smoothTime * Time.timeScale);
 
-            WrapAngle();
-            
+                WrapAngles();
+                ((SliderOption) CinemaUIManager.Options[UIOption.CameraRollSlider]).Slider.Set(_currAngle);
+            }
+
             FreeCameraController.FreeCam.rotation = Quaternion.identity;
             FreeCameraController.FreeCam.Rotate(_fpsCamera.Forward, _currAngle);
-            ((SliderOption) CinemaUIManager.Options[UIOption.CameraRollSlider]).Slider.Set(_currAngle);
         }
 
         // set angle at +-180
-        private void WrapAngle()
+        private void WrapAngles()
         {
             _currAngle = (_currAngle + 180f) % 360f;
             _currAngle += _currAngle < 0 ? 180 : -180;
