@@ -49,17 +49,17 @@ namespace CinematographyPlugin
             }
         }
         
-        // Mirror mouse input when upside down
-        [HarmonyPrefix]
-        [HarmonyPatch(typeof(LookCameraController), "MouseLookUpdate", typeof(float), typeof(float))]
-        private static void Prefix_invertXonUpsideDown(ref float axisHor, float axisVer, LookCameraController __instance)
-        {
-            var upsideDown = Math.Sign(Vector3.Dot(__instance.transform.up, Vector3.up)) < 0;
-            if (upsideDown)
-            {
-                axisHor *= -1;
-            }
-        }
+        // // Mirror mouse input when upside down
+        // [HarmonyPrefix]
+        // [HarmonyPatch(typeof(LookCameraController), "MouseLookUpdate", typeof(float), typeof(float))]
+        // private static void Prefix_invertXonUpsideDown(ref float axisHor, float axisVer, LookCameraController __instance)
+        // {
+        //     var upsideDown = Math.Sign(Vector3.Dot(__instance.transform.up, Vector3.up)) < 0;
+        //     if (upsideDown)
+        //     {
+        //         axisHor *= -1;
+        //     }
+        // }
 
         [HarmonyPostfix]
         [HarmonyPatch(typeof(PlayerAgent), "Alive", MethodType.Setter)]

@@ -30,6 +30,7 @@ namespace CinematographyPlugin
 
             ClassInjector.RegisterTypeInIl2Cpp<UIWindow>();
             ClassInjector.RegisterTypeInIl2Cpp<CinemaUIManager>();
+            ClassInjector.RegisterTypeInIl2Cpp<FreeCamController>();
             ClassInjector.RegisterTypeInIl2Cpp<FoVController>();
             ClassInjector.RegisterTypeInIl2Cpp<TimeScaleController>();
             ClassInjector.RegisterTypeInIl2Cpp<FreeCameraController>();

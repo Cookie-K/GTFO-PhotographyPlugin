@@ -66,8 +66,8 @@ namespace CinematographyPlugin.Cinematography
                 ((SliderOption) CinemaUIManager.Options[UIOption.CameraRollSlider]).Slider.Set(_currAngle);
             }
 
-            FreeCameraController.FreeCam.rotation = Quaternion.identity;
-            FreeCameraController.FreeCam.Rotate(_fpsCamera.Forward, _currAngle);
+            FreeCameraController.FreeCamCtrl.rotation = Quaternion.identity;
+            FreeCameraController.FreeCamCtrl.Rotate(_fpsCamera.Forward, _currAngle);
         }
 
         // set angle at +-180
@@ -105,7 +105,7 @@ namespace CinematographyPlugin.Cinematography
         {
             if (!toggleValue)
             {
-                FreeCameraController.FreeCam.rotation = Quaternion.identity;
+                FreeCameraController.FreeCamCtrl.rotation = Quaternion.identity;
                 _currAngle = 0;
                 _speed = RollSpeedDefault;
                 _smoothTime = RollTimeDefault;

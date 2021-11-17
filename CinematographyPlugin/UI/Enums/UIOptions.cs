@@ -7,6 +7,8 @@
         ToggleFreeCamera,
         MovementSpeedSlider,
         MovementSmoothingSlider,
+        RotationSpeedSlider,
+        RotationSmoothingSlider,
         ToggleDynamicRoll,
         DynamicRollIntensitySlider,
         ToggleMouseCtrlAltitude,

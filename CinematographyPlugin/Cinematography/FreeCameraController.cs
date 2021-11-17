@@ -61,7 +61,7 @@ namespace CinematographyPlugin.Cinematography
         private static Vector3 _bodyStartingPosition;
 
         private static Transform _prevParent;
-        public static Transform FreeCam;
+        public static Transform FreeCamCtrl;
         private static Transform _fpsCamHolderSubstitute;
         
         private static bool _freeCamEnabled;
@@ -99,11 +99,16 @@ namespace CinematographyPlugin.Cinematography
 			_damageFeedback = _fpsCamera.gameObject.GetComponent<PE_FPSDamageFeedback>();
 			_playerAgent = PlayerManager.GetLocalPlayerAgent();
 			_playerLocomotion = _player.GetComponent<PlayerLocomotion>();
-			
+
+			var freeCam = new GameObject("FreeCam").transform;
+			var freeCamRotation = new GameObject("FreeCamRotation").transform;
 			_fpsCamHolderSubstitute = new GameObject("FPSCamHolderSubstitute").transform;
-			FreeCam = new GameObject("FreeCamControl").transform;
-			_fpsCamHolderSubstitute.parent = FreeCam;
-		}
+			FreeCamCtrl = new GameObject("FreeCamControl").transform;
+			
+			_fpsCamHolderSubstitute.parent = freeCamRotation;
+			freeCamRotation.parent = FreeCamCtrl;
+			FreeCamCtrl.parent = freeCam;
+        }
 
         private void Start()
         {
@@ -129,10 +134,10 @@ namespace CinematographyPlugin.Cinematography
 			        ToggleAllScreenClutterExceptWaterMark(false);
 		        }
 
-		        if (!CinemaUIManager.MenuOpen)
-		        {
-			        UpdateMovement();
-		        }
+		        // if (!CinemaUIManager.MenuOpen)
+		        // {
+			       //  UpdateMovement();
+		        // }
 		        DivertEnemiesAwayFromCameraMan();
 	        }
 
@@ -213,9 +218,13 @@ namespace CinematographyPlugin.Cinematography
 				_fpsStartingPosition = _prevParent.position;
 				_targetPosition = _fpsStartingPosition;
 				_bodyStartingPosition = _player.transform.position;
-
-				FreeCam.position = _fpsStartingPosition;
+				
+				FreeCamCtrl.parent.position = _fpsStartingPosition;
+				FreeCamCtrl.parent.rotation = _fpsCamera.Rotation;
 				_fpsCamera.m_orgParent.parent = _fpsCamHolderSubstitute.transform;
+
+				FreeCamCtrl.gameObject.AddComponent<FreeCamController>();
+				_fpsCamera.MouseLookEnabled = false;
 
 				_prevParent.gameObject.active = false;
 				_player.transform.position = Vector3.Scale(_bodyStartingPosition, new Vector3(1, -3, 1));
@@ -228,8 +237,11 @@ namespace CinematographyPlugin.Cinematography
 				_movementSpeed = 1;
 				_smoothTime = 0;
 				_dynamicRollSmoothTime = 0;
-				FreeCam.rotation = Quaternion.identity;
-				UpdateMovement();
+				FreeCamCtrl.rotation = Quaternion.identity;
+				// UpdateMovement();
+
+				FreeCamCtrl.gameObject.GetComponent<FreeCamController>().Destroy();
+				_fpsCamera.MouseLookEnabled = true;
 				
 				_fpsCamera.ResetPitchLimit();
 
@@ -246,8 +258,8 @@ namespace CinematographyPlugin.Cinematography
 		private void UpdateMovement()
 		{
 			_targetPosition += CalculateTargetPositionDelta();
-			var position = Vector3.SmoothDamp(FreeCam.position, _targetPosition, ref _smoothVelocity, _smoothTime * Time.timeScale);
-			FreeCam.position = position;
+			var position = Vector3.SmoothDamp(FreeCamCtrl.position, _targetPosition, ref _smoothVelocity, _smoothTime * Time.timeScale);
+			FreeCamCtrl.position = position;
 			
 			if (_dynamicRollEnabled)
 			{
@@ -272,7 +284,7 @@ namespace CinematographyPlugin.Cinematography
 
 		private Vector3 CalculateCullerPosition()
 		{
-			var currPosition = FreeCam.position;
+			var currPosition = FreeCamCtrl.position;
 			var raycastOrigWithOffset = currPosition + _fpsCamera.FlatForward.normalized;
 			return Physics.Raycast(raycastOrigWithOffset, Vector3.down,
 				out var hit) ? hit.point : currPosition;

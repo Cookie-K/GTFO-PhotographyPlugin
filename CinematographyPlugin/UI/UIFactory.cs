@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace CinematographyPlugin.UI
 {
-    public static class UIUtils
+    public static class UIFactory
     {
         
         public static Dictionary<UIOption, Option> BuildOptions(GameObject cinemaUI)
@@ -16,8 +16,10 @@ namespace CinematographyPlugin.UI
             options.Add(UIOption.ToggleBody, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleBody), true, true));
             
             options.Add(UIOption.ToggleFreeCamera, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleFreeCamera), false, true));
-            options.Add(UIOption.MovementSpeedSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.MovementSpeedSlider), false, FreeCameraController.MovementSpeedDefault, FreeCameraController.MovementSpeedMin, FreeCameraController.MovementSpeedMax));
-            options.Add(UIOption.MovementSmoothingSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.MovementSmoothingSlider), false, FreeCameraController.SmoothTimeDefault, FreeCameraController.SmoothTimeMin, FreeCameraController.SmoothTimeMax));
+            options.Add(UIOption.MovementSpeedSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.MovementSpeedSlider), false, FreeCamController.MovementSpeedDefault, FreeCamController.MovementSpeedMin, FreeCamController.MovementSpeedMax));
+            options.Add(UIOption.MovementSmoothingSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.MovementSmoothingSlider), false, FreeCamController.MovementSmoothTimeDefault, FreeCamController.MovementSmoothTimeMin, FreeCamController.MovementSmoothTimeMax));
+            options.Add(UIOption.RotationSpeedSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.RotationSpeedSlider), false, FreeCamController.RotationSpeedDefault, FreeCamController.RotationSpeedMin, FreeCamController.RotationSpeedMax));
+            options.Add(UIOption.RotationSmoothingSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.RotationSmoothingSlider), false, FreeCamController.RotationSmoothTimeDefault, FreeCamController.RotationSmoothTimeMin, FreeCamController.RotationSmoothTimeMax));
             
             options.Add(UIOption.ToggleDynamicRoll, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleDynamicRoll), false, false));
             options.Add(UIOption.DynamicRollIntensitySlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.DynamicRollIntensitySlider), false, FreeCameraController.DynamicRollIntensityDefault, FreeCameraController.DynamicRollIntensityMin, FreeCameraController.DynamicRollIntensityMax));
@@ -52,6 +54,8 @@ namespace CinematographyPlugin.UI
             {
                 options[UIOption.MovementSpeedSlider],
                 options[UIOption.MovementSmoothingSlider],
+                options[UIOption.RotationSpeedSlider],
+                options[UIOption.RotationSmoothingSlider],
                 options[UIOption.ToggleDynamicRoll],
                 options[UIOption.ToggleCameraRoll],
                 options[UIOption.ToggleMouseCtrlAltitude],
@@ -92,6 +96,48 @@ namespace CinematographyPlugin.UI
             options[UIOption.ToggleFoV].StateByDisableOnSelectOptions.Add(options[UIOption.ToggleBody], false);
             
             return options;
+        }
+
+        public static Dictionary<UIOption, ToggleOption> GetToggles(Dictionary<UIOption, Option> options)
+        {
+            var toggles = new Dictionary<UIOption, ToggleOption>();
+            
+            toggles.Add(UIOption.ToggleUI, (ToggleOption) options[UIOption.ToggleUI]);
+            toggles.Add(UIOption.ToggleBody, (ToggleOption) options[UIOption.ToggleBody]);
+            toggles.Add(UIOption.ToggleFreeCamera, (ToggleOption) options[UIOption.ToggleFreeCamera]);
+            toggles.Add(UIOption.ToggleMouseCtrlAltitude, (ToggleOption) options[UIOption.ToggleMouseCtrlAltitude]);
+            toggles.Add(UIOption.ToggleDynamicRoll, (ToggleOption) options[UIOption.ToggleDynamicRoll]);
+            toggles.Add(UIOption.ToggleCameraRoll, (ToggleOption) options[UIOption.ToggleCameraRoll]);
+            toggles.Add(UIOption.ToggleVignette, (ToggleOption) options[UIOption.ToggleVignette]);
+            toggles.Add(UIOption.ToggleFoV, (ToggleOption) options[UIOption.ToggleFoV]);
+            toggles.Add(UIOption.ToggleDoF, (ToggleOption) options[UIOption.ToggleDoF]);
+            toggles.Add(UIOption.ToggleLookSmoothing, (ToggleOption) options[UIOption.ToggleLookSmoothing]);
+            toggles.Add(UIOption.ToggleTimeScale, (ToggleOption) options[UIOption.ToggleTimeScale]);
+
+            return toggles;
+        }
+        
+        public static Dictionary<UIOption, SliderOption> GetSliders(Dictionary<UIOption, Option> options)
+        {
+            var sliders = new Dictionary<UIOption, SliderOption>();
+            
+            sliders.Add(UIOption.MovementSpeedSlider, (SliderOption) options[UIOption.MovementSpeedSlider]);
+            sliders.Add(UIOption.MovementSmoothingSlider, (SliderOption) options[UIOption.MovementSmoothingSlider]);
+            sliders.Add(UIOption.RotationSpeedSlider, (SliderOption) options[UIOption.RotationSpeedSlider]);
+            sliders.Add(UIOption.RotationSmoothingSlider, (SliderOption) options[UIOption.RotationSmoothingSlider]);
+            sliders.Add(UIOption.DynamicRollIntensitySlider, (SliderOption) options[UIOption.DynamicRollIntensitySlider]);
+            sliders.Add(UIOption.CameraRollSlider, (SliderOption) options[UIOption.CameraRollSlider]);
+            sliders.Add(UIOption.CameraRollSpeedSlider, (SliderOption) options[UIOption.CameraRollSpeedSlider]);
+            sliders.Add(UIOption.CameraRollSmoothingSlider, (SliderOption) options[UIOption.CameraRollSmoothingSlider]);
+            sliders.Add(UIOption.LookSmoothingSlider, (SliderOption) options[UIOption.LookSmoothingSlider]);
+            sliders.Add(UIOption.TimeScaleSlider, (SliderOption) options[UIOption.TimeScaleSlider]);
+            sliders.Add(UIOption.FoVSpeedSlider, (SliderOption) options[UIOption.FoVSlider]);
+            sliders.Add(UIOption.FoVSmoothingSlider, (SliderOption) options[UIOption.FoVSmoothingSlider]);
+            sliders.Add(UIOption.FocusDistanceSlider, (SliderOption) options[UIOption.FocusDistanceSlider]);
+            sliders.Add(UIOption.FocalLenghtSlider, (SliderOption) options[UIOption.FocalLenghtSlider]);
+            sliders.Add(UIOption.ApertureSlider, (SliderOption) options[UIOption.ApertureSlider]);
+
+            return sliders;
         }
 
         private static GameObject GetOptionObj(GameObject cinemaUI, UIOption option)

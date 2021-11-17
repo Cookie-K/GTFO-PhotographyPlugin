@@ -19,6 +19,8 @@ namespace CinematographyPlugin.UI
         private const KeyCode UIOpenKey = KeyCode.F4;
        
         internal static Dictionary<UIOption, Option> Options { get; set; }
+        internal static Dictionary<UIOption, ToggleOption> Toggles; 
+        internal static Dictionary<UIOption, SliderOption> Sliders; 
 
         internal static CursorLockMode CursorLockLastMode { get; set; }
         internal static bool CursorLastVisible { get; set; }
@@ -53,7 +55,9 @@ namespace CinematographyPlugin.UI
                 var resetButton = _cinemaUIgo.GetComponentInChildren<Button>();;
                 resetButton.onClick.AddListener((UnityAction) OnCloseButton);
                 
-                Options = UIUtils.BuildOptions(_cinemaUIgo);
+                Options = UIFactory.BuildOptions(_cinemaUIgo);
+                Toggles = UIFactory.GetToggles(Options);
+                Sliders = UIFactory.GetSliders(Options);
             }
         }
 
