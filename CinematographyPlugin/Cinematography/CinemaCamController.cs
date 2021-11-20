@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace CinematographyPlugin.Cinematography
 {
-    public class FreeCamController : MonoBehaviour
+    public class CinemaCamController : MonoBehaviour
     {
         private const float FastSpeedScale = 2;
         private const float SlowSpeedScale = 1f/2f;
@@ -19,22 +19,22 @@ namespace CinematographyPlugin.Cinematography
 
         public const float MovementSmoothTimeDefault = 0.2f;
         public const float MovementSmoothTimeMin = 0f;
-        public const float MovementSmoothTimeMax = 2f;
+        public const float MovementSmoothTimeMax = 1f;
 
-        public const float SensitivityScaling = 100f;
-        public static float RotationSpeedDefault = .65f;
+        private const float SensitivityScaling = 100f;
+        private static float _rotationSpeedDefault = .65f;
         public const float RotationSpeedMin = 0f;
         public const float RotationSpeedMax = 1f;
 
         public const float RotationSmoothTimeDefault = 0.2f;
         public const float RotationSmoothTimeMin = 0f;
-        public const float RotationSmoothTimeMax = 2f;
+        public const float RotationSmoothTimeMax = 1f;
         
-        public static float ZoomDefault = 88f;
-        public const float ZoomMin = 1f;
-        public const float ZoomMax = 160f;
-        
-        public const float ZoomScaling = 100f;
+        private static float _zoomDefault;
+        private const float ZoomMin = 1f;
+        private const float ZoomMax = 160f;
+
+        private const float ZoomScaling = 100f;
         public const float ZoomSpeedDefault = .65f;
         public const float ZoomSpeedMin = 0f;
         public const float ZoomSpeedMax = 1f;
@@ -43,30 +43,47 @@ namespace CinematographyPlugin.Cinematography
         public const float ZoomSmoothTimeMin = 0f;
         public const float ZoomSmoothTimeMax = 2f;
 
+        public const float DynamicRotationDefault = 5f;
+        public const float DynamicRotationMin = 0f;
+        public const float DynamicRotationMax = 10f;
+        private const float DynamicRotationSmoothFactor = 0.4f;
+        private const float DynamicRotationRollMax = 80f;
+        // public const float DynamicRotationPitchMax = 20f;
+        
         private bool _mouseCtrlAltitude = true;
+        private bool _dynamicRotation = true;
         
         private float _lastInterval;
         private float _independentDeltaTime;
         private float _movementSpeed = MovementSpeedDefault;
-        private float _rotationSpeed = RotationSpeedDefault;
-        private float _movementSmoothTime = MovementSmoothTimeDefault;
-        private float _rotationSmoothTime = RotationSmoothTimeDefault;
-        private float _targetZoom = ZoomDefault;
-        private float _currZoom = ZoomDefault;
+        private float _rotationSpeed = _rotationSpeedDefault;
+        private float _movementSmoothFactor = MovementSmoothTimeDefault;
+        private float _rotationSmoothFactor = RotationSmoothTimeDefault;
+        private float _targetZoom = _zoomDefault;
+        private float _currZoom = _zoomDefault;
         private float _zoomVelocity;
         private float _zoomSpeed = ZoomSpeedDefault;
         private float _zoomSmoothTime = ZoomSmoothTimeDefault;
+        private float _dynamicRotationSpeed = DynamicRotationDefault;
+        private float _prevDynamicPitch;
+        private float _targetDynamicRoll;
+        private float _prevDynamicRoll;
+        private float _dynamicPitchVelocity;
+        private float _dynamicRollVelocity;
 
+        private Vector3 prevEuler = Vector3.zero;
+        
         private FPSCamera _fpsCamera;
         private Transform _rotTrans;
         private Vector3 _targetPos = Vector3.zero;
+        private Vector3 _prevPos = Vector3.zero;
         private Vector3 _movementVelocity = Vector3.zero;
         private Quaternion _targetWorldRot = Quaternion.identity;
         private Quaternion _targetLocalRot = Quaternion.identity;
         private Quaternion _worldRotVelocity = Quaternion.identity;
         private Quaternion _localRotVelocity = Quaternion.identity;
 
-        public FreeCamController(IntPtr intPtr) : base(intPtr)
+        public CinemaCamController(IntPtr intPtr) : base(intPtr)
         {
             // For Il2CppAssemblyUnhollower
         }
@@ -75,32 +92,60 @@ namespace CinematographyPlugin.Cinematography
         {
             CinemaUIManager.Sliders[UIOption.MovementSpeedSlider].OnValueChanged += SetMovementSpeed;
             CinemaUIManager.Sliders[UIOption.MovementSmoothingSlider].OnValueChanged += SetMovementSmoothTime;
+            
             CinemaUIManager.Sliders[UIOption.RotationSpeedSlider].OnValueChanged += SetRotationSpeed;
             CinemaUIManager.Sliders[UIOption.RotationSmoothingSlider].OnValueChanged += SetRotationSmoothTime;
+
+            CinemaUIManager.Sliders[UIOption.ZoomSpeedSlider].OnValueChanged += SetZoomSpeed;
+            CinemaUIManager.Sliders[UIOption.ZoomSmoothingSlider].OnValueChanged += SetZoomSmoothTime;
+
+            CinemaUIManager.Toggles[UIOption.ToggleDynamicRoll].OnValueChanged += SetDynamicRotation;
+            CinemaUIManager.Sliders[UIOption.DynamicRollIntensitySlider].OnValueChanged += SetDynamicRotationSpeed;
             CinemaUIManager.Toggles[UIOption.ToggleMouseCtrlAltitude].OnValueChanged += SetMouseCtrlAltitude;
-        }
 
-        private void Start()
-        {
             _fpsCamera = FindObjectOfType<FPSCamera>();
-
-            var trans = transform;
-            var lookRotation= Quaternion.LookRotation(_fpsCamera.Forward);
-
-            // set starting position and rotations
-            _rotTrans = trans.GetChild(0);
-            trans.localRotation.SetEulerRotation(0, lookRotation.eulerAngles.y, 0);
-            _rotTrans.localRotation.SetEulerRotation(lookRotation.eulerAngles.x, 0, 0);
-            _targetPos = trans.position;
+            _rotTrans = transform.GetChild(0);
             
             // Get default sensitivity 
-            RotationSpeedDefault = CellSettingsManager.GetFloatValue(eCellSettingID.Gameplay_LookSpeed);
-            _rotationSpeed = RotationSpeedDefault;
+            _rotationSpeedDefault = CellSettingsManager.GetFloatValue(eCellSettingID.Gameplay_LookSpeed);
+            _rotationSpeed = _rotationSpeedDefault;
             
             // Get default FoV
-            ZoomDefault = CellSettingsManager.GetIntValue(eCellSettingID.Video_WorldFOV);
-            _targetZoom = ZoomDefault;
-            _currZoom = ZoomDefault;
+            _zoomDefault = CellSettingsManager.GetIntValue(eCellSettingID.Video_WorldFOV);
+            _targetZoom = _zoomDefault;
+            _currZoom = _zoomDefault;
+        }
+
+        // Positions and Rotations must be synced before parenting to align with camera transform    
+        public void SyncWithCameraTransform()
+        {
+            var fpsCamRot = _fpsCamera.m_orgParent.eulerAngles;
+            var worldRot = Quaternion.Euler(0, fpsCamRot.y, 0);
+            var localRot = Quaternion.Euler(fpsCamRot.x, 0, 0);
+
+            transform.localRotation = _targetWorldRot = worldRot;
+            _rotTrans.localRotation = _targetLocalRot = localRot;
+            _targetPos = transform.position = _fpsCamera.Position;
+        }
+
+        public static float GetDefaultZoom()
+        {
+            if (_zoomDefault < 0.001)
+            {
+                _zoomDefault = CellSettingsManager.GetIntValue(eCellSettingID.Video_WorldFOV);
+            }
+
+            return _zoomDefault;
+        }
+        
+        public static float GetDefaultRotationSpeed()
+        {
+            if (_rotationSpeedDefault < 0.001)
+            {
+                _rotationSpeedDefault = CellSettingsManager.GetFloatValue(eCellSettingID.Gameplay_LookSpeed);
+            }
+
+            return _rotationSpeedDefault;
         }
 
         private void Update()
@@ -113,11 +158,14 @@ namespace CinematographyPlugin.Cinematography
             UpdateCuller();
             UpdateZoom();
             CheckReset();
+
+            if (!_dynamicRotation) return;
+            
+            CalculateDynamicRotationDelta();
         }
 
         private void UpdatePosition()
         {
-            
             // get directional vectors
             var x = InputManager.GetAxis(AxisName.PosX);
             var y = InputManager.GetAxis(AxisName.PosY);
@@ -129,9 +177,8 @@ namespace CinematographyPlugin.Cinematography
             var speedAxis = InputManager.GetAxis(AxisName.Speed);
             var speedScale = speedAxis > 0 ? FastSpeedScale : speedAxis < 0 ? SlowSpeedScale : 1;
             var speed = _movementSpeed * speedScale;
-            var smoothTime = _movementSmoothTime * Time.timeScale; // Scale by adjusted time scale
 
-            var right = _mouseCtrlAltitude ? _rotTrans.right : FlatRight();
+            var right = FlatRight();
             var forward = _mouseCtrlAltitude ? _rotTrans.forward : FlatForward();
             var up = _mouseCtrlAltitude ? _rotTrans.up : Vector3.up;
 
@@ -141,8 +188,14 @@ namespace CinematographyPlugin.Cinematography
             delta += _independentDeltaTime * speed * z * forward;
             
             _targetPos += delta;
-            var newPos = Vector3.SmoothDamp(transform.position, _targetPos, ref _movementVelocity, smoothTime);
+            
+            var currPos = transform.position;
+            var t = 1.0f - Mathf.Pow(_movementSmoothFactor, _independentDeltaTime);
+            var newPos = Vector3.Lerp(currPos, _targetPos, t);
 
+            _movementVelocity = (newPos - _prevPos)/_independentDeltaTime;
+            _prevPos = newPos;
+            
             transform.position = newPos;
         }
         
@@ -158,23 +211,54 @@ namespace CinematographyPlugin.Cinematography
         
             // calculate speed and smoothing time
             var speed = _rotationSpeed * SensitivityScaling;
-            var smoothTime = _rotationSmoothTime * Time.timeScale; // Scale by adjusted time scale
-        
+
             var deltaEuler = new Vector3(pitch, yaw, roll);
             deltaEuler *= _independentDeltaTime * speed;
             
             var deltaWorld = Quaternion.Euler(0, deltaEuler.y, deltaEuler.z);
             var deltaLocal = Quaternion.Euler(deltaEuler.x, 0, 0);
             
-            // calculate rotation delta with smoothing 
+            // calculate rotation delta with smoothing
             _targetWorldRot *= deltaWorld;
             _targetLocalRot *= deltaLocal;
             
-            var newWorldRot = Utils.QuaternionSmoothDamp(worldTrans.localRotation, _targetWorldRot, ref _worldRotVelocity, smoothTime);
-            var newLocalRot = Utils.QuaternionSmoothDamp(localTrans.localRotation, _targetLocalRot, ref _localRotVelocity, smoothTime);
+            var t = 1.0f - Mathf.Pow(_rotationSmoothFactor, _independentDeltaTime);
+            var newWorldRot = Quaternion.Slerp(worldTrans.localRotation, _targetWorldRot, t);
+            var newLocalRot = Quaternion.Slerp(localTrans.localRotation, _targetLocalRot, t);
 
             worldTrans.localRotation = newWorldRot;
             localTrans.localRotation = newLocalRot;
+            
+            prevEuler = new Vector3(pitch, yaw, roll);
+        }
+        
+        // Pitch causes more trouble than good so it is commented out
+        private void CalculateDynamicRotationDelta()
+        {
+            var worldTrans = transform;
+            var localTrans = _rotTrans;
+            
+            var up = _mouseCtrlAltitude ? localTrans.up : Vector3.up;
+            var right = _mouseCtrlAltitude ? localTrans.right : FlatRight();
+            // var forward = _mouseCtrlAltitude ? localTrans.forward : FlatForward();
+            
+            var velocityXZ = Vector3.ProjectOnPlane(_movementVelocity, up);
+            var vector = velocityXZ * (Time.timeScale * _dynamicRotationSpeed);
+
+            // var pitchDir = Mathf.Sign(Vector3.Dot(vector, forward));
+            var rollDir = Mathf.Sign(Vector3.Dot(vector, right));
+
+            // var pitch = Mathf.Clamp(Vector3.Project(vector, forward).magnitude, 0, DynamicRotationPitchMax) * pitchDir;
+            var roll = Mathf.Clamp(Vector3.Project(vector, right).magnitude, 0, DynamicRotationRollMax) * rollDir;
+            // var targetPitch = worldTrans.rotation * Quaternion.Euler(pitch, 0 , 0);
+            var targetRoll = worldTrans.rotation * Quaternion.Euler(0, 0 , roll);
+
+            var t = 1.0f - Mathf.Pow(DynamicRotationSmoothFactor, _independentDeltaTime);
+            // var newLocalRot = Quaternion.Slerp(localTrans.localRotation, targetPitch, t);
+            var newWorldRot = Quaternion.Slerp(worldTrans.localRotation, targetRoll, t);
+
+            // localTrans.localRotation = newLocalRot;
+            worldTrans.localRotation = newWorldRot;
         }
 
         private void UpdateZoom()
@@ -183,8 +267,8 @@ namespace CinematographyPlugin.Cinematography
             var speed = _zoomSpeed * ZoomScaling;
             var smoothTime = _zoomSmoothTime * Time.timeScale;
             
-            _targetZoom += _independentDeltaTime * speed * dir;
-            var newZoom = Mathf.Clamp(Utils.SmoothDampNoOvershootProtection(_currZoom, _targetZoom, ref _zoomVelocity, smoothTime), ZoomMin, ZoomMax);
+            _targetZoom = Mathf.Clamp(_targetZoom + _independentDeltaTime * speed * dir, ZoomMin, ZoomMax);
+            var newZoom = Utils.SmoothDampNoOvershootProtection(_currZoom, _targetZoom, ref _zoomVelocity, smoothTime);
             _fpsCamera.m_camera.fieldOfView = newZoom;
             // Have separate zoom since accessing the field seems to reset it
             _currZoom = newZoom;
@@ -208,7 +292,7 @@ namespace CinematographyPlugin.Cinematography
         
         private void OnReset()
         {
-            _targetZoom = ZoomDefault;
+            _targetZoom = _zoomDefault;
             _targetWorldRot = Quaternion.Euler(0, _targetWorldRot.eulerAngles.y, 0);
         }
 
@@ -236,7 +320,7 @@ namespace CinematographyPlugin.Cinematography
         
         private void SetMovementSmoothTime(float value)
         {
-            _movementSmoothTime = value;
+            _movementSmoothFactor = value;
         }
         
         private void SetRotationSpeed(float value)
@@ -246,21 +330,48 @@ namespace CinematographyPlugin.Cinematography
         
         private void SetRotationSmoothTime(float value)
         {
-            _rotationSmoothTime = value;
+            _rotationSmoothFactor = value;
         }
-
+        
+        private void SetZoomSpeed(float value)
+        {
+            _zoomSpeed = value;
+        }
+        
+        private void SetZoomSmoothTime(float value)
+        {
+            _zoomSmoothTime = value;
+        }
+        
         private void SetMouseCtrlAltitude(bool value)
         {
             _mouseCtrlAltitude = value;
         }
         
+        private void SetDynamicRotation(bool value)
+        {
+            _dynamicRotation = value;
+        }
+
+        private void SetDynamicRotationSpeed(float value)
+        {
+            _dynamicRotationSpeed = value;
+        }
+
         private void OnDestroy()
         {
             CinemaUIManager.Sliders[UIOption.MovementSpeedSlider].OnValueChanged -= SetMovementSpeed;
             CinemaUIManager.Sliders[UIOption.MovementSmoothingSlider].OnValueChanged -= SetMovementSmoothTime;
+            
             CinemaUIManager.Sliders[UIOption.RotationSpeedSlider].OnValueChanged -= SetRotationSpeed;
             CinemaUIManager.Sliders[UIOption.RotationSmoothingSlider].OnValueChanged -= SetRotationSmoothTime;
+
+            CinemaUIManager.Sliders[UIOption.ZoomSpeedSlider].OnValueChanged -= SetZoomSpeed;
+            CinemaUIManager.Sliders[UIOption.ZoomSmoothingSlider].OnValueChanged -= SetZoomSmoothTime;
+            
             CinemaUIManager.Toggles[UIOption.ToggleMouseCtrlAltitude].OnValueChanged -= SetMouseCtrlAltitude;
+            CinemaUIManager.Toggles[UIOption.ToggleDynamicRoll].OnValueChanged -= SetDynamicRotation;
+            CinemaUIManager.Sliders[UIOption.DynamicRollIntensitySlider].OnValueChanged += SetDynamicRotationSpeed;
         }
     }
 }
