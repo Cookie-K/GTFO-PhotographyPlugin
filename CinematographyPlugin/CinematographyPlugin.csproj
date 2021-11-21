@@ -633,6 +633,7 @@
         <Compile Include="Cinematography\LookSmoothingController.cs" />
         <Compile Include="Cinematography\CinemaNetworkingManager.cs" />
         <Compile Include="Cinematography\TimeScaleController.cs" />
+        <Compile Include="Cinematography\ScreenClutterManager.cs" />
         <Compile Include="Cinematography\Utils.cs" />
         <Compile Include="Entry.cs" />
         <Compile Include="Cinematography\CinemaCamManager.cs" />

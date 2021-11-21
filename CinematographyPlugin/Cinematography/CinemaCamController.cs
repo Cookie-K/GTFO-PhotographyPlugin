@@ -43,9 +43,10 @@ namespace CinematographyPlugin.Cinematography
         public const float ZoomSmoothTimeMin = 0f;
         public const float ZoomSmoothTimeMax = 2f;
 
-        public const float DynamicRotationDefault = 5f;
+        public const float DynamicRotationDefault = 1f;
         public const float DynamicRotationMin = 0f;
-        public const float DynamicRotationMax = 10f;
+        public const float DynamicRotationMax = 2f;
+        public const float DynamicRotationSpeedScale = 10f;
         private const float DynamicRotationSmoothFactor = 0.4f;
         private const float DynamicRotationRollMax = 80f;
         // public const float DynamicRotationPitchMax = 20f;
@@ -65,13 +66,6 @@ namespace CinematographyPlugin.Cinematography
         private float _zoomSpeed = ZoomSpeedDefault;
         private float _zoomSmoothTime = ZoomSmoothTimeDefault;
         private float _dynamicRotationSpeed = DynamicRotationDefault;
-        private float _prevDynamicPitch;
-        private float _targetDynamicRoll;
-        private float _prevDynamicRoll;
-        private float _dynamicPitchVelocity;
-        private float _dynamicRollVelocity;
-
-        private Vector3 prevEuler = Vector3.zero;
         
         private FPSCamera _fpsCamera;
         private Transform _rotTrans;
@@ -80,8 +74,6 @@ namespace CinematographyPlugin.Cinematography
         private Vector3 _movementVelocity = Vector3.zero;
         private Quaternion _targetWorldRot = Quaternion.identity;
         private Quaternion _targetLocalRot = Quaternion.identity;
-        private Quaternion _worldRotVelocity = Quaternion.identity;
-        private Quaternion _localRotVelocity = Quaternion.identity;
 
         public CinemaCamController(IntPtr intPtr) : base(intPtr)
         {
@@ -201,14 +193,17 @@ namespace CinematographyPlugin.Cinematography
         
         private void UpdateRotation()
         {
+            var worldTrans = transform;
+            var localTrans = _rotTrans;
+            
             // get directional vectors
             var pitch = InputManager.GetAxis(AxisName.RotX);
             var yaw = InputManager.GetAxis(AxisName.RotY);
             var roll = InputManager.GetAxis(AxisName.RotZ);
-            
-            var worldTrans = transform;
-            var localTrans = _rotTrans;
-        
+
+            var upsideDown = Math.Sign(Vector3.Dot(localTrans.up, Vector3.up));
+            yaw *= upsideDown; // invert yaw controls when upside down to keep mose directions consistent
+
             // calculate speed and smoothing time
             var speed = _rotationSpeed * SensitivityScaling;
 
@@ -228,8 +223,6 @@ namespace CinematographyPlugin.Cinematography
 
             worldTrans.localRotation = newWorldRot;
             localTrans.localRotation = newLocalRot;
-            
-            prevEuler = new Vector3(pitch, yaw, roll);
         }
         
         // Pitch causes more trouble than good so it is commented out
@@ -243,7 +236,7 @@ namespace CinematographyPlugin.Cinematography
             // var forward = _mouseCtrlAltitude ? localTrans.forward : FlatForward();
             
             var velocityXZ = Vector3.ProjectOnPlane(_movementVelocity, up);
-            var vector = velocityXZ * (Time.timeScale * _dynamicRotationSpeed);
+            var vector = velocityXZ * (Time.timeScale * _dynamicRotationSpeed * DynamicRotationSpeedScale);
 
             // var pitchDir = Mathf.Sign(Vector3.Dot(vector, forward));
             var rollDir = Mathf.Sign(Vector3.Dot(vector, right));
