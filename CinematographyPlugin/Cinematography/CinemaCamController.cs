@@ -46,10 +46,9 @@ namespace CinematographyPlugin.Cinematography
         public const float DynamicRotationDefault = 1f;
         public const float DynamicRotationMin = 0f;
         public const float DynamicRotationMax = 2f;
-        public const float DynamicRotationSpeedScale = 10f;
+        private const float DynamicRotationSpeedScale = 10f;
         private const float DynamicRotationSmoothFactor = 0.4f;
-        private const float DynamicRotationRollMax = 80f;
-        // public const float DynamicRotationPitchMax = 20f;
+        private const float DynamicRotationRollMax = 180f;
         
         private bool _mouseCtrlAltitude = true;
         private bool _dynamicRotation = true;
