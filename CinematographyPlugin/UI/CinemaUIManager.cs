@@ -5,8 +5,6 @@ using CinematographyPlugin.Cinematography;
 using CinematographyPlugin.Cinematography.Networking;
 using CinematographyPlugin.UI.Enums;
 using GTFO.API;
-using HarmonyLib;
-using ToggleUIPlugin.Managers;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -66,8 +64,6 @@ namespace CinematographyPlugin.UI
 
         public void Start()
         {
-            Toggles[UIOption.ToggleUI].OnValueChanged += OnUIToggle;
-            Toggles[UIOption.ToggleBody].OnValueChanged += OnBodyToggle;
             CinemaNetworkingManager.OnFreeCamEnableOrDisable += OnFreeCamEnableOrDisable;
             CinemaNetworkingManager.OnTimeScaleEnableOrDisable += OnTimeScaleEnableOrDisable;
             CinemaPluginPatches.OnLocalPlayerDieOrRevive += OnFreeCamEnableOrDisable;
@@ -96,30 +92,6 @@ namespace CinematographyPlugin.UI
             CloseUI();
         }
         
-        public void OnUIToggle(bool state)
-        {
-            if (state)
-            {
-                ToggleUIManager.ShowUI();
-            }
-            else
-            {
-                ToggleUIManager.HideUI();
-            }
-        }
-        
-        public void OnBodyToggle(bool state)
-        {
-            if (state)
-            {
-                ToggleUIManager.ShowBody();
-            }
-            else
-            {
-                ToggleUIManager.HideBody();
-            }
-        }
-
         private void OnFreeCamEnableOrDisable(bool enable)
         {
             var option = Toggles[UIOption.ToggleFreeCamera];
@@ -169,8 +141,6 @@ namespace CinematographyPlugin.UI
 
         public void OnDestroy()
         {
-            Toggles[UIOption.ToggleUI].OnValueChanged -= OnUIToggle;
-            Toggles[UIOption.ToggleBody].OnValueChanged -= OnBodyToggle;
             CinemaNetworkingManager.OnFreeCamEnableOrDisable -= OnFreeCamEnableOrDisable;
             CinemaNetworkingManager.OnTimeScaleEnableOrDisable -= OnTimeScaleEnableOrDisable;
             CinemaPluginPatches.OnLocalPlayerDieOrRevive -= OnFreeCamEnableOrDisable;

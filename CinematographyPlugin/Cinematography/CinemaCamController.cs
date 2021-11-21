@@ -51,6 +51,7 @@ namespace CinematographyPlugin.Cinematography
         private const float DynamicRotationRollMax = 180f;
         
         private bool _mouseCtrlAltitude = true;
+        private bool _rollCtrlLateralAxis = false;
         private bool _dynamicRotation = true;
         
         private float _lastInterval;
@@ -93,6 +94,7 @@ namespace CinematographyPlugin.Cinematography
             CinemaUIManager.Toggles[UIOption.ToggleDynamicRoll].OnValueChanged += SetDynamicRotation;
             CinemaUIManager.Sliders[UIOption.DynamicRollIntensitySlider].OnValueChanged += SetDynamicRotationSpeed;
             CinemaUIManager.Toggles[UIOption.ToggleMouseCtrlAltitude].OnValueChanged += SetMouseCtrlAltitude;
+            CinemaUIManager.Toggles[UIOption.ToggleRollCtrlLateralAxis].OnValueChanged += SetRollCtrlLateralAxis;
 
             _fpsCamera = FindObjectOfType<FPSCamera>();
             _rotTrans = transform.GetChild(0);
@@ -169,7 +171,7 @@ namespace CinematographyPlugin.Cinematography
             var speedScale = speedAxis > 0 ? FastSpeedScale : speedAxis < 0 ? SlowSpeedScale : 1;
             var speed = _movementSpeed * speedScale;
 
-            var right = FlatRight();
+            var right = _rollCtrlLateralAxis ? _rotTrans.right : FlatRight();
             var forward = _mouseCtrlAltitude ? _rotTrans.forward : FlatForward();
             var up = _mouseCtrlAltitude ? _rotTrans.up : Vector3.up;
 
@@ -340,6 +342,11 @@ namespace CinematographyPlugin.Cinematography
             _mouseCtrlAltitude = value;
         }
         
+        private void SetRollCtrlLateralAxis(bool value)
+        {
+            _rollCtrlLateralAxis = value;
+        }
+        
         private void SetDynamicRotation(bool value)
         {
             _dynamicRotation = value;
@@ -362,6 +369,7 @@ namespace CinematographyPlugin.Cinematography
             CinemaUIManager.Sliders[UIOption.ZoomSmoothingSlider].OnValueChanged -= SetZoomSmoothTime;
             
             CinemaUIManager.Toggles[UIOption.ToggleMouseCtrlAltitude].OnValueChanged -= SetMouseCtrlAltitude;
+            CinemaUIManager.Toggles[UIOption.ToggleRollCtrlLateralAxis].OnValueChanged -= SetRollCtrlLateralAxis;
             CinemaUIManager.Toggles[UIOption.ToggleDynamicRoll].OnValueChanged -= SetDynamicRotation;
             CinemaUIManager.Sliders[UIOption.DynamicRollIntensitySlider].OnValueChanged += SetDynamicRotationSpeed;
         }

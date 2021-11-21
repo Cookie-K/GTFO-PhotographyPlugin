@@ -1,4 +1,6 @@
 ﻿using System;
+using CinematographyPlugin.UI;
+using CinematographyPlugin.UI.Enums;
 using Player;
 using UnityEngine;
 
@@ -36,6 +38,9 @@ namespace CinematographyPlugin.Cinematography
         
         private void Awake()
         {
+            CinemaUIManager.Toggles[UIOption.ToggleUI].OnValueChanged += ToggleUIElements;
+            CinemaUIManager.Toggles[UIOption.ToggleBody].OnValueChanged += ToggleBody;
+            
             _uiPlayerLayer = GuiManager.PlayerLayer.Root.FindChild("PlayerLayer").gameObject;
             _uiCrosshairLayer = GuiManager.CrosshairLayer.Root.FindChild("CrosshairLayer").gameObject;
             _uiInteractionLayer = GuiManager.PlayerLayer.Root.FindChild("InteractionLayer").gameObject;
@@ -74,7 +79,7 @@ namespace CinematographyPlugin.Cinematography
             player.AnimatorBody.gameObject.active = value;
             player.NavMarker.m_marker.enabled = value;
         }
-        
+
         private void ToggleBody(bool value)
         {
             _body.active = value;
@@ -97,6 +102,12 @@ namespace CinematographyPlugin.Cinematography
         private void ToggleScreenLiquids(bool value)
         {
             ScreenLiquidManager.hasSystem = value;
+        }
+
+        private void OnDestroy()
+        {
+            CinemaUIManager.Toggles[UIOption.ToggleUI].OnValueChanged -= ToggleUIElements;
+            CinemaUIManager.Toggles[UIOption.ToggleBody].OnValueChanged -= ToggleBody;
         }
     }
 }

@@ -1,9 +1,7 @@
 ﻿using CinematographyPlugin.Cinematography;
 using CinematographyPlugin.Cinematography.Networking;
 using CinematographyPlugin.UI;
-using GTFO.API;
 using HarmonyLib;
-using ToggleUIPlugin.Managers;
 using UnityEngine;
 
 namespace CinematographyPlugin

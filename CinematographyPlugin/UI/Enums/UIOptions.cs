@@ -14,6 +14,7 @@
         ToggleDynamicRoll,
         DynamicRollIntensitySlider,
         ToggleMouseCtrlAltitude,
+        ToggleRollCtrlLateralAxis,
         ToggleFpsLookSmoothing,
         FpsLookSmoothingSlider,
         ToggleDoF,
