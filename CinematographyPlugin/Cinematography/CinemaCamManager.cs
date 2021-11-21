@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Agents;
+using CinematographyPlugin.Cinematography.Networking;
 using CinematographyPlugin.UI;
 using CinematographyPlugin.UI.Enums;
 using Enemies;
@@ -146,7 +147,7 @@ namespace CinematographyPlugin.Cinematography
 			var playerName = player.Sync.PlayerNick;
 			var damage = player.Damage;
 
-			if (enteringFreeCam && _playerPrevMaxHealthByName.ContainsKey(playerName))
+			if (enteringFreeCam && !_playerPrevMaxHealthByName.ContainsKey(playerName))
 			{
 				_playerPrevMaxHealthByName.Add(playerName, damage.HealthMax);
 				_playerPrevHealthByName.Add(playerName, damage.Health);
@@ -184,12 +185,12 @@ namespace CinematographyPlugin.Cinematography
 		{
 			if (PlayerManager.PlayerAgentsInLevel.Count == 1) return;
 			
-			foreach (var playerAgent in CinemaNetworkingManager.PlayersInFreeCamByName.Values)
+			foreach (var playerAgent in CinemaNetworkingManager.GetPlayersInFreeCam())
 			{
 				foreach (var attacker in new List<Agent>(playerAgent.GetAttackers().ToArray()))
 				{
 					playerAgent.UnregisterAttacker(attacker);
-					var delegateAgent = CinemaNetworkingManager.PlayersNotInFreeCamByName.Values.Aggregate(
+					var delegateAgent = CinemaNetworkingManager.GetPlayersNotInFreeCam().Aggregate(
 							(currMin, pa) => pa.GetAttackersScore() < currMin.GetAttackersScore() ? pa : currMin);
 					CinematographyCore.log.LogInfo($"Diverting {attacker.name} to {delegateAgent}");
 					attacker.TryCast<EnemyAgent>().AI.SetTarget(delegateAgent);

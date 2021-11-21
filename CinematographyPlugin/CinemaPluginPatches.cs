@@ -4,6 +4,7 @@ using System.Linq;
 using Agents;
 using ChainedPuzzles;
 using CinematographyPlugin.Cinematography;
+using CinematographyPlugin.Cinematography.Networking;
 using CinematographyPlugin.UI;
 using Enemies;
 using HarmonyLib;
@@ -51,9 +52,9 @@ namespace CinematographyPlugin
         [HarmonyPatch(typeof(PlayerAgent), "Alive", MethodType.Setter)]
         private static void Prefix_PlayerAlive(bool value, PlayerAgent __instance)
         {
-            CinematographyCore.log.LogInfo($"{__instance.name} is alive {value}");
-            if (!value && __instance.IsLocallyOwned)
+            if (__instance.IsLocallyOwned)
             {
+                CinematographyCore.log.LogInfo($"{__instance.name} is alive {value}");
                 OnLocalPlayerDieOrRevive?.Invoke(value);
             }
         }
@@ -62,26 +63,34 @@ namespace CinematographyPlugin
         [HarmonyPatch(typeof(EnemyAI), "Target", MethodType.Setter)]
         private static void Prefix_SetTargetDivertAwayFromCameraMan(ref AgentTarget value)
         {
-            if (value == null || value.m_agent.Cast<PlayerAgent>() == null) return;
-            if (CinemaNetworkingManager.PlayersInFreeCamByName.ContainsKey(value.m_agent.Cast<PlayerAgent>().Sync.PlayerNick))
+            if (value == null || PlayerManager.PlayerAgentsInLevel.Count == 1) return;
+            var playerAgent = value.m_agent.TryCast<PlayerAgent>();
+            if (playerAgent == null) return;
+            
+            if (CinemaNetworkingManager.GetPlayersInFreeCam().Any(p => p.Sync.PlayerNick == playerAgent.Sync.PlayerNick))
             {
-                value.m_agent = CinemaNetworkingManager.PlayersNotInFreeCamByName.Values.Aggregate((currMin, pa) => pa.GetAttackersScore() < currMin.GetAttackersScore() ? pa : currMin);
+                value.m_agent = CinemaNetworkingManager.GetPlayersNotInFreeCam().Aggregate((currMin, pa) => pa.GetAttackersScore() < currMin.GetAttackersScore() ? pa : currMin);
             }
         }
+        
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(CP_Bioscan_Core), "Update")]
-        private static void Prefix_ReduceTeamScanSizeIfPlayerInFreeCam(CP_Bioscan_Core __instance)
+        [HarmonyPatch(typeof(CP_Bioscan_Graphics), "Update")]
+        private static void Prefix_ReduceTeamScanSizeIfPlayerInFreeCam(CP_Bioscan_Graphics __instance)
         {
-            if (!CinemaNetworkingManager.PlayersInFreeCamByName.Any()) return;
-            if (__instance.m_playerAgents.Count == CinemaNetworkingManager.PlayersNotInFreeCamByName.Count)
+            if (!__instance.isActiveAndEnabled || !CinemaNetworkingManager.GetPlayersInFreeCam().Any()) return;
+            var core = __instance.GetComponent<CP_Bioscan_Core>();
+            if (core.m_playerAgents.Count == 0) return;
+
+            if (core.m_playerAgents.Count == CinemaNetworkingManager.GetPlayersNotInFreeCam().Count())
             {
-                if (__instance.m_playerScanner.RequireAllPlayers)
+                if (core.m_playerScanner.RequireAllPlayers)
                 {
                     CinematographyCore.log.LogInfo("Adjusting team scan to account for free cam players");
                     __instance.GetComponent<CP_PlayerScanner>().m_requireAllPlayers = false;
                     PrevRequiredTeamScanIDs.Add(__instance.GetInstanceID());
-                }   
-            } else if (PrevRequiredTeamScanIDs.Contains(__instance.GetInstanceID()))
+                }
+            } 
+            else if (PrevRequiredTeamScanIDs.Contains(__instance.GetInstanceID()))
             {
                 CinematographyCore.log.LogInfo("Reverting team scan to require all players");
                 __instance.GetComponent<CP_PlayerScanner>().m_requireAllPlayers = true;

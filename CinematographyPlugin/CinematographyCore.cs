@@ -2,6 +2,7 @@
 using BepInEx.IL2CPP;
 using BepInEx.Logging;
 using CinematographyPlugin.Cinematography;
+using CinematographyPlugin.Cinematography.Networking;
 using CinematographyPlugin.UI;
 using Dissonance;
 using HarmonyLib;

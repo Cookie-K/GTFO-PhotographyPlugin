@@ -55,6 +55,11 @@ namespace CinematographyPlugin.Cinematography
         {
             return _body.active || _fpArms.active || _uiPlayerLayer.active;
         }
+
+        public void HideUI()
+        {
+            ToggleUIElements(false);
+        }
         
         public void ToggleAllScreenClutterExceptWaterMark(bool value)
         {

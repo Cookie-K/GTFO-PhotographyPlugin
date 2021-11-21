@@ -1,4 +1,5 @@
 ﻿using System;
+using CinematographyPlugin.Cinematography.Networking;
 using CinematographyPlugin.UI;
 using CinematographyPlugin.UI.Enums;
 using Enemies;
@@ -23,6 +24,11 @@ namespace CinematographyPlugin.Cinematography
         {
             ((SliderOption) CinemaUIManager.Options[UIOption.TimeScaleSlider]).OnValueChanged +=  OnTimeScaleChange;
             CinemaNetworkingManager.OnTimeScaleChangedByOtherPlayer += OnTimeScaleChange;
+        }
+
+        public static void ResetTimeScale()
+        {
+            Time.timeScale = 1;
         }
 
         private void OnTimeScaleChange(float value)
