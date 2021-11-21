@@ -18,7 +18,7 @@ namespace CinematographyPlugin
             MODNAME = "Cinematography",
             AUTHOR = "Cookie_K",
             GUID = "com." + AUTHOR + "." + MODNAME,
-            VERSION = "0.0.0";
+            VERSION = "0.0.1";
 
         public static ManualLogSource log;
 
@@ -30,10 +30,10 @@ namespace CinematographyPlugin
 
             ClassInjector.RegisterTypeInIl2Cpp<UIWindow>();
             ClassInjector.RegisterTypeInIl2Cpp<CinemaUIManager>();
-            ClassInjector.RegisterTypeInIl2Cpp<FoVController>();
+            ClassInjector.RegisterTypeInIl2Cpp<CinemaCamManager>();
+            ClassInjector.RegisterTypeInIl2Cpp<CinemaCamController>();
             ClassInjector.RegisterTypeInIl2Cpp<TimeScaleController>();
-            ClassInjector.RegisterTypeInIl2Cpp<FreeCameraController>();
-            ClassInjector.RegisterTypeInIl2Cpp<CameraRollController>();
+            ClassInjector.RegisterTypeInIl2Cpp<ScreenClutterManager>();
             ClassInjector.RegisterTypeInIl2Cpp<LookSmoothingController>();
             ClassInjector.RegisterTypeInIl2Cpp<CinemaNetworkingManager>();
             ClassInjector.RegisterTypeInIl2Cpp<PostProcessingController>();

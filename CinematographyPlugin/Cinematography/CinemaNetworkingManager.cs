@@ -103,8 +103,8 @@ namespace CinematographyPlugin.Cinematography
             
             foreach (var agent in PlayerManager.PlayerAgentsInLevel)
             {
-                PlayersNotInFreeCamByName.TryAdd(agent.Sync.PlayerNick, agent);
-                PlayersNotInTimeScaleByName.TryAdd(agent.Sync.PlayerNick, agent);
+                PlayersNotInFreeCamByName.Add(agent.Sync.PlayerNick, agent);
+                PlayersNotInTimeScaleByName.Add(agent.Sync.PlayerNick, agent);
             }
         }
 

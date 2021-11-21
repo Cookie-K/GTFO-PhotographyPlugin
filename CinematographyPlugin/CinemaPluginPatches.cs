@@ -7,9 +7,7 @@ using CinematographyPlugin.Cinematography;
 using CinematographyPlugin.UI;
 using Enemies;
 using HarmonyLib;
-using LibCpp2IL;
 using Player;
-using UnhollowerBaseLib;
 using UnityEngine;
 
 namespace CinematographyPlugin
@@ -46,18 +44,6 @@ namespace CinematographyPlugin
             {
                 CinemaUIManager.CursorLastVisible = value;
                 value = true;
-            }
-        }
-        
-        // Mirror mouse input when upside down
-        [HarmonyPrefix]
-        [HarmonyPatch(typeof(LookCameraController), "MouseLookUpdate", typeof(float), typeof(float))]
-        private static void Prefix_invertXonUpsideDown(ref float axisHor, float axisVer, LookCameraController __instance)
-        {
-            var upsideDown = Math.Sign(Vector3.Dot(__instance.transform.up, Vector3.up)) < 0;
-            if (upsideDown)
-            {
-                axisHor *= -1;
             }
         }
 

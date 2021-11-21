@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace CinematographyPlugin.UI
 {
-    public static class UIUtils
+    public static class UIFactory
     {
         
         public static Dictionary<UIOption, Option> BuildOptions(GameObject cinemaUI)
@@ -16,66 +16,48 @@ namespace CinematographyPlugin.UI
             options.Add(UIOption.ToggleBody, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleBody), true, true));
             
             options.Add(UIOption.ToggleFreeCamera, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleFreeCamera), false, true));
-            options.Add(UIOption.MovementSpeedSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.MovementSpeedSlider), false, FreeCameraController.MovementSpeedDefault, FreeCameraController.MovementSpeedMin, FreeCameraController.MovementSpeedMax));
-            options.Add(UIOption.MovementSmoothingSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.MovementSmoothingSlider), false, FreeCameraController.SmoothTimeDefault, FreeCameraController.SmoothTimeMin, FreeCameraController.SmoothTimeMax));
-            
+            options.Add(UIOption.MovementSpeedSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.MovementSpeedSlider), false, CinemaCamController.MovementSpeedDefault, CinemaCamController.MovementSpeedMin, CinemaCamController.MovementSpeedMax));
+            options.Add(UIOption.MovementSmoothingSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.MovementSmoothingSlider), false, CinemaCamController.MovementSmoothTimeDefault, CinemaCamController.MovementSmoothTimeMin, CinemaCamController.MovementSmoothTimeMax));
+            options.Add(UIOption.RotationSpeedSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.RotationSpeedSlider), false, CinemaCamController.GetDefaultRotationSpeed(), CinemaCamController.RotationSpeedMin, CinemaCamController.RotationSpeedMax));
+            options.Add(UIOption.RotationSmoothingSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.RotationSmoothingSlider), false, CinemaCamController.RotationSmoothTimeDefault, CinemaCamController.RotationSmoothTimeMin, CinemaCamController.RotationSmoothTimeMax));
+            options.Add(UIOption.ZoomSpeedSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.ZoomSpeedSlider), false, CinemaCamController.GetDefaultZoom(), CinemaCamController.ZoomSpeedMin, CinemaCamController.ZoomSpeedMax));
+            options.Add(UIOption.ZoomSmoothingSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.ZoomSmoothingSlider), false, CinemaCamController.ZoomSmoothTimeDefault, CinemaCamController.ZoomSmoothTimeMin, CinemaCamController.ZoomSmoothTimeMax));
+
             options.Add(UIOption.ToggleDynamicRoll, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleDynamicRoll), false, false));
-            options.Add(UIOption.DynamicRollIntensitySlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.DynamicRollIntensitySlider), false, FreeCameraController.DynamicRollIntensityDefault, FreeCameraController.DynamicRollIntensityMin, FreeCameraController.DynamicRollIntensityMax));
+            options.Add(UIOption.DynamicRollIntensitySlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.DynamicRollIntensitySlider), false, CinemaCamController.DynamicRotationDefault, CinemaCamController.DynamicRotationMin, CinemaCamController.DynamicRotationMax));
             options.Add(UIOption.ToggleMouseCtrlAltitude, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleMouseCtrlAltitude), true, false));
 
-            options.Add(UIOption.ToggleLookSmoothing, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleLookSmoothing), false, true));
-            options.Add(UIOption.LookSmoothingSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.LookSmoothingSlider), false, LookSmoothingController.SmoothDefault, LookSmoothingController.SmoothMin, LookSmoothingController.SmoothMax));
-            
-            options.Add(UIOption.ToggleCameraRoll, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleCameraRoll), false, false));
-            options.Add(UIOption.CameraRollSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.CameraRollSlider), false, CameraRollController.RollDefault, CameraRollController.RollMin, CameraRollController.RollMax));
-            options.Add(UIOption.CameraRollSpeedSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.CameraRollSpeedSlider), false, CameraRollController.RollSpeedDefault, CameraRollController.RollSpeedMin, CameraRollController.RollSpeedMax));
-            options.Add(UIOption.CameraRollSmoothingSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.CameraRollSmoothingSlider), false, CameraRollController.RollTimeDefault, CameraRollController.RollTimeMin, CameraRollController.RollTimeMax));
-            
-            options.Add(UIOption.ToggleTimeScale, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleTimeScale), false, true));
-            options.Add(UIOption.TimeScaleSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.TimeScaleSlider), false, TimeScaleController.TimeScaleDefault, TimeScaleController.TimeScaleMin, TimeScaleController.TimeScaleMax));
-            
-            options.Add(UIOption.ToggleFoV, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleFoV), false, true));
-            options.Add(UIOption.FoVSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.FoVSlider), false, FoVController.GetDefaultFoV(), FoVController.FovMin, FoVController.FovMax));
-            options.Add(UIOption.FoVSpeedSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.FoVSpeedSlider), false, FoVController.FovSpeedDefault, FoVController.FovSpeedMin, FoVController.FovSpeedMax));
-            options.Add(UIOption.FoVSmoothingSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.FoVSmoothingSlider), false, FoVController.FoVTimeDefault, FoVController.FoVTimeMin, FoVController.FoVTimeMax));
-            
-            options.Add(UIOption.ToggleVignette, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleVignette), true, true));
-            
+            options.Add(UIOption.ToggleFpsLookSmoothing, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleFpsLookSmoothing), false, true));
+            options.Add(UIOption.FpsLookSmoothingSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.FpsLookSmoothingSlider), false, LookSmoothingController.SmoothDefault, LookSmoothingController.SmoothMin, LookSmoothingController.SmoothMax));
+
             options.Add(UIOption.ToggleDoF, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleDoF), false, true));
             options.Add(UIOption.FocusDistanceSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.FocusDistanceSlider), false, PostProcessingController.GetDefaultFocusDistance(), PostProcessingController.FocusDistanceMin, PostProcessingController.FocusDistanceMax));
             options.Add(UIOption.ApertureSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.ApertureSlider), false, PostProcessingController.GetDefaultAperture(), PostProcessingController.ApertureMin, PostProcessingController.ApertureMax));
             options.Add(UIOption.FocalLenghtSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.FocalLenghtSlider), false, PostProcessingController.GetDefaultFocalLenght(), PostProcessingController.FocalLenghtMin, PostProcessingController.FocalLenghtMax));
+            
+            options.Add(UIOption.ToggleVignette, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleVignette), true, true));
 
+            options.Add(UIOption.ToggleTimeScale, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleTimeScale), false, true));
+            options.Add(UIOption.TimeScaleSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.TimeScaleSlider), false, TimeScaleController.TimeScaleDefault, TimeScaleController.TimeScaleMin, TimeScaleController.TimeScaleMax));
 
             // Add sub options
             options[UIOption.ToggleFreeCamera].SubOptions.AddRange(new []
             {
                 options[UIOption.MovementSpeedSlider],
                 options[UIOption.MovementSmoothingSlider],
+                options[UIOption.RotationSpeedSlider],
+                options[UIOption.RotationSmoothingSlider],
+                options[UIOption.ZoomSpeedSlider],
+                options[UIOption.ZoomSmoothingSlider],
                 options[UIOption.ToggleDynamicRoll],
-                options[UIOption.ToggleCameraRoll],
                 options[UIOption.ToggleMouseCtrlAltitude],
             });
             
             options[UIOption.ToggleDynamicRoll].SubOptions.Add(options[UIOption.DynamicRollIntensitySlider]);
             
-            options[UIOption.ToggleLookSmoothing].SubOptions.Add(options[UIOption.LookSmoothingSlider]);
-            
-            options[UIOption.ToggleCameraRoll].SubOptions.AddRange(new []
-            {
-                options[UIOption.CameraRollSlider],   
-                options[UIOption.CameraRollSpeedSlider],
-                options[UIOption.CameraRollSmoothingSlider],
-            });
+            options[UIOption.ToggleFpsLookSmoothing].SubOptions.Add(options[UIOption.FpsLookSmoothingSlider]);
             
             options[UIOption.ToggleTimeScale].SubOptions.Add(options[UIOption.TimeScaleSlider]);
-            
-            options[UIOption.ToggleFoV].SubOptions.AddRange(new []
-            {
-                options[UIOption.FoVSlider],  
-                options[UIOption.FoVSpeedSlider],  
-                options[UIOption.FoVSmoothingSlider],  
-            });
             
             options[UIOption.ToggleDoF].SubOptions.AddRange(new []
             {
@@ -87,11 +69,45 @@ namespace CinematographyPlugin.UI
             // Add options to disable on select
             options[UIOption.ToggleFreeCamera].StateByDisableOnSelectOptions.Add(options[UIOption.ToggleUI], false);
             options[UIOption.ToggleFreeCamera].StateByDisableOnSelectOptions.Add(options[UIOption.ToggleBody], false);
-            options[UIOption.ToggleCameraRoll].StateByDisableOnSelectOptions.Add(options[UIOption.ToggleBody], false);
-            options[UIOption.ToggleDynamicRoll].StateByDisableOnSelectOptions.Add(options[UIOption.ToggleCameraRoll], false);
-            options[UIOption.ToggleFoV].StateByDisableOnSelectOptions.Add(options[UIOption.ToggleBody], false);
             
             return options;
+        }
+
+        public static Dictionary<UIOption, ToggleOption> GetToggles(Dictionary<UIOption, Option> options)
+        {
+            var toggles = new Dictionary<UIOption, ToggleOption>();
+            
+            toggles.Add(UIOption.ToggleUI, (ToggleOption) options[UIOption.ToggleUI]);
+            toggles.Add(UIOption.ToggleBody, (ToggleOption) options[UIOption.ToggleBody]);
+            toggles.Add(UIOption.ToggleFreeCamera, (ToggleOption) options[UIOption.ToggleFreeCamera]);
+            toggles.Add(UIOption.ToggleMouseCtrlAltitude, (ToggleOption) options[UIOption.ToggleMouseCtrlAltitude]);
+            toggles.Add(UIOption.ToggleDynamicRoll, (ToggleOption) options[UIOption.ToggleDynamicRoll]);
+            toggles.Add(UIOption.ToggleVignette, (ToggleOption) options[UIOption.ToggleVignette]);
+            toggles.Add(UIOption.ToggleDoF, (ToggleOption) options[UIOption.ToggleDoF]);
+            toggles.Add(UIOption.ToggleFpsLookSmoothing, (ToggleOption) options[UIOption.ToggleFpsLookSmoothing]);
+            toggles.Add(UIOption.ToggleTimeScale, (ToggleOption) options[UIOption.ToggleTimeScale]);
+
+            return toggles;
+        }
+        
+        public static Dictionary<UIOption, SliderOption> GetSliders(Dictionary<UIOption, Option> options)
+        {
+            var sliders = new Dictionary<UIOption, SliderOption>();
+            
+            sliders.Add(UIOption.MovementSpeedSlider, (SliderOption) options[UIOption.MovementSpeedSlider]);
+            sliders.Add(UIOption.MovementSmoothingSlider, (SliderOption) options[UIOption.MovementSmoothingSlider]);
+            sliders.Add(UIOption.RotationSpeedSlider, (SliderOption) options[UIOption.RotationSpeedSlider]);
+            sliders.Add(UIOption.RotationSmoothingSlider, (SliderOption) options[UIOption.RotationSmoothingSlider]);
+            sliders.Add(UIOption.DynamicRollIntensitySlider, (SliderOption) options[UIOption.DynamicRollIntensitySlider]);
+            sliders.Add(UIOption.FpsLookSmoothingSlider, (SliderOption) options[UIOption.FpsLookSmoothingSlider]);
+            sliders.Add(UIOption.TimeScaleSlider, (SliderOption) options[UIOption.TimeScaleSlider]);
+            sliders.Add(UIOption.ZoomSpeedSlider, (SliderOption) options[UIOption.ZoomSpeedSlider]);
+            sliders.Add(UIOption.ZoomSmoothingSlider, (SliderOption) options[UIOption.ZoomSmoothingSlider]);
+            sliders.Add(UIOption.FocusDistanceSlider, (SliderOption) options[UIOption.FocusDistanceSlider]);
+            sliders.Add(UIOption.FocalLenghtSlider, (SliderOption) options[UIOption.FocalLenghtSlider]);
+            sliders.Add(UIOption.ApertureSlider, (SliderOption) options[UIOption.ApertureSlider]);
+
+            return sliders;
         }
 
         private static GameObject GetOptionObj(GameObject cinemaUI, UIOption option)

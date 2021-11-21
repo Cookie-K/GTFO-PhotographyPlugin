@@ -626,15 +626,17 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="Cinematography\CameraRollController.cs" />
+        <Compile Include="Cinematography\CinemaCamController.cs" />
+        <Compile Include="Cinematography\CinemaInput\AxisNames.cs" />
+        <Compile Include="Cinematography\CinemaInput\InputManager.cs" />
         <Compile Include="Cinematography\PostProcessingController.cs" />
-        <Compile Include="Cinematography\FoVController.cs" />
         <Compile Include="Cinematography\LookSmoothingController.cs" />
         <Compile Include="Cinematography\CinemaNetworkingManager.cs" />
         <Compile Include="Cinematography\TimeScaleController.cs" />
+        <Compile Include="Cinematography\ScreenClutterManager.cs" />
         <Compile Include="Cinematography\Utils.cs" />
         <Compile Include="Entry.cs" />
-        <Compile Include="Cinematography\FreeCameraController.cs" />
+        <Compile Include="Cinematography\CinemaCamManager.cs" />
         <Compile Include="CinemaPluginPatches.cs" />
         <Compile Include="UI\CinemaUIManager.cs" />
         <Compile Include="CinematographyCore.cs" />
