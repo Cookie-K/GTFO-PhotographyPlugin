@@ -83,10 +83,10 @@ namespace CinematographyPlugin.Cinematography
 
         private void CheckAndForceUiHidden()
         {
-	        if (ScreenClutterManager.GetInstance().IsBodyOrUiVisible())
+	        if (ScreenClutterController.GetInstance().IsBodyOrUiVisible())
 	        {
 		        // force hide all ui when in free cam
-		        ScreenClutterManager.GetInstance().ToggleAllScreenClutterExceptWaterMark(false);
+		        ScreenClutterController.GetInstance().ToggleAllScreenClutterExceptWaterMark(false);
 	        }
         }
 
@@ -112,7 +112,7 @@ namespace CinematographyPlugin.Cinematography
 		private void EnableOrDisableCinemaCam(bool enable)
 		{
 			SetCameraManHealth(_playerAgent, enable);
-			ScreenClutterManager.GetInstance().ToggleAllScreenClutterExceptWaterMark(!enable);
+			ScreenClutterController.GetInstance().ToggleAllScreenClutterExceptWaterMark(!enable);
 
 			if (enable)
 			{
@@ -178,7 +178,7 @@ namespace CinematographyPlugin.Cinematography
 		{
 			CinematographyCore.log.LogInfo($"{playerAgent.Sync.PlayerNick} entering free cam : {enteringFreeCam}");
 			SetCameraManHealth(playerAgent, enteringFreeCam);
-			ScreenClutterManager.GetInstance().ToggleClientVisibility(playerAgent, !enteringFreeCam);
+			ScreenClutterController.GetInstance().ToggleClientVisibility(playerAgent, !enteringFreeCam);
 		}
 		
 		private void DivertEnemiesAwayFromCameraMan()

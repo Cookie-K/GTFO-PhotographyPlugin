@@ -14,25 +14,25 @@ namespace CinematographyPlugin.UI
         
         internal Toggle Toggle { get; }
 
-        private bool InitalVal;
+        private readonly bool _initialVal;
 
-        private readonly TMP_Text TMP;
+        private readonly TMP_Text _tmp;
         
         private int _nDisabled;
 
-        public ToggleOption(GameObject root, bool initialValue, bool startActive) : base(root, OptionType.Toggle, startActive)
+        public ToggleOption(GameObject root, bool initialValue, bool startActive) : base(root, startActive)
         {
             Toggle = root.GetComponentInChildren<Toggle>();
             Toggle.onValueChanged.AddListener((UnityAction<bool>) OnToggleChange);
-            TMP = Toggle.transform.GetComponentInChildren<TMP_Text>();
+            _tmp = Toggle.transform.GetComponentInChildren<TMP_Text>();
             Toggle.Set(initialValue);
             OnToggleChange(initialValue);
-            InitalVal = initialValue;
+            _initialVal = initialValue;
         }
         
         private void OnToggleChange(bool value)
         {
-            TMP.text = value ? "<color=\"orange\">ON</color>" : "OFF";
+            _tmp.text = value ? "<color=\"orange\">ON</color>" : "OFF";
 
             foreach (var (option, stateOnDisable) in StateByDisableOnSelectOptions)
             {
@@ -60,7 +60,7 @@ namespace CinematographyPlugin.UI
             _nDisabled++;
             Toggle.Set(state);
             Toggle.enabled = false;
-            TMP.text = $"<s>{TMP.text}</s>";
+            _tmp.text = $"<s>{_tmp.text}</s>";
             foreach (var option in SubOptions)
             {
                 option.OnReset();
@@ -83,8 +83,8 @@ namespace CinematographyPlugin.UI
 
         public override void OnReset()
         {
-            Toggle.Set(InitalVal);
-            OnToggleChange(InitalVal);
+            Toggle.Set(_initialVal);
+            OnToggleChange(_initialVal);
         }
 
     }

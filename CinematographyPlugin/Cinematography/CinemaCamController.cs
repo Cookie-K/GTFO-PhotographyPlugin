@@ -62,9 +62,8 @@ namespace CinematographyPlugin.Cinematography
         private float _rotationSmoothFactor = RotationSmoothTimeDefault;
         private float _targetZoom = _zoomDefault;
         private float _currZoom = _zoomDefault;
-        private float _zoomVelocity;
         private float _zoomSpeed = ZoomSpeedDefault;
-        private float _zoomSmoothTime = ZoomSmoothTimeDefault;
+        private float _zoomSmoothFactor = ZoomSmoothTimeDefault;
         private float _dynamicRotationSpeed = DynamicRotationDefault;
         
         private FPSCamera _fpsCamera;
@@ -259,10 +258,12 @@ namespace CinematographyPlugin.Cinematography
         {
             var dir = InputManager.GetAxis(AxisName.Zoom);
             var speed = _zoomSpeed * ZoomScaling;
-            var smoothTime = _zoomSmoothTime * Time.timeScale;
             
             _targetZoom = Mathf.Clamp(_targetZoom + _independentDeltaTime * speed * dir, ZoomMin, ZoomMax);
-            var newZoom = Utils.SmoothDampNoOvershootProtection(_currZoom, _targetZoom, ref _zoomVelocity, smoothTime);
+            
+            var t = 1.0f - Mathf.Pow(_zoomSmoothFactor, _independentDeltaTime);
+            var newZoom = Mathf.Lerp(_currZoom, _targetZoom, t);
+            
             _fpsCamera.m_camera.fieldOfView = newZoom;
             // Have separate zoom since accessing the field seems to reset it
             _currZoom = newZoom;
@@ -334,7 +335,7 @@ namespace CinematographyPlugin.Cinematography
         
         private void SetZoomSmoothTime(float value)
         {
-            _zoomSmoothTime = value;
+            _zoomSmoothFactor = value;
         }
         
         private void SetMouseCtrlAltitude(bool value)

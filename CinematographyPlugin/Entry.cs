@@ -26,7 +26,7 @@ namespace CinematographyPlugin
                     gameObject.AddComponent<CinemaUIManager>();
                     gameObject.AddComponent<TimeScaleController>();
                     gameObject.AddComponent<CinemaCamManager>();
-                    gameObject.AddComponent<ScreenClutterManager>();
+                    gameObject.AddComponent<ScreenClutterController>();
                     gameObject.AddComponent<LookSmoothingController>();
                     gameObject.AddComponent<CinemaNetworkingManager>();
                     gameObject.AddComponent<PostProcessingController>();

@@ -39,15 +39,14 @@ namespace CinematographyPlugin.UI
         {
             var loadedAsset = AssetAPI.GetLoadedAsset(PrefabPath);
             _cinemaUIgo = Instantiate(loadedAsset).TryCast<GameObject>();
+            
             if (_cinemaUIgo is null)
             {
                 CinematographyCore.log.LogWarning(
-                    "Cinematography plugin could not load UI prefab. Asset either not loaded or not in Bepinex/Config folder");
+                    "Cinematography plugin could not load UI prefab. Asset either not loaded or not in Bepinex/Config/Assets/AssetBundles folder");
             }
             else
             {
-                _init = true;
-                _cinemaUIgo.active = false;
                 // CinemaUI/Canvas/Window
                 var canvas = _cinemaUIgo.transform.GetChild(0);
                 var window = canvas.GetChild(0);
@@ -59,6 +58,9 @@ namespace CinematographyPlugin.UI
                 Options = UIFactory.BuildOptions(_cinemaUIgo);
                 Toggles = UIFactory.GetToggles(Options);
                 Sliders = UIFactory.GetSliders(Options);
+                
+                _cinemaUIgo.active = false;
+                _init = true;
             }
         }
 
@@ -151,7 +153,7 @@ namespace CinematographyPlugin.UI
             }
 
             TimeScaleController.ResetTimeScale();
-            ScreenClutterManager.GetInstance().HideUI();
+            ScreenClutterController.GetInstance().HideUI();
 
             Destroy(_cinemaUIgo);
         }

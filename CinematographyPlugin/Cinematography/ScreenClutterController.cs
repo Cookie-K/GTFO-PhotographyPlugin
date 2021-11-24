@@ -6,9 +6,9 @@ using UnityEngine;
 
 namespace CinematographyPlugin.Cinematography
 {
-    public class ScreenClutterManager : MonoBehaviour
+    public class ScreenClutterController : MonoBehaviour
     {
-        private static ScreenClutterManager _instance;
+        private static ScreenClutterController _instance;
         private static bool _init;
         
         private static GameObject _body;
@@ -20,12 +20,12 @@ namespace CinematographyPlugin.Cinematography
         private static GameObject _uiNavMarkerLayer;
         private static PE_FPSDamageFeedback _damageFeedback;
 
-        public ScreenClutterManager(IntPtr intPtr) : base(intPtr)
+        public ScreenClutterController(IntPtr intPtr) : base(intPtr)
         {
             // For Il2CppAssemblyUnhollower
         }
 
-        public static ScreenClutterManager GetInstance()
+        public static ScreenClutterController GetInstance()
         {
             if (_init)
             {

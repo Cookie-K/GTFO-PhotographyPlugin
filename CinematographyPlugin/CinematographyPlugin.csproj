@@ -634,8 +634,7 @@
         <Compile Include="Cinematography\PostProcessingController.cs" />
         <Compile Include="Cinematography\LookSmoothingController.cs" />
         <Compile Include="Cinematography\TimeScaleController.cs" />
-        <Compile Include="Cinematography\ScreenClutterManager.cs" />
-        <Compile Include="Cinematography\Utils.cs" />
+        <Compile Include="Cinematography\ScreenClutterController.cs" />
         <Compile Include="Entry.cs" />
         <Compile Include="Cinematography\CinemaCamManager.cs" />
         <Compile Include="CinemaPluginPatches.cs" />
@@ -643,7 +642,6 @@
         <Compile Include="CinematographyCore.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
         <Compile Include="UI\UIWindow.cs" />
-        <Compile Include="UI\Enums\OptionType.cs" />
         <Compile Include="UI\Enums\UIOptions.cs" />
         <Compile Include="UI\Option.cs" />
         <Compile Include="UI\SliderOption.cs" />
