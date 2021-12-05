@@ -1,8 +1,7 @@
 ﻿using CinematographyPlugin.Cinematography;
+using CinematographyPlugin.Cinematography.Networking;
 using CinematographyPlugin.UI;
-using GTFO.API;
 using HarmonyLib;
-using ToggleUIPlugin.Managers;
 using UnityEngine;
 
 namespace CinematographyPlugin
@@ -27,10 +26,10 @@ namespace CinematographyPlugin
                     gameObject.AddComponent<CinemaUIManager>();
                     gameObject.AddComponent<TimeScaleController>();
                     gameObject.AddComponent<CinemaCamManager>();
-                    gameObject.AddComponent<ScreenClutterManager>();
+                    gameObject.AddComponent<ScreenClutterController>();
                     gameObject.AddComponent<LookSmoothingController>();
-                    gameObject.AddComponent<CinemaNetworkingManager>();
                     gameObject.AddComponent<PostProcessingController>();
+                    gameObject.AddComponent<CinemaNetworkingManager>().RegisterEvents();
                     Object.DontDestroyOnLoad(gameObject);
 
                     _go = gameObject;
@@ -40,8 +39,11 @@ namespace CinematographyPlugin
                 case eGameStateName.ExpeditionFail:
                 case eGameStateName.ExpeditionSuccess:
                 case eGameStateName.AfterLevel:
-                    CinematographyCore.log.LogMessage("Closing " + CinematographyCore.NAME);
-                    Object.Destroy(_go);
+                    if (_go != null)
+                    {
+                        CinematographyCore.log.LogMessage("Closing " + CinematographyCore.NAME);
+                        Object.Destroy(_go);
+                    }
                     break;
             }
         }

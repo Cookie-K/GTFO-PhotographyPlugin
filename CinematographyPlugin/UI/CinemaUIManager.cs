@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using BepInEx;
 using CinematographyPlugin.Cinematography;
+using CinematographyPlugin.Cinematography.Networking;
 using CinematographyPlugin.UI.Enums;
 using GTFO.API;
-using HarmonyLib;
-using ToggleUIPlugin.Managers;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -15,6 +14,8 @@ namespace CinematographyPlugin.UI
     [BepInDependency("dev.gtfomodding.gtfo-api")]
     public class CinemaUIManager : MonoBehaviour
     {
+        public static event Action OnUIStart;
+        
         private const string PrefabPath = "Assets/UI/CinemaUI.prefab";
         private const KeyCode UIOpenKey = KeyCode.F4;
        
@@ -38,15 +39,14 @@ namespace CinematographyPlugin.UI
         {
             var loadedAsset = AssetAPI.GetLoadedAsset(PrefabPath);
             _cinemaUIgo = Instantiate(loadedAsset).TryCast<GameObject>();
+            
             if (_cinemaUIgo is null)
             {
                 CinematographyCore.log.LogWarning(
-                    "Cinematography plugin could not load UI prefab. Asset either not loaded or not in Bepinex/Config folder");
+                    "Cinematography plugin could not load UI prefab. Asset either not loaded or not in Bepinex/Config/Assets/AssetBundles folder");
             }
             else
             {
-                _init = true;
-                _cinemaUIgo.active = false;
                 // CinemaUI/Canvas/Window
                 var canvas = _cinemaUIgo.transform.GetChild(0);
                 var window = canvas.GetChild(0);
@@ -58,16 +58,19 @@ namespace CinematographyPlugin.UI
                 Options = UIFactory.BuildOptions(_cinemaUIgo);
                 Toggles = UIFactory.GetToggles(Options);
                 Sliders = UIFactory.GetSliders(Options);
+                
+                _cinemaUIgo.active = false;
+                _init = true;
             }
         }
 
         public void Start()
         {
-            ((ToggleOption) Options[UIOption.ToggleUI]).OnValueChanged += OnUIToggle;
-            ((ToggleOption) Options[UIOption.ToggleBody]).OnValueChanged += OnBodyToggle;
             CinemaNetworkingManager.OnFreeCamEnableOrDisable += OnFreeCamEnableOrDisable;
             CinemaNetworkingManager.OnTimeScaleEnableOrDisable += OnTimeScaleEnableOrDisable;
             CinemaPluginPatches.OnLocalPlayerDieOrRevive += OnFreeCamEnableOrDisable;
+            
+            OnUIStart?.Invoke();
         }
 
         public void Update()
@@ -91,33 +94,9 @@ namespace CinematographyPlugin.UI
             CloseUI();
         }
         
-        public void OnUIToggle(bool state)
-        {
-            if (state)
-            {
-                ToggleUIManager.ShowUI();
-            }
-            else
-            {
-                ToggleUIManager.HideUI();
-            }
-        }
-        
-        public void OnBodyToggle(bool state)
-        {
-            if (state)
-            {
-                ToggleUIManager.ShowBody();
-            }
-            else
-            {
-                ToggleUIManager.HideBody();
-            }
-        }
-
         private void OnFreeCamEnableOrDisable(bool enable)
         {
-            var option = (ToggleOption) Options[UIOption.ToggleFreeCamera];
+            var option = Toggles[UIOption.ToggleFreeCamera];
             if (enable)
             {
                 option.Enable(option.Toggle.isOn);
@@ -130,7 +109,7 @@ namespace CinematographyPlugin.UI
         
         private void OnTimeScaleEnableOrDisable(bool enable)
         {
-            var option = (ToggleOption) Options[UIOption.ToggleTimeScale];
+            var option = Toggles[UIOption.ToggleTimeScale];
             if (enable)
             {
                 option.Enable(option.Toggle.isOn);
@@ -143,7 +122,9 @@ namespace CinematographyPlugin.UI
 
         public void OpenUI()
         {
-            CursorLockLastMode = Cursor.lockState;
+            if (!CinemaNetworkingManager.AssertAllPlayersHasPlugin()) return;
+
+                CursorLockLastMode = Cursor.lockState;
             CursorLastVisible = Cursor.visible;
             
             Cursor.lockState = CursorLockMode.None;
@@ -162,22 +143,17 @@ namespace CinematographyPlugin.UI
 
         public void OnDestroy()
         {
-            ((ToggleOption) Options[UIOption.ToggleUI]).OnValueChanged -= OnUIToggle;
-            ((ToggleOption) Options[UIOption.ToggleBody]).OnValueChanged -= OnBodyToggle;
             CinemaNetworkingManager.OnFreeCamEnableOrDisable -= OnFreeCamEnableOrDisable;
             CinemaNetworkingManager.OnTimeScaleEnableOrDisable -= OnTimeScaleEnableOrDisable;
+            CinemaPluginPatches.OnLocalPlayerDieOrRevive -= OnFreeCamEnableOrDisable;
             
             if (MenuOpen)
             {
                 CloseUI();
             }
-            
-            foreach (var keyValuePair in Options)
-            {
-                keyValuePair.Value.OnReset();
-            }
-            
-            ToggleUIManager.HideUI();
+
+            TimeScaleController.ResetTimeScale();
+            ScreenClutterController.GetInstance().HideUI();
 
             Destroy(_cinemaUIgo);
         }

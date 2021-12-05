@@ -8,7 +8,6 @@ namespace CinematographyPlugin.UI
     public abstract class Option
     {
         internal GameObject Root { get; }
-        private OptionType OptionType { get; }
         private bool StartActive { get; }
         private string Name { get; }
 
@@ -16,10 +15,9 @@ namespace CinematographyPlugin.UI
 
         internal Dictionary<Option, bool> StateByDisableOnSelectOptions { get; } = new Dictionary<Option, bool>();
 
-        protected Option(GameObject root, OptionType optionType, bool startActive)
+        protected Option(GameObject root, bool startActive)
         {
             Root = root;
-            OptionType = optionType;
             StartActive = startActive;
             Name = root.name;
 

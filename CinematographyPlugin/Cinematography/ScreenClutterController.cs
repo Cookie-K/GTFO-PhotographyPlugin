@@ -1,12 +1,14 @@
 ﻿using System;
+using CinematographyPlugin.UI;
+using CinematographyPlugin.UI.Enums;
 using Player;
 using UnityEngine;
 
 namespace CinematographyPlugin.Cinematography
 {
-    public class ScreenClutterManager : MonoBehaviour
+    public class ScreenClutterController : MonoBehaviour
     {
-        private static ScreenClutterManager _instance;
+        private static ScreenClutterController _instance;
         private static bool _init;
         
         private static GameObject _body;
@@ -18,12 +20,12 @@ namespace CinematographyPlugin.Cinematography
         private static GameObject _uiNavMarkerLayer;
         private static PE_FPSDamageFeedback _damageFeedback;
 
-        public ScreenClutterManager(IntPtr intPtr) : base(intPtr)
+        public ScreenClutterController(IntPtr intPtr) : base(intPtr)
         {
             // For Il2CppAssemblyUnhollower
         }
 
-        public static ScreenClutterManager GetInstance()
+        public static ScreenClutterController GetInstance()
         {
             if (_init)
             {
@@ -36,6 +38,9 @@ namespace CinematographyPlugin.Cinematography
         
         private void Awake()
         {
+            CinemaUIManager.Toggles[UIOption.ToggleUI].OnValueChanged += ToggleUIElements;
+            CinemaUIManager.Toggles[UIOption.ToggleBody].OnValueChanged += ToggleBody;
+            
             _uiPlayerLayer = GuiManager.PlayerLayer.Root.FindChild("PlayerLayer").gameObject;
             _uiCrosshairLayer = GuiManager.CrosshairLayer.Root.FindChild("CrosshairLayer").gameObject;
             _uiInteractionLayer = GuiManager.PlayerLayer.Root.FindChild("InteractionLayer").gameObject;
@@ -55,6 +60,11 @@ namespace CinematographyPlugin.Cinematography
         {
             return _body.active || _fpArms.active || _uiPlayerLayer.active;
         }
+
+        public void HideUI()
+        {
+            ToggleUIElements(false);
+        }
         
         public void ToggleAllScreenClutterExceptWaterMark(bool value)
         {
@@ -67,9 +77,9 @@ namespace CinematographyPlugin.Cinematography
         public void ToggleClientVisibility(PlayerAgent player, bool value)
         {
             player.AnimatorBody.gameObject.active = value;
-            player.NavMarker.m_marker.enabled = value;
+            player.NavMarker.m_marker.gameObject.active = value;
         }
-        
+
         private void ToggleBody(bool value)
         {
             _body.active = value;
@@ -92,6 +102,12 @@ namespace CinematographyPlugin.Cinematography
         private void ToggleScreenLiquids(bool value)
         {
             ScreenLiquidManager.hasSystem = value;
+        }
+
+        private void OnDestroy()
+        {
+            CinemaUIManager.Toggles[UIOption.ToggleUI].OnValueChanged -= ToggleUIElements;
+            CinemaUIManager.Toggles[UIOption.ToggleBody].OnValueChanged -= ToggleBody;
         }
     }
 }

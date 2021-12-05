@@ -2,6 +2,7 @@
 using BepInEx.IL2CPP;
 using BepInEx.Logging;
 using CinematographyPlugin.Cinematography;
+using CinematographyPlugin.Cinematography.Networking;
 using CinematographyPlugin.UI;
 using Dissonance;
 using HarmonyLib;
@@ -33,7 +34,7 @@ namespace CinematographyPlugin
             ClassInjector.RegisterTypeInIl2Cpp<CinemaCamManager>();
             ClassInjector.RegisterTypeInIl2Cpp<CinemaCamController>();
             ClassInjector.RegisterTypeInIl2Cpp<TimeScaleController>();
-            ClassInjector.RegisterTypeInIl2Cpp<ScreenClutterManager>();
+            ClassInjector.RegisterTypeInIl2Cpp<ScreenClutterController>();
             ClassInjector.RegisterTypeInIl2Cpp<LookSmoothingController>();
             ClassInjector.RegisterTypeInIl2Cpp<CinemaNetworkingManager>();
             ClassInjector.RegisterTypeInIl2Cpp<PostProcessingController>();

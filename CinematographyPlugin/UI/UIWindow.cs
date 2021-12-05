@@ -42,13 +42,6 @@ namespace CinematographyPlugin.UI
             exit.callback.AddListener((UnityAction<BaseEventData>) OnExit);
             trigger.triggers.Add(exit);
         }
-        
-        Rect ClampToScreen(Rect r)
-        {
-            r.x = Mathf.Clamp(r.x,0,Screen.width-r.width);
-            r.y = Mathf.Clamp(r.y,0,Screen.height-r.height);
-            return r;
-        }
 
         public void OnDrag(BaseEventData data)
         {

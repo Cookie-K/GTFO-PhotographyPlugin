@@ -18,7 +18,7 @@ namespace CinematographyPlugin.UI
 
         private int _nDisabled;
 
-        public SliderOption(GameObject root, bool startActive, float initialValue, float minValue, float maxValue) : base(root, OptionType.Slider, startActive)
+        public SliderOption(GameObject root, bool startActive, float initialValue, float minValue, float maxValue) : base(root, startActive)
         {
             Slider = root.GetComponentInChildren<Slider>();
             _valueText = root.transform.GetChild(1).GetComponentInChildren<TMP_Text>();

@@ -20,12 +20,13 @@ namespace CinematographyPlugin.UI
             options.Add(UIOption.MovementSmoothingSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.MovementSmoothingSlider), false, CinemaCamController.MovementSmoothTimeDefault, CinemaCamController.MovementSmoothTimeMin, CinemaCamController.MovementSmoothTimeMax));
             options.Add(UIOption.RotationSpeedSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.RotationSpeedSlider), false, CinemaCamController.GetDefaultRotationSpeed(), CinemaCamController.RotationSpeedMin, CinemaCamController.RotationSpeedMax));
             options.Add(UIOption.RotationSmoothingSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.RotationSmoothingSlider), false, CinemaCamController.RotationSmoothTimeDefault, CinemaCamController.RotationSmoothTimeMin, CinemaCamController.RotationSmoothTimeMax));
-            options.Add(UIOption.ZoomSpeedSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.ZoomSpeedSlider), false, CinemaCamController.GetDefaultZoom(), CinemaCamController.ZoomSpeedMin, CinemaCamController.ZoomSpeedMax));
+            options.Add(UIOption.ZoomSpeedSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.ZoomSpeedSlider), false, CinemaCamController.ZoomSpeedDefault, CinemaCamController.ZoomSpeedMin, CinemaCamController.ZoomSpeedMax));
             options.Add(UIOption.ZoomSmoothingSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.ZoomSmoothingSlider), false, CinemaCamController.ZoomSmoothTimeDefault, CinemaCamController.ZoomSmoothTimeMin, CinemaCamController.ZoomSmoothTimeMax));
 
             options.Add(UIOption.ToggleDynamicRoll, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleDynamicRoll), false, false));
             options.Add(UIOption.DynamicRollIntensitySlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.DynamicRollIntensitySlider), false, CinemaCamController.DynamicRotationDefault, CinemaCamController.DynamicRotationMin, CinemaCamController.DynamicRotationMax));
             options.Add(UIOption.ToggleMouseCtrlAltitude, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleMouseCtrlAltitude), true, false));
+            options.Add(UIOption.ToggleRollCtrlLateralAxis, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleRollCtrlLateralAxis), false, false));
 
             options.Add(UIOption.ToggleFpsLookSmoothing, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleFpsLookSmoothing), false, true));
             options.Add(UIOption.FpsLookSmoothingSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.FpsLookSmoothingSlider), false, LookSmoothingController.SmoothDefault, LookSmoothingController.SmoothMin, LookSmoothingController.SmoothMax));
@@ -51,6 +52,7 @@ namespace CinematographyPlugin.UI
                 options[UIOption.ZoomSmoothingSlider],
                 options[UIOption.ToggleDynamicRoll],
                 options[UIOption.ToggleMouseCtrlAltitude],
+                options[UIOption.ToggleRollCtrlLateralAxis],
             });
             
             options[UIOption.ToggleDynamicRoll].SubOptions.Add(options[UIOption.DynamicRollIntensitySlider]);
@@ -69,6 +71,7 @@ namespace CinematographyPlugin.UI
             // Add options to disable on select
             options[UIOption.ToggleFreeCamera].StateByDisableOnSelectOptions.Add(options[UIOption.ToggleUI], false);
             options[UIOption.ToggleFreeCamera].StateByDisableOnSelectOptions.Add(options[UIOption.ToggleBody], false);
+            options[UIOption.ToggleFreeCamera].StateByDisableOnSelectOptions.Add(options[UIOption.ToggleFpsLookSmoothing], false);
             
             return options;
         }
@@ -81,6 +84,7 @@ namespace CinematographyPlugin.UI
             toggles.Add(UIOption.ToggleBody, (ToggleOption) options[UIOption.ToggleBody]);
             toggles.Add(UIOption.ToggleFreeCamera, (ToggleOption) options[UIOption.ToggleFreeCamera]);
             toggles.Add(UIOption.ToggleMouseCtrlAltitude, (ToggleOption) options[UIOption.ToggleMouseCtrlAltitude]);
+            toggles.Add(UIOption.ToggleRollCtrlLateralAxis, (ToggleOption) options[UIOption.ToggleRollCtrlLateralAxis]);
             toggles.Add(UIOption.ToggleDynamicRoll, (ToggleOption) options[UIOption.ToggleDynamicRoll]);
             toggles.Add(UIOption.ToggleVignette, (ToggleOption) options[UIOption.ToggleVignette]);
             toggles.Add(UIOption.ToggleDoF, (ToggleOption) options[UIOption.ToggleDoF]);
