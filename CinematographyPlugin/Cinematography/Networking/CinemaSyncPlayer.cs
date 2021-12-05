@@ -7,6 +7,8 @@ namespace CinematographyPlugin.Cinematography.Networking
     {
         public PlayerAgent Agent { get; }
 
+        public bool HasPlugin { get; set; }
+
         public bool IsInFreeCam { get; set; }
 
         public bool IsInCtrlOfTime { get; set; }
@@ -16,10 +18,10 @@ namespace CinematographyPlugin.Cinematography.Networking
             Agent = agent;
         }
 
-        public void UpdateStates(CinemaNetworkingManager.CinemaPluginStateData data)
+        public void UpdateUIStates(CinemaNetworkingManager.CinemaPluginStateData data)
         {
-            IsInFreeCam = data.StartingFreeCam;
-            IsInCtrlOfTime = data.StartingTimeScale;
+            IsInFreeCam = data.StartingFreeCam || !data.StoppingFreeCam && IsInFreeCam;
+            IsInCtrlOfTime = data.StartingTimeScale || !data.StoppingTimeScale && IsInCtrlOfTime;
         }
 
     }

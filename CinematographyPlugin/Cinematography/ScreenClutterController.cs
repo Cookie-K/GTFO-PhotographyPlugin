@@ -77,7 +77,7 @@ namespace CinematographyPlugin.Cinematography
         public void ToggleClientVisibility(PlayerAgent player, bool value)
         {
             player.AnimatorBody.gameObject.active = value;
-            player.NavMarker.m_marker.enabled = value;
+            player.NavMarker.m_marker.gameObject.active = value;
         }
 
         private void ToggleBody(bool value)

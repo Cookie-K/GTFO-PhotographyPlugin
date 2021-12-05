@@ -25,11 +25,12 @@ namespace CinematographyPlugin.Cinematography
         private static float _rotationSpeedDefault = .65f;
         public const float RotationSpeedMin = 0f;
         public const float RotationSpeedMax = 1f;
+        private const float RotationDiffMax = 90f;
 
         public const float RotationSmoothTimeDefault = 0.2f;
         public const float RotationSmoothTimeMin = 0f;
         public const float RotationSmoothTimeMax = 1f;
-        
+
         private static float _zoomDefault;
         private const float ZoomMin = 1f;
         private const float ZoomMax = 160f;
@@ -214,15 +215,32 @@ namespace CinematographyPlugin.Cinematography
             var deltaLocal = Quaternion.Euler(deltaEuler.x, 0, 0);
             
             // calculate rotation delta with smoothing
-            _targetWorldRot *= deltaWorld;
-            _targetLocalRot *= deltaLocal;
-            
+            if (!IsRotationFlippedByNewRotation(deltaWorld))
+            {
+                _targetWorldRot *= deltaWorld;
+                _targetLocalRot *= deltaLocal;
+            }
+
             var t = 1.0f - Mathf.Pow(_rotationSmoothFactor, _independentDeltaTime);
             var newWorldRot = Quaternion.Slerp(worldTrans.localRotation, _targetWorldRot, t);
             var newLocalRot = Quaternion.Slerp(localTrans.localRotation, _targetLocalRot, t);
 
             worldTrans.localRotation = newWorldRot;
             localTrans.localRotation = newLocalRot;
+        }
+
+        // Prevents slerp from sudden direction change when shortest angle flips around to opposite dir 
+        private bool IsRotationFlippedByNewRotation(Quaternion delta)
+        {
+            var preTargetForward = _targetWorldRot * Vector3.fwd;
+            var aftTargetForward = _targetWorldRot * delta * Vector3.fwd;
+            var currRot = transform.localRotation * Vector3.fwd;
+            
+            var rotAxis = Vector3.Cross(_fpsCamera.Forward, preTargetForward);
+            var preAngle = Vector3.SignedAngle(currRot, preTargetForward, rotAxis);
+            var aftAngle = Vector3.SignedAngle(currRot, aftTargetForward, rotAxis);
+
+            return Math.Abs(preAngle) >= RotationDiffMax && Math.Sign(preAngle) != Math.Sign(aftAngle);
         }
         
         // Pitch causes more trouble than good so it is commented out

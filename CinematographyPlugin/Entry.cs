@@ -28,8 +28,8 @@ namespace CinematographyPlugin
                     gameObject.AddComponent<CinemaCamManager>();
                     gameObject.AddComponent<ScreenClutterController>();
                     gameObject.AddComponent<LookSmoothingController>();
-                    gameObject.AddComponent<CinemaNetworkingManager>();
                     gameObject.AddComponent<PostProcessingController>();
+                    gameObject.AddComponent<CinemaNetworkingManager>().RegisterEvents();
                     Object.DontDestroyOnLoad(gameObject);
 
                     _go = gameObject;
@@ -39,8 +39,11 @@ namespace CinematographyPlugin
                 case eGameStateName.ExpeditionFail:
                 case eGameStateName.ExpeditionSuccess:
                 case eGameStateName.AfterLevel:
-                    CinematographyCore.log.LogMessage("Closing " + CinematographyCore.NAME);
-                    Object.Destroy(_go);
+                    if (_go != null)
+                    {
+                        CinematographyCore.log.LogMessage("Closing " + CinematographyCore.NAME);
+                        Object.Destroy(_go);
+                    }
                     break;
             }
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using CinematographyPlugin.Cinematography.Networking;
 using CinematographyPlugin.UI;
 using CinematographyPlugin.UI.Enums;
 using InControl;
@@ -40,6 +41,7 @@ namespace CinematographyPlugin.Cinematography
             CinemaUIManager.Toggles[UIOption.ToggleFpsLookSmoothing].OnValueChanged += OnFpsSmoothToggle;
             CinemaUIManager.Sliders[UIOption.FpsLookSmoothingSlider].OnValueChanged += OnFpsSmoothValChange;
             CinemaUIManager.Sliders[UIOption.TimeScaleSlider].OnValueChanged += OnTimeScaleChange;
+            CinemaNetworkingManager.OnTimeScaleChangedByOtherPlayer += OnTimeScaleChange;
         }
 
         private void OnFpsSmoothToggle(bool value)
@@ -68,6 +70,7 @@ namespace CinematographyPlugin.Cinematography
             CinemaUIManager.Toggles[UIOption.ToggleFpsLookSmoothing].OnValueChanged -= OnFpsSmoothToggle;
             CinemaUIManager.Sliders[UIOption.FpsLookSmoothingSlider].OnValueChanged -= OnFpsSmoothValChange;
             CinemaUIManager.Sliders[UIOption.TimeScaleSlider].OnValueChanged -= OnTimeScaleChange;
+            CinemaNetworkingManager.OnTimeScaleChangedByOtherPlayer -= OnTimeScaleChange;
         }
     }
 }
