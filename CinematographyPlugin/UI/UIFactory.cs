@@ -20,7 +20,7 @@ namespace CinematographyPlugin.UI
             options.Add(UIOption.MovementSmoothingSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.MovementSmoothingSlider), false, CinemaCamController.MovementSmoothTimeDefault, CinemaCamController.MovementSmoothTimeMin, CinemaCamController.MovementSmoothTimeMax));
             options.Add(UIOption.RotationSpeedSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.RotationSpeedSlider), false, CinemaCamController.GetDefaultRotationSpeed(), CinemaCamController.RotationSpeedMin, CinemaCamController.RotationSpeedMax));
             options.Add(UIOption.RotationSmoothingSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.RotationSmoothingSlider), false, CinemaCamController.RotationSmoothTimeDefault, CinemaCamController.RotationSmoothTimeMin, CinemaCamController.RotationSmoothTimeMax));
-            options.Add(UIOption.ZoomSpeedSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.ZoomSpeedSlider), false, CinemaCamController.GetDefaultZoom(), CinemaCamController.ZoomSpeedMin, CinemaCamController.ZoomSpeedMax));
+            options.Add(UIOption.ZoomSpeedSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.ZoomSpeedSlider), false, CinemaCamController.ZoomSpeedDefault, CinemaCamController.ZoomSpeedMin, CinemaCamController.ZoomSpeedMax));
             options.Add(UIOption.ZoomSmoothingSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.ZoomSmoothingSlider), false, CinemaCamController.ZoomSmoothTimeDefault, CinemaCamController.ZoomSmoothTimeMin, CinemaCamController.ZoomSmoothTimeMax));
 
             options.Add(UIOption.ToggleDynamicRoll, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleDynamicRoll), false, false));

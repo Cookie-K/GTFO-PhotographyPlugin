@@ -104,7 +104,7 @@ namespace CinematographyPlugin.Cinematography
             _rotationSpeed = _rotationSpeedDefault;
             
             // Get default FoV
-            _zoomDefault = CellSettingsManager.GetIntValue(eCellSettingID.Video_WorldFOV);
+            _zoomDefault = GetDefaultZoom();
             _targetZoom = _zoomDefault;
             _currZoom = _zoomDefault;
         }
