@@ -223,7 +223,7 @@ namespace CinematographyPlugin.Cinematography.Networking
             };
 
             PlayersByName[playerName].IsInFreeCam = enteringFreeCam;
-            CinematographyCore.log.LogInfo($"{data.PlayerName} broadcasting free cam {enteringFreeCam}");
+            // CinematographyCore.log.LogInfo($"{data.PlayerName} broadcasting free cam {enteringFreeCam}");
             NetworkingManager.InvokeEvent(SyncCinemaStateEvent, data);
         }
 
@@ -238,7 +238,7 @@ namespace CinematographyPlugin.Cinematography.Networking
             };
             
             PlayersByName[playerName].IsInCtrlOfTime = alteringTimeScale;
-            CinematographyCore.log.LogInfo($"{data.PlayerName} broadcasting time scale {alteringTimeScale}");
+            // CinematographyCore.log.LogInfo($"{data.PlayerName} broadcasting time scale {alteringTimeScale}");
             NetworkingManager.InvokeEvent(SyncCinemaStateEvent, data);
         }
 

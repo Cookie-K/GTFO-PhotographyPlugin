@@ -54,7 +54,7 @@ namespace CinematographyPlugin
         {
             if (__instance.IsLocallyOwned)
             {
-                CinematographyCore.log.LogInfo($"{__instance.name} is alive {value}");
+                // CinematographyCore.log.LogInfo($"{__instance.name} is alive {value}");
                 OnLocalPlayerDieOrRevive?.Invoke(value);
             }
         }

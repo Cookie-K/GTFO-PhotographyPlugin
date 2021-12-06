@@ -390,7 +390,7 @@ namespace CinematographyPlugin.Cinematography
             CinemaUIManager.Toggles[UIOption.ToggleMouseCtrlAltitude].OnValueChanged -= SetMouseCtrlAltitude;
             CinemaUIManager.Toggles[UIOption.ToggleRollCtrlLateralAxis].OnValueChanged -= SetRollCtrlLateralAxis;
             CinemaUIManager.Toggles[UIOption.ToggleDynamicRoll].OnValueChanged -= SetDynamicRotation;
-            CinemaUIManager.Sliders[UIOption.DynamicRollIntensitySlider].OnValueChanged += SetDynamicRotationSpeed;
+            CinemaUIManager.Sliders[UIOption.DynamicRollIntensitySlider].OnValueChanged -= SetDynamicRotationSpeed;
         }
     }
 }
