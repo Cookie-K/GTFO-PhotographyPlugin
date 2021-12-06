@@ -7,12 +7,12 @@ namespace CinematographyPlugin.Cinematography.CinemaInput
     {
         private static KeyCode PosX = KeyCode.D;
         private static KeyCode NegX = KeyCode.A;
-        private static KeyCode PosY = KeyCode.Space;
-        private static KeyCode NegY = KeyCode.LeftControl;
+        private static KeyCode PosY = ConfigManager.UpKey;
+        private static KeyCode NegY = ConfigManager.DownKey;
         private static KeyCode PosZ = KeyCode.W;
         private static KeyCode NegZ = KeyCode.S;
-        private static KeyCode PosS = KeyCode.LeftShift;
-        private static KeyCode NegS = KeyCode.LeftAlt;
+        private static KeyCode PosS = ConfigManager.SpeedUpKey;
+        private static KeyCode NegS = ConfigManager.SlowDownKey;
         
         public static float GetAxis(AxisName axis)
         {

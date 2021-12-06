@@ -41,6 +41,7 @@
     <Compile Include="Cinematography\LookSmoothingController.cs" />
     <Compile Include="Cinematography\TimeScaleController.cs" />
     <Compile Include="Cinematography\ScreenClutterController.cs" />
+    <Compile Include="ConfigManager.cs" />
     <Compile Include="Entry.cs" />
     <Compile Include="Cinematography\CinemaCamManager.cs" />
     <Compile Include="CinemaPluginPatches.cs" />

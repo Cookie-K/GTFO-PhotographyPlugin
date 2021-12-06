@@ -17,8 +17,8 @@ namespace CinematographyPlugin.UI
         public static event Action OnUIStart;
         
         private const string PrefabPath = "Assets/UI/CinemaUI.prefab";
-        private const KeyCode UIOpenKey = KeyCode.F4;
-       
+        private static readonly KeyCode UIOpenKey = ConfigManager.MenuKey;
+
         internal static Dictionary<UIOption, Option> Options { get; set; }
         internal static Dictionary<UIOption, ToggleOption> Toggles; 
         internal static Dictionary<UIOption, SliderOption> Sliders; 
