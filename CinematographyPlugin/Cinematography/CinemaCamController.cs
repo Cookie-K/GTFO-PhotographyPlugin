@@ -254,7 +254,7 @@ namespace CinematographyPlugin.Cinematography
             // var forward = _mouseCtrlAltitude ? localTrans.forward : FlatForward();
             
             var velocityXZ = Vector3.ProjectOnPlane(_movementVelocity, up);
-            var vector = velocityXZ * (Time.timeScale * _dynamicRotationSpeed * DynamicRotationSpeedScale);
+            var vector = velocityXZ * (_dynamicRotationSpeed * DynamicRotationSpeedScale);
 
             // var pitchDir = Mathf.Sign(Vector3.Dot(vector, forward));
             var rollDir = Mathf.Sign(Vector3.Dot(vector, right));
