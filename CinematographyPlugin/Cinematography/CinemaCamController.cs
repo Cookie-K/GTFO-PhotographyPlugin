@@ -12,10 +12,11 @@ namespace CinematographyPlugin.Cinematography
     {
         private const float FastSpeedScale = 2;
         private const float SlowSpeedScale = 1f/2f;
-
-        public const float MovementSpeedDefault = 5f;
+        
+        public const float MovementSpeedDefault = 0.5f;
         public const float MovementSpeedMin = 0f;
-        public const float MovementSpeedMax = 10f;
+        public const float MovementSpeedMax = 1f;
+        private const float MovementSpeedScale = 10;
 
         public const float MovementSmoothTimeDefault = 0.2f;
         public const float MovementSmoothTimeMin = 0f;
@@ -42,7 +43,7 @@ namespace CinematographyPlugin.Cinematography
 
         public const float ZoomSmoothTimeDefault = 0.2f;
         public const float ZoomSmoothTimeMin = 0f;
-        public const float ZoomSmoothTimeMax = 2f;
+        public const float ZoomSmoothTimeMax = 1f;
 
         public const float DynamicRotationDefault = 1f;
         public const float DynamicRotationMin = 0f;
@@ -51,8 +52,8 @@ namespace CinematographyPlugin.Cinematography
         private const float DynamicRotationSmoothFactor = 0.4f;
         private const float DynamicRotationRollMax = 180f;
         
-        private bool _mouseCtrlAltitude = true;
-        private bool _rollCtrlLateralAxis = false;
+        private bool _alignPitchAxisWCam = true;
+        private bool _alignRollAxisWCam = false;
         private bool _dynamicRotation = true;
         
         private float _lastInterval;
@@ -93,8 +94,8 @@ namespace CinematographyPlugin.Cinematography
 
             CinemaUIManager.Toggles[UIOption.ToggleDynamicRoll].OnValueChanged += SetDynamicRotation;
             CinemaUIManager.Sliders[UIOption.DynamicRollIntensitySlider].OnValueChanged += SetDynamicRotationSpeed;
-            CinemaUIManager.Toggles[UIOption.ToggleMouseCtrlAltitude].OnValueChanged += SetMouseCtrlAltitude;
-            CinemaUIManager.Toggles[UIOption.ToggleRollCtrlLateralAxis].OnValueChanged += SetRollCtrlLateralAxis;
+            CinemaUIManager.Toggles[UIOption.ToggleAlignPitchAxisWCam].OnValueChanged += SetAlignPitchAxisWCam;
+            CinemaUIManager.Toggles[UIOption.ToggleAlignRollAxisWCam].OnValueChanged += SetAlignRollAxisWCam;
 
             _fpsCamera = FindObjectOfType<FPSCamera>();
             _rotTrans = transform.GetChild(0);
@@ -168,12 +169,12 @@ namespace CinematographyPlugin.Cinematography
 
             // calculate speed and smoothing time
             var speedAxis = InputManager.GetAxis(AxisName.Speed);
-            var speedScale = speedAxis > 0 ? FastSpeedScale : speedAxis < 0 ? SlowSpeedScale : 1;
+            var speedScale = MovementSpeedScale * (speedAxis > 0 ? FastSpeedScale : speedAxis < 0 ? SlowSpeedScale : 1);
             var speed = _movementSpeed * speedScale;
 
-            var right = _rollCtrlLateralAxis ? _rotTrans.right : FlatRight();
-            var forward = _mouseCtrlAltitude ? _rotTrans.forward : FlatForward();
-            var up = _mouseCtrlAltitude ? _rotTrans.up : Vector3.up;
+            var right = _alignRollAxisWCam ? _rotTrans.right : FlatRight();
+            var forward = _alignPitchAxisWCam ? _rotTrans.forward : FlatForward();
+            var up = _alignPitchAxisWCam ? _rotTrans.up : Vector3.up;
 
             // calculate translation delta with smoothing
             delta += _independentDeltaTime * speed * x * right;
@@ -215,9 +216,12 @@ namespace CinematographyPlugin.Cinematography
             var deltaLocal = Quaternion.Euler(deltaEuler.x, 0, 0);
             
             // calculate rotation delta with smoothing
-            if (!IsRotationFlippedByNewRotation(deltaWorld))
+            if (!IsYawRotationFlippedByNewRotation(deltaWorld))
             {
                 _targetWorldRot *= deltaWorld;
+            }
+            if (!IsPitchRotationFlippedByNewRotation(deltaLocal))
+            {
                 _targetLocalRot *= deltaLocal;
             }
 
@@ -230,11 +234,24 @@ namespace CinematographyPlugin.Cinematography
         }
 
         // Prevents slerp from sudden direction change when shortest angle flips around to opposite dir 
-        private bool IsRotationFlippedByNewRotation(Quaternion delta)
+        private bool IsYawRotationFlippedByNewRotation(Quaternion delta)
         {
             var preTargetForward = _targetWorldRot * Vector3.fwd;
             var aftTargetForward = _targetWorldRot * delta * Vector3.fwd;
             var currRot = transform.localRotation * Vector3.fwd;
+            
+            var rotAxis = Vector3.Cross(_fpsCamera.Forward, preTargetForward);
+            var preAngle = Vector3.SignedAngle(currRot, preTargetForward, rotAxis);
+            var aftAngle = Vector3.SignedAngle(currRot, aftTargetForward, rotAxis);
+
+            return Math.Abs(preAngle) >= RotationDiffMax && Math.Sign(preAngle) != Math.Sign(aftAngle);
+        }
+        
+        private bool IsPitchRotationFlippedByNewRotation(Quaternion delta)
+        {
+            var preTargetForward = _targetLocalRot * Vector3.fwd;
+            var aftTargetForward = _targetLocalRot * delta * Vector3.fwd;
+            var currRot = _rotTrans.localRotation * Vector3.fwd;
             
             var rotAxis = Vector3.Cross(_fpsCamera.Forward, preTargetForward);
             var preAngle = Vector3.SignedAngle(currRot, preTargetForward, rotAxis);
@@ -249,8 +266,8 @@ namespace CinematographyPlugin.Cinematography
             var worldTrans = transform;
             var localTrans = _rotTrans;
             
-            var up = _mouseCtrlAltitude ? localTrans.up : Vector3.up;
-            var right = _mouseCtrlAltitude ? localTrans.right : FlatRight();
+            var up = _alignPitchAxisWCam ? localTrans.up : Vector3.up;
+            var right = _alignPitchAxisWCam ? localTrans.right : FlatRight();
             // var forward = _mouseCtrlAltitude ? localTrans.forward : FlatForward();
             
             var velocityXZ = Vector3.ProjectOnPlane(_movementVelocity, up);
@@ -356,14 +373,14 @@ namespace CinematographyPlugin.Cinematography
             _zoomSmoothFactor = value;
         }
         
-        private void SetMouseCtrlAltitude(bool value)
+        private void SetAlignPitchAxisWCam(bool value)
         {
-            _mouseCtrlAltitude = value;
+            _alignPitchAxisWCam = value;
         }
         
-        private void SetRollCtrlLateralAxis(bool value)
+        private void SetAlignRollAxisWCam(bool value)
         {
-            _rollCtrlLateralAxis = value;
+            _alignRollAxisWCam = value;
         }
         
         private void SetDynamicRotation(bool value)
@@ -387,8 +404,8 @@ namespace CinematographyPlugin.Cinematography
             CinemaUIManager.Sliders[UIOption.ZoomSpeedSlider].OnValueChanged -= SetZoomSpeed;
             CinemaUIManager.Sliders[UIOption.ZoomSmoothingSlider].OnValueChanged -= SetZoomSmoothTime;
             
-            CinemaUIManager.Toggles[UIOption.ToggleMouseCtrlAltitude].OnValueChanged -= SetMouseCtrlAltitude;
-            CinemaUIManager.Toggles[UIOption.ToggleRollCtrlLateralAxis].OnValueChanged -= SetRollCtrlLateralAxis;
+            CinemaUIManager.Toggles[UIOption.ToggleAlignPitchAxisWCam].OnValueChanged -= SetAlignPitchAxisWCam;
+            CinemaUIManager.Toggles[UIOption.ToggleAlignRollAxisWCam].OnValueChanged -= SetAlignRollAxisWCam;
             CinemaUIManager.Toggles[UIOption.ToggleDynamicRoll].OnValueChanged -= SetDynamicRotation;
             CinemaUIManager.Sliders[UIOption.DynamicRollIntensitySlider].OnValueChanged -= SetDynamicRotationSpeed;
         }

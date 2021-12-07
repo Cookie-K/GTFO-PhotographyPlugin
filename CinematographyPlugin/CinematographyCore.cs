@@ -19,7 +19,7 @@ namespace CinematographyPlugin
             MODNAME = "Cinematography",
             AUTHOR = "Cookie_K",
             GUID = "com." + AUTHOR + "." + MODNAME,
-            VERSION = "0.0.1";
+            VERSION = "1.0.0";
 
         public static ManualLogSource log;
 
@@ -27,6 +27,12 @@ namespace CinematographyPlugin
 
         public override void Load()
         {
+            if (Globals.Global.RundownIdToLoad > 1)
+            {
+                // This plugin is only for modded rundowns with ID 1
+                return;
+            }
+            
             log = Log;
 
             ClassInjector.RegisterTypeInIl2Cpp<UIWindow>();

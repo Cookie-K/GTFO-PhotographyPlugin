@@ -28,7 +28,7 @@ namespace CinematographyPlugin.UI
         internal static bool MenuOpen { get; set; }
         private static bool _init;
 
-        private GameObject _cinemaUIgo;
+        private static GameObject _cinemaUIgo;
 
         public CinemaUIManager(IntPtr intPtr) : base(intPtr)
         {
@@ -133,7 +133,7 @@ namespace CinematographyPlugin.UI
             MenuOpen = true;
         }
         
-        public void CloseUI()
+        public static void CloseUI()
         {
             Cursor.lockState = CursorLockLastMode;
             Cursor.visible = CursorLastVisible;
@@ -147,15 +147,10 @@ namespace CinematographyPlugin.UI
             CinemaNetworkingManager.OnTimeScaleEnableOrDisable -= OnTimeScaleEnableOrDisable;
             CinemaPluginPatches.OnLocalPlayerDieOrRevive -= OnFreeCamEnableOrDisable;
             
-            if (MenuOpen)
+            if (_cinemaUIgo != null)
             {
-                CloseUI();
+                Destroy(_cinemaUIgo);
             }
-
-            TimeScaleController.ResetTimeScale();
-            ScreenClutterController.GetInstance().HideUI();
-
-            Destroy(_cinemaUIgo);
         }
     }
 }
