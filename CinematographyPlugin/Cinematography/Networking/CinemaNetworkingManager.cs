@@ -4,8 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using CinematographyPlugin.UI;
 using CinematographyPlugin.UI.Enums;
-using LibCpp2IL;
-using Nidhogg.Managers;
+using GTFO.API;
 using Player;
 using UnityEngine;
 
@@ -77,25 +76,25 @@ namespace CinematographyPlugin.Cinematography.Networking
 
         public void RegisterEvents()
         {
-            if (!NetworkingManager.IsEventRegistered(SyncCinemaStateEvent))
+            if (!NetworkAPI.IsEventRegistered(SyncCinemaStateEvent))
             {
-                NetworkingManager.RegisterEvent<CinemaPluginStateData>(SyncCinemaStateEvent,  (senderId, packet) => 
+                NetworkAPI.RegisterEvent<CinemaPluginStateData>(SyncCinemaStateEvent,  (senderId, packet) => 
                 {
                     UpdateStatesAndTriggerEvents(packet);
                 });
             }
             
-            if (!NetworkingManager.IsEventRegistered(SyncCinemaAlterTimeScaleEvent))
+            if (!NetworkAPI.IsEventRegistered(SyncCinemaAlterTimeScaleEvent))
             {
-                NetworkingManager.RegisterEvent<CinemaPluginTimeScaleData>(SyncCinemaAlterTimeScaleEvent,  (senderId, packet) => 
+                NetworkAPI.RegisterEvent<CinemaPluginTimeScaleData>(SyncCinemaAlterTimeScaleEvent,  (senderId, packet) => 
                 {
                     OnTimeScaleSetByOtherPlayer(packet);
                 });
             }
             
-            if (!NetworkingManager.IsEventRegistered(CinemaPingEvent))
+            if (!NetworkAPI.IsEventRegistered(CinemaPingEvent))
             {
-                NetworkingManager.RegisterEvent<CinemaPluginPingData>(CinemaPingEvent,  (senderId, packet) => 
+                NetworkAPI.RegisterEvent<CinemaPluginPingData>(CinemaPingEvent,  (senderId, packet) => 
                 {
                     OnPing(packet);
                 });
@@ -201,7 +200,7 @@ namespace CinematographyPlugin.Cinematography.Networking
             var playerName = PlayerManager.GetLocalPlayerAgent().Sync.PlayerNick;
             var data = new CinemaPluginPingData { PlayerName = playerName };
             PlayersByName[data.PlayerName].HasPlugin = true;
-            NetworkingManager.InvokeEvent(CinemaPingEvent, data);
+            NetworkAPI.InvokeEvent(CinemaPingEvent, data);
         }
 
         private static void OnTimeScaleSetByOtherPlayer(CinemaPluginTimeScaleData data)
@@ -224,7 +223,7 @@ namespace CinematographyPlugin.Cinematography.Networking
 
             PlayersByName[playerName].IsInFreeCam = enteringFreeCam;
             // CinematographyCore.log.LogInfo($"{data.PlayerName} broadcasting free cam {enteringFreeCam}");
-            NetworkingManager.InvokeEvent(SyncCinemaStateEvent, data);
+            NetworkAPI.InvokeEvent(SyncCinemaStateEvent, data);
         }
 
         private static void SyncLocalPlayerEnterExitTimeScale(bool alteringTimeScale)
@@ -239,7 +238,7 @@ namespace CinematographyPlugin.Cinematography.Networking
             
             PlayersByName[playerName].IsInCtrlOfTime = alteringTimeScale;
             // CinematographyCore.log.LogInfo($"{data.PlayerName} broadcasting time scale {alteringTimeScale}");
-            NetworkingManager.InvokeEvent(SyncCinemaStateEvent, data);
+            NetworkAPI.InvokeEvent(SyncCinemaStateEvent, data);
         }
 
         private static void SyncLocalPlayerAlterTimeScale(float timeScale)
@@ -248,7 +247,7 @@ namespace CinematographyPlugin.Cinematography.Networking
             {
                 PlayerName = PlayerManager.GetLocalPlayerAgent().Sync.PlayerNick, TimeScale = timeScale
             };
-            NetworkingManager.InvokeEvent(SyncCinemaAlterTimeScaleEvent, data);
+            NetworkAPI.InvokeEvent(SyncCinemaAlterTimeScaleEvent, data);
         }
 
         private static void UpdatePlayersList()

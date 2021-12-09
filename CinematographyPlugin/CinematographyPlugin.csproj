@@ -203,9 +203,6 @@
     <Reference Include="Newtonsoft.Json, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
       <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\GTFO-CinemaTest\BepInEx\unhollowed\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Nidhogg, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\GTFO-CinemaTest\BepInEx\plugins\Kasuromi-Nidhogg\Nidhogg.dll</HintPath>
-    </Reference>
     <Reference Include="PlayFab-ASM, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
       <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\GTFO-CinemaTest\BepInEx\unhollowed\PlayFab-ASM.dll</HintPath>
     </Reference>
@@ -563,6 +560,12 @@
     <Reference Include="Wwise-ASM, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
       <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\GTFO-CinemaTest\BepInEx\unhollowed\Wwise-ASM.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="config\Assets\AssetBundles\chinematographyplugin" />
+    <Content Include="icon.png" />
+    <Content Include="manifest.json" />
+    <Content Include="README.md" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
