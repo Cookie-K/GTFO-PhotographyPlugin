@@ -110,6 +110,9 @@
     <Reference Include="FluffyUnderware.DevTools, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
       <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\GTFO-CinemaTest\BepInEx\unhollowed\FluffyUnderware.DevTools.dll</HintPath>
     </Reference>
+    <Reference Include="FPSRenderer, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
+      <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\GTFO-CinemaTest\BepInEx\unhollowed\FPSRenderer.dll</HintPath>
+    </Reference>
     <Reference Include="GameData-ASM, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
       <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\GTFO-CinemaTest\BepInEx\unhollowed\GameData-ASM.dll</HintPath>
     </Reference>
@@ -146,6 +149,9 @@
     <Reference Include="Il2CppSystem.Core, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
       <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\GTFO-CinemaTest\BepInEx\unhollowed\Il2CppSystem.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Il2CppSystem.Data, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
+      <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\GTFO-CinemaTest\BepInEx\unhollowed\Il2CppSystem.Data.dll</HintPath>
+    </Reference>
     <Reference Include="Il2CppSystem.Diagnostics.StackTrace, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
       <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\GTFO-CinemaTest\BepInEx\unhollowed\Il2CppSystem.Diagnostics.StackTrace.dll</HintPath>
     </Reference>
@@ -157,6 +163,12 @@
     </Reference>
     <Reference Include="Il2CppSystem.Net.Http, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
       <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\GTFO-CinemaTest\BepInEx\unhollowed\Il2CppSystem.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="Il2CppSystem.Numerics, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
+      <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\GTFO-CinemaTest\BepInEx\unhollowed\Il2CppSystem.Numerics.dll</HintPath>
+    </Reference>
+    <Reference Include="Il2CppSystem.Runtime, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
+      <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\GTFO-CinemaTest\BepInEx\unhollowed\Il2CppSystem.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Il2CppSystem.Runtime.Serialization, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
       <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\GTFO-CinemaTest\BepInEx\unhollowed\Il2CppSystem.Runtime.Serialization.dll</HintPath>
@@ -199,6 +211,9 @@
     </Reference>
     <Reference Include="MonoMod.Utils, Version=21.10.10.1, Culture=neutral, PublicKeyToken=null">
       <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\GTFO-CinemaTest\BepInEx\core\MonoMod.Utils.dll</HintPath>
+    </Reference>
+    <Reference Include="NativeHeap, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
+      <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\GTFO-CinemaTest\BepInEx\unhollowed\NativeHeap.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
       <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\GTFO-CinemaTest\BepInEx\unhollowed\Newtonsoft.Json.dll</HintPath>
@@ -256,6 +271,24 @@
     </Reference>
     <Reference Include="UnhollowerRuntimeLib, Version=0.4.19.1, Culture=neutral, PublicKeyToken=null">
       <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\GTFO-CinemaTest\BepInEx\core\UnhollowerRuntimeLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Analytics.DataPrivacy, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
+      <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\GTFO-CinemaTest\BepInEx\unhollowed\Unity.Analytics.DataPrivacy.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Burst, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
+      <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\GTFO-CinemaTest\BepInEx\unhollowed\Unity.Burst.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Burst.Unsafe, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
+      <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\GTFO-CinemaTest\BepInEx\unhollowed\Unity.Burst.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Collections, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
+      <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\GTFO-CinemaTest\BepInEx\unhollowed\Unity.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Mathematics, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
+      <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\GTFO-CinemaTest\BepInEx\unhollowed\Unity.Mathematics.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Postprocessing.Runtime, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
+      <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\GTFO-CinemaTest\BepInEx\unhollowed\Unity.Postprocessing.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
       <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\GTFO-CinemaTest\BepInEx\unhollowed\Unity.TextMeshPro.dll</HintPath>
@@ -371,7 +404,7 @@
     <Reference Include="UnityEngine.InputModule, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
       <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\GTFO-CinemaTest\BepInEx\unhollowed\UnityEngine.InputModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.JSONSerializeModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="UnityEngine.JSONSerializeModule, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
       <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\GTFO-CinemaTest\BepInEx\unhollowed\UnityEngine.JSONSerializeModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.LocalizationModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
@@ -560,12 +593,6 @@
     <Reference Include="Wwise-ASM, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
       <HintPath>C:\Users\Kukai\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\GTFO-CinemaTest\BepInEx\unhollowed\Wwise-ASM.dll</HintPath>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="config\Assets\AssetBundles\chinematographyplugin" />
-    <Content Include="icon.png" />
-    <Content Include="manifest.json" />
-    <Content Include="README.md" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -1,8 +1,10 @@
 ﻿using System;
 using CinematographyPlugin.UI;
 using CinematographyPlugin.UI.Enums;
+using Player;
 using UnityEngine;
 using UnityEngine.PostProcessing;
+using UnityEngine.Rendering.PostProcessing;
 
 namespace CinematographyPlugin.Cinematography
 {
@@ -20,7 +22,10 @@ namespace CinematographyPlugin.Cinematography
         public const float FocalLenghtMax = 10f; // in cm
         private static float _focalLenghtDefault; // in cm
 
-        private PostProcessingProfile _ppp;
+        private PostProcessVolume _ppv;
+        private DepthOfField _dof;
+        private Vignette _vin;
+        private AmbientParticles _ambientParticles;
         
         public PostProcessingController(IntPtr intPtr) : base(intPtr)
         {
@@ -29,25 +34,33 @@ namespace CinematographyPlugin.Cinematography
 
         private void Awake()
         {
-            var fpsCamera = FindObjectOfType<FPSCamera>();
-            var ppBehaviour = fpsCamera.GetComponent<PostProcessingBehaviour>();
-            _ppp = ppBehaviour.profile;
+            _ambientParticles = PlayerManager.GetLocalPlayerAgent().FPSCamera.GetComponent<AmbientParticles>();
+            _ppv = GetPostProcessVolume();
+            _dof = _ppv.profile.GetSetting<DepthOfField>();
+            _vin = _ppv.profile.GetSetting<Vignette>();
         }
 
         private void Start()
         {
             ((ToggleOption) CinemaUIManager.Options[UIOption.ToggleVignette]).OnValueChanged += OnVignetteToggle;
+            ((ToggleOption) CinemaUIManager.Options[UIOption.ToggleAmbientParticles]).OnValueChanged += OnAmbientParticleToggle;
             ((SliderOption) CinemaUIManager.Options[UIOption.FocusDistanceSlider]).OnValueChanged +=  OnFocusDistanceChange;
             ((SliderOption) CinemaUIManager.Options[UIOption.ApertureSlider]).OnValueChanged +=  OnApertureChange;
             ((SliderOption) CinemaUIManager.Options[UIOption.FocalLenghtSlider]).OnValueChanged +=  OnFocalLenghtChange;
+        }
+
+        private static PostProcessVolume GetPostProcessVolume()
+        {
+            return PlayerManager.GetLocalPlayerAgent().FPSCamera.GetComponent<PostProcessVolume>();
         }
 
         public static float GetDefaultFocusDistance()
         {
             if (_focusDistanceDefault < 0.001)
             {
-                var ppp = FindObjectOfType<FPSCamera>().GetComponent<PostProcessingBehaviour>().profile;
-                _focusDistanceDefault = ppp.depthOfField.settings.focusDistance;
+                var dof = GetPostProcessVolume().profile.GetSetting<DepthOfField>();
+                CinematographyCore.log.LogInfo(dof);
+                _focusDistanceDefault = dof.focusDistance;
             }
             return _focusDistanceDefault;
         }
@@ -56,8 +69,8 @@ namespace CinematographyPlugin.Cinematography
         {
             if (_apertureDefault < 0.001)
             {
-                var ppp = FindObjectOfType<FPSCamera>().GetComponent<PostProcessingBehaviour>().profile;
-                _apertureDefault = ppp.depthOfField.settings.aperture;
+                var dof = GetPostProcessVolume().profile.GetSetting<DepthOfField>();
+                _apertureDefault = dof.aperture;
             }
 
             return _apertureDefault;
@@ -67,42 +80,54 @@ namespace CinematographyPlugin.Cinematography
         {
             if (_focalLenghtDefault < 0.001)
             {
-                var ppp = FindObjectOfType<FPSCamera>().GetComponent<PostProcessingBehaviour>().profile;
-                _focalLenghtDefault = ppp.depthOfField.settings.focalLength / 10;
+                var dof = GetPostProcessVolume().profile.GetSetting<DepthOfField>();
+                _focalLenghtDefault = dof.focalLength / 10;
             }
 
             return _focalLenghtDefault;
         }
         
+        public void OnAmbientParticleToggle(bool value)
+        {
+            _ambientParticles.enabled = value;
+        }
+        
         private void OnVignetteToggle(bool value)
         {
-            _ppp.vignette.enabled = value;
+            _vin.active = value;
         }
 
         private void OnFocusDistanceChange(float value)
         {
-            var newSettings = _ppp.depthOfField.settings;
-            newSettings.focusDistance = value;
-            _ppp.depthOfField.settings = newSettings;
+            var param = new FloatParameter
+            {
+                value = value
+            };
+            _dof.focusDistance.value = param;
         }
         
         private void OnApertureChange(float value)
         {
-            var newSettings = _ppp.depthOfField.settings;
-            newSettings.aperture = value;
-            _ppp.depthOfField.settings = newSettings;
+            var param = new FloatParameter
+            {
+                value = value
+            };
+            _dof.aperture.value = param;
         }
         
         private void OnFocalLenghtChange(float value)
         {
-            var newSettings = _ppp.depthOfField.settings;
-            newSettings.focalLength = value * 10;
-            _ppp.depthOfField.settings = newSettings;
+            var param = new FloatParameter
+            {
+                value = value / 10
+            };
+            _dof.focalLength.value = param;
         }
 
         private void OnDestroy()
         {
             ((ToggleOption) CinemaUIManager.Options[UIOption.ToggleVignette]).OnValueChanged -= OnVignetteToggle;
+            ((ToggleOption) CinemaUIManager.Options[UIOption.ToggleAmbientParticles]).OnValueChanged -= OnAmbientParticleToggle;
             ((SliderOption) CinemaUIManager.Options[UIOption.FocusDistanceSlider]).OnValueChanged -=  OnFocusDistanceChange;
             ((SliderOption) CinemaUIManager.Options[UIOption.ApertureSlider]).OnValueChanged -=  OnApertureChange;
             ((SliderOption) CinemaUIManager.Options[UIOption.FocalLenghtSlider]).OnValueChanged -=  OnFocalLenghtChange;

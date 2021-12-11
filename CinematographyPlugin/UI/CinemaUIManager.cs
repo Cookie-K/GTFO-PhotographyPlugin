@@ -11,7 +11,6 @@ using UnityEngine.UI;
 
 namespace CinematographyPlugin.UI
 {
-    [BepInDependency("dev.gtfomodding.gtfo-api")]
     public class CinemaUIManager : MonoBehaviour
     {
         public static event Action OnUIStart;

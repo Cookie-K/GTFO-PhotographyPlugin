@@ -25,7 +25,6 @@ namespace CinematographyPlugin.Cinematography
         private float _freeCamDisabledTime;
 
         private FPSCamera _fpsCamera;
-        private GameObject _player;
         private Transform _prevParent;
         private Transform _cinemaCamCtrlHolder;
         private Transform _cinemaCam;
@@ -42,10 +41,9 @@ namespace CinematographyPlugin.Cinematography
         private void Awake()
         {
 	        // Comps reference set up
-	        _fpsCamera = FindObjectOfType<FPSCamera>();
-			_player = _fpsCamera.m_owner.gameObject;
-			_playerAgent = PlayerManager.GetLocalPlayerAgent();
-			_playerLocomotion = _player.GetComponent<PlayerLocomotion>();
+	        _playerAgent = PlayerManager.GetLocalPlayerAgent();
+	        _fpsCamera = _playerAgent.FPSCamera;
+	        _playerLocomotion = _playerAgent.GetComponent<PlayerLocomotion>();
 
 			// Cinema cam obj set up
 			_cinemaCam = new GameObject("CinemaCam").transform;

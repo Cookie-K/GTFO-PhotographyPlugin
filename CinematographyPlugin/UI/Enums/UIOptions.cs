@@ -22,6 +22,7 @@
         ApertureSlider,
         FocalLenghtSlider,
         ToggleVignette,
+        ToggleAmbientParticles,
         ToggleTimeScale,
         TimeScaleSlider,
     }

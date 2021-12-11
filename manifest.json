@@ -1,9 +1,9 @@
 {
     "name": "CinematographyPlugin",
-    "version_number": "1.0.1",
+    "version_number": "1.1.0",
     "website_url": "https://github.com/thunderstore-io",
     "description": "Cinematic camera tool mainly for video editors",
     "dependencies": [
-        "BepInEx-BepInExPack_GTFO-1.6.1"
+        "BepInEx-BepInExPack_GTFO-1.7.0"
     ]
 }

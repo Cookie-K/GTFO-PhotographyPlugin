@@ -6,6 +6,7 @@ using ChainedPuzzles;
 using CinematographyPlugin.Cinematography;
 using CinematographyPlugin.Cinematography.Networking;
 using CinematographyPlugin.UI;
+using CinematographyPlugin.UI.Enums;
 using Enemies;
 using HarmonyLib;
 using Player;
@@ -79,17 +80,17 @@ namespace CinematographyPlugin
         {
             if (!__instance.isActiveAndEnabled || __instance.m_currentPlayerCount == 0) return;
             
-            if (__instance.m_playerScanner.RequireAllPlayers && CinemaNetworkingManager.GetPlayersInFreeCam().Any() && __instance.m_sync.GetCurrentState().status == eBioscanStatus.Scanning &&
+            if (__instance.m_playerScanner.ScanPlayersRequired == PlayerRequirement.All && CinemaNetworkingManager.GetPlayersInFreeCam().Any() && __instance.m_sync.GetCurrentState().status == eBioscanStatus.Scanning &&
                 __instance.m_sync.GetCurrentState().playersInScan >= CinemaNetworkingManager.GetPlayersNotInFreeCam().Count())
             {
                 CinematographyCore.log.LogInfo("Adjusting team scan to account for free cam players");
-                __instance.GetComponent<CP_PlayerScanner>().m_requireAllPlayers = false;
+                __instance.GetComponent<CP_PlayerScanner>().m_playerRequirement = PlayerRequirement.None;
                 PrevRequiredTeamScanIDs.Add(__instance.GetInstanceID());
             }
             else if (PrevRequiredTeamScanIDs.Contains(__instance.GetInstanceID()) && __instance.m_currentPlayerCount < CinemaNetworkingManager.GetPlayersNotInFreeCam().Count())
             {
                 CinematographyCore.log.LogInfo("Reverting team scan to require all players");
-                __instance.GetComponent<CP_PlayerScanner>().m_requireAllPlayers = true;
+                __instance.GetComponent<CP_PlayerScanner>().m_playerRequirement = PlayerRequirement.All;
                 PrevRequiredTeamScanIDs.Remove(__instance.GetInstanceID());
             } 
         }

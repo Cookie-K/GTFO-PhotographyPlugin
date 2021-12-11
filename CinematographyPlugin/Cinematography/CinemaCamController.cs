@@ -309,7 +309,7 @@ namespace CinematographyPlugin.Cinematography
             var currPosition = transform.position;
             var raycastOrigWithOffset = currPosition + FlatForward();
             var newCullPos = Physics.Raycast(raycastOrigWithOffset, Vector3.down, out var hit) ? hit.point : currPosition;
-            _fpsCamera.m_owner.m_movingCuller.UpdatePosition(newCullPos);
+            _fpsCamera.m_owner.m_movingCuller.UpdatePosition(new Bounds(newCullPos, Vector3.one));
         }
 
         private void CheckReset()

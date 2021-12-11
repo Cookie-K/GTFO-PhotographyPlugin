@@ -9,7 +9,7 @@ A bepinex plugin to enable a cinematic camera mode
 ## Plugin Menu
 Pressing `F4` will open the following menu: 
 
-![Plugin Menu](https://i.imgur.com/65kEhDG.png)
+![Plugin Menu](https://i.imgur.com/LV8iRto.png)
 
 1. `Free Camera`: The main tool of the plugin. Strips the entire UI and FPS effects off the screen (except the modded watermark) and enters the player into free camera mode. You cannot interact with anything while in this state and the player will return to where they started free cam when exiting (the world may be gone when you exit but just walk and the culler should update).
 
@@ -47,7 +47,8 @@ Pressing `F4` will open the following menu:
     |---|---|
 
 6. `Vignette`: turns the camera's vignette on/off 
-7. `Time Scale`: Changes the time scale of the game (the gifs below are showing the in game speed and are not slowed down). Only one person at a time can change the time scale (the option will be disabled for those who are not controlling time).
+7. `Ambient Particles`: turns off the ambient particles that are floating around the map
+8. `Time Scale`: Changes the time scale of the game (the gifs below are showing the in game speed and are not slowed down). Only one person at a time can change the time scale (the option will be disabled for those who are not controlling time).
 
     | ![slow-mo bonk](https://i.imgur.com/CTjIc6N.gif) | ![slow-mo strikers](https://i.imgur.com/tapeOp8.gif) |
     |---|---|
@@ -67,3 +68,6 @@ If something doesn't work quite right or you want something specific added feel 
 - 1.0.1: 
     - Removed package reference to Nidhogg networking api in favor of GTFO API
     - Small update to read me on enemies and team scans
+- 1.1.0: 
+    - Updated to work with R6
+    - Added ambient particle toggle

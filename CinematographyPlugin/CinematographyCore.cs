@@ -12,6 +12,7 @@ namespace CinematographyPlugin
 {
     [BepInPlugin(GUID, MODNAME, VERSION)]
     [BepInProcess("GTFO.exe")]
+    [BepInDependency("dev.gtfomodding.gtfo-api", BepInDependency.DependencyFlags.HardDependency)]
     public class CinematographyCore : BasePlugin
     {
         public const string
@@ -19,7 +20,7 @@ namespace CinematographyPlugin
             MODNAME = "Cinematography",
             AUTHOR = "Cookie_K",
             GUID = "com." + AUTHOR + "." + MODNAME,
-            VERSION = "1.0.1";
+            VERSION = "1.1.0";
 
         public static ManualLogSource log;
 

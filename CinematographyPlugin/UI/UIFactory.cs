@@ -37,6 +37,7 @@ namespace CinematographyPlugin.UI
             options.Add(UIOption.FocalLenghtSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.FocalLenghtSlider), false, PostProcessingController.GetDefaultFocalLenght(), PostProcessingController.FocalLenghtMin, PostProcessingController.FocalLenghtMax));
             
             options.Add(UIOption.ToggleVignette, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleVignette), true, true));
+            options.Add(UIOption.ToggleAmbientParticles, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleAmbientParticles), true, true));
 
             options.Add(UIOption.ToggleTimeScale, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleTimeScale), false, true));
             options.Add(UIOption.TimeScaleSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.TimeScaleSlider), false, TimeScaleController.TimeScaleDefault, TimeScaleController.TimeScaleMin, TimeScaleController.TimeScaleMax));
@@ -87,6 +88,7 @@ namespace CinematographyPlugin.UI
             toggles.Add(UIOption.ToggleAlignRollAxisWCam, (ToggleOption) options[UIOption.ToggleAlignRollAxisWCam]);
             toggles.Add(UIOption.ToggleDynamicRoll, (ToggleOption) options[UIOption.ToggleDynamicRoll]);
             toggles.Add(UIOption.ToggleVignette, (ToggleOption) options[UIOption.ToggleVignette]);
+            toggles.Add(UIOption.ToggleAmbientParticles, (ToggleOption) options[UIOption.ToggleAmbientParticles]);
             toggles.Add(UIOption.ToggleDoF, (ToggleOption) options[UIOption.ToggleDoF]);
             toggles.Add(UIOption.ToggleFpsLookSmoothing, (ToggleOption) options[UIOption.ToggleFpsLookSmoothing]);
             toggles.Add(UIOption.ToggleTimeScale, (ToggleOption) options[UIOption.ToggleTimeScale]);
