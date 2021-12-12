@@ -1,14 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Agents;
+using CellMenu;
 using ChainedPuzzles;
 using CinematographyPlugin.Cinematography;
 using CinematographyPlugin.Cinematography.Networking;
 using CinematographyPlugin.UI;
 using CinematographyPlugin.UI.Enums;
 using Enemies;
+using Globals;
 using HarmonyLib;
+using Il2CppSystem;
 using Player;
 using UnityEngine;
 
@@ -18,9 +20,35 @@ namespace CinematographyPlugin
     public class CinemaPluginPatches
     {
 
-        public static event Action<bool> OnLocalPlayerDieOrRevive;
+        public static event System.Action<bool> OnLocalPlayerDieOrRevive;
 
         private static readonly List<int> PrevRequiredTeamScanIDs = new List<int>();
+   
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof (InputMapper), "DoGetButton")]
+        [HarmonyPatch(typeof (InputMapper), "DoGetButtonUp")]
+        [HarmonyPatch(typeof (InputMapper), "DoGetButtonDown")]
+        private static bool Prefix_DoGetButton(ref bool __result)
+        {
+            if (Cursor.lockState != CursorLockMode.None)
+            {
+                return true;
+            }
+            __result = false;
+            return false;
+        }
+        
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof (InputMapper), "DoGetAxis")]
+        private static bool Prefix_DoGetAxis(ref float __result)
+        {
+            if (Cursor.lockState != CursorLockMode.None)
+            {
+                return true;
+            }
+            __result = 0.0f;
+            return false;
+        }
         
         // Force Curosr lock to none when cinema menu is open 
         [HarmonyPrefix]

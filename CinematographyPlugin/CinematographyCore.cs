@@ -20,7 +20,7 @@ namespace CinematographyPlugin
             MODNAME = "Cinematography",
             AUTHOR = "Cookie_K",
             GUID = "com." + AUTHOR + "." + MODNAME,
-            VERSION = "1.1.0";
+            VERSION = "1.1.1";
 
         public static ManualLogSource log;
 

@@ -65,9 +65,10 @@ If something doesn't work quite right or you want something specific added feel 
 - Special thanks to Basrijs, iRekia, and Kolfo for testing
 ---
 ### Patches
-- 1.0.1: 
-    - Removed package reference to Nidhogg networking api in favor of GTFO API
-    - Small update to read me on enemies and team scans
 - 1.1.0: 
     - Updated to work with R6
     - Added ambient particle toggle
+
+- 1.0.1: 
+    - Removed package reference to Nidhogg networking api in favor of GTFO API
+    - Small update to read me on enemies and team scans
