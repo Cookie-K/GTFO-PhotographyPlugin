@@ -3,6 +3,7 @@ using CellMenu;
 using CinematographyPlugin.Cinematography.CinemaInput;
 using CinematographyPlugin.UI;
 using CinematographyPlugin.UI.Enums;
+using LevelGeneration;
 using Player;
 using UnityEngine;
 
@@ -69,6 +70,7 @@ namespace CinematographyPlugin.Cinematography
         private float _dynamicRotationSpeed = DynamicRotationDefault;
         
         private FPSCamera _fpsCamera;
+        private PlayerAgent _playerAgent;
         private Transform _rotTrans;
         private Vector3 _targetPos = Vector3.zero;
         private Vector3 _prevPos = Vector3.zero;
@@ -97,6 +99,8 @@ namespace CinematographyPlugin.Cinematography
             CinemaUIManager.Toggles[UIOption.ToggleAlignPitchAxisWCam].OnValueChanged += SetAlignPitchAxisWCam;
             CinemaUIManager.Toggles[UIOption.ToggleAlignRollAxisWCam].OnValueChanged += SetAlignRollAxisWCam;
 
+            _playerAgent = PlayerManager.GetLocalPlayerAgent();
+            
             _fpsCamera = FindObjectOfType<FPSCamera>();
             _rotTrans = transform.GetChild(0);
             
@@ -309,7 +313,8 @@ namespace CinematographyPlugin.Cinematography
             var currPosition = transform.position;
             var raycastOrigWithOffset = currPosition + FlatForward();
             var newCullPos = Physics.Raycast(raycastOrigWithOffset, Vector3.down, out var hit) ? hit.point : currPosition;
-            _fpsCamera.m_owner.m_movingCuller.UpdatePosition(new Bounds(newCullPos, Vector3.one));
+            
+            _fpsCamera.m_owner.m_movingCuller.UpdatePosition(_playerAgent.m_dimensionIndex, newCullPos);
         }
 
         private void CheckReset()

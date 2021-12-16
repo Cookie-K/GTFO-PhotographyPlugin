@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using CinematographyPlugin.UI;
 using CinematographyPlugin.UI.Enums;
 using GTFO.API;
+using HarmonyLib;
 using Player;
 using UnityEngine;
 
@@ -126,7 +127,27 @@ namespace CinematographyPlugin.Cinematography.Networking
 
         public static bool AssertAllPlayersHasPlugin()
         {
-            return PlayersByName.Values.All(p => p.HasPlugin);
+            var assertAll = PlayersByName.Values.All(p => p.HasPlugin);
+            
+            if (!assertAll)
+            {
+                var names = PlayersByName.Values.Where(p => !p.HasPlugin).Join(p => p.Agent.Sync.PlayerNick);
+                var msg = new[] {
+                    "Cinematography plugin cannot be started.",
+                    "All must have the plugin installed to continue.",
+                    "The players that do not have the plugin are:",
+                    names
+                };
+                
+                CinematographyCore.log.LogInfo(msg.Join());
+                
+                foreach (var s in msg)
+                {
+                    PlayerChatManager.WantToSentTextMessage(PlayerManager.GetLocalPlayerAgent(), s);
+                }
+            }
+            
+            return assertAll;
         }
         
         private static void OnPing(CinemaPluginPingData data)
@@ -255,10 +276,14 @@ namespace CinematographyPlugin.Cinematography.Networking
             var agentsNames = new List<string>();
             foreach (var agent in PlayerManager.PlayerAgentsInLevel)
             {
+                if (agent.gameObject.GetComponent<PlayerAIBot>() != null) continue;
+                
                 var agentName = agent.Sync.PlayerNick;
                 agentsNames.Add(agentName);
                 if (!PlayersByName.ContainsKey(agentName))
                 {
+                    CinematographyCore.log.LogInfo($"Adding {agentName} to list");
+
                     PlayersByName.Add(agentName, new CinemaSyncPlayer(agent));
                 }
             }

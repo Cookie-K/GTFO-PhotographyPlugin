@@ -18,6 +18,7 @@ namespace CinematographyPlugin.Cinematography
         private static GameObject _uiPlayerLayer;
         private static GameObject _uiInteractionLayer;
         private static GameObject _uiNavMarkerLayer;
+        private static GameObject _watermarkLayer;
         private static PE_FPSDamageFeedback _damageFeedback;
 
         public ScreenClutterController(IntPtr intPtr) : base(intPtr)
@@ -40,11 +41,14 @@ namespace CinematographyPlugin.Cinematography
         {
             CinemaUIManager.Toggles[UIOption.ToggleUI].OnValueChanged += ToggleUIElements;
             CinemaUIManager.Toggles[UIOption.ToggleBody].OnValueChanged += ToggleBody;
-            
-            _uiPlayerLayer = GuiManager.PlayerLayer.Root.FindChild("PlayerLayer").gameObject;
+
+            var uiRoot = GuiManager.PlayerLayer.Root;
+
+            _uiPlayerLayer = uiRoot.FindChild("PlayerLayer").gameObject;
+            _uiInteractionLayer = uiRoot.FindChild("InteractionLayer").gameObject;
+            _watermarkLayer = uiRoot.FindChild("WatermarkLayer").gameObject;
+            _uiNavMarkerLayer = uiRoot.FindChild("NavMarkerLayer").gameObject;
             _uiCrosshairLayer = GuiManager.CrosshairLayer.Root.FindChild("CrosshairLayer").gameObject;
-            _uiInteractionLayer = GuiManager.PlayerLayer.Root.FindChild("InteractionLayer").gameObject;
-            _uiNavMarkerLayer = GuiManager.PlayerLayer.Root.FindChild("NavMarkerLayer").gameObject;
 
             _body = PlayerManager.GetLocalPlayerAgent().AnimatorBody.transform.parent.gameObject;
             _fpArms = PlayerManager.GetLocalPlayerAgent().FPItemHolder.gameObject;
@@ -77,7 +81,7 @@ namespace CinematographyPlugin.Cinematography
         public void ToggleClientVisibility(PlayerAgent player, bool value)
         {
             player.AnimatorBody.gameObject.active = value;
-            player.NavMarker.m_marker.gameObject.active = value;
+            player.NavMarker.m_marker.SetVisible(value);
         }
 
         private void ToggleBody(bool value)
@@ -92,6 +96,7 @@ namespace CinematographyPlugin.Cinematography
             _uiCrosshairLayer.active = value;
             _uiInteractionLayer.active = value;
             _uiNavMarkerLayer.active = value;
+            _watermarkLayer.active = value;
         }
 
         private void ToggleScreenShake(bool value)

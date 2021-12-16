@@ -18,9 +18,9 @@ namespace CinematographyPlugin.Cinematography
         public const float ApertureMax = 5f;
         private static float _apertureDefault;
         
-        public const float FocalLenghtMin = 0.1f; // in cm
-        public const float FocalLenghtMax = 10f; // in cm
-        private static float _focalLenghtDefault; // in cm
+        public const float FocalLenghtMin = 0.1f;
+        public const float FocalLenghtMax = 10f;
+        private static float _focalLenghtDefault;
 
         private PostProcessVolume _ppv;
         private DepthOfField _dof;
@@ -59,7 +59,6 @@ namespace CinematographyPlugin.Cinematography
             if (_focusDistanceDefault < 0.001)
             {
                 var dof = GetPostProcessVolume().profile.GetSetting<DepthOfField>();
-                CinematographyCore.log.LogInfo(dof);
                 _focusDistanceDefault = dof.focusDistance;
             }
             return _focusDistanceDefault;
@@ -81,7 +80,7 @@ namespace CinematographyPlugin.Cinematography
             if (_focalLenghtDefault < 0.001)
             {
                 var dof = GetPostProcessVolume().profile.GetSetting<DepthOfField>();
-                _focalLenghtDefault = dof.focalLength / 10;
+                _focalLenghtDefault = dof.focalLength;
             }
 
             return _focalLenghtDefault;
@@ -99,29 +98,17 @@ namespace CinematographyPlugin.Cinematography
 
         private void OnFocusDistanceChange(float value)
         {
-            var param = new FloatParameter
-            {
-                value = value
-            };
-            _dof.focusDistance.value = param;
+            _dof.focusDistance.value = value;
         }
         
         private void OnApertureChange(float value)
         {
-            var param = new FloatParameter
-            {
-                value = value
-            };
-            _dof.aperture.value = param;
+            _dof.focusDistance.value = value;
         }
         
         private void OnFocalLenghtChange(float value)
         {
-            var param = new FloatParameter
-            {
-                value = value / 10
-            };
-            _dof.focalLength.value = param;
+            _dof.focusDistance.value = value;
         }
 
         private void OnDestroy()

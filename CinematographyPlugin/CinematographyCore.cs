@@ -4,7 +4,7 @@ using BepInEx.Logging;
 using CinematographyPlugin.Cinematography;
 using CinematographyPlugin.Cinematography.Networking;
 using CinematographyPlugin.UI;
-using Dissonance;
+using Globals;
 using HarmonyLib;
 using UnhollowerRuntimeLib;
 
@@ -20,7 +20,7 @@ namespace CinematographyPlugin
             MODNAME = "Cinematography",
             AUTHOR = "Cookie_K",
             GUID = "com." + AUTHOR + "." + MODNAME,
-            VERSION = "1.1.1";
+            VERSION = "1.1.2";
 
         public static ManualLogSource log;
 
@@ -28,7 +28,7 @@ namespace CinematographyPlugin
 
         public override void Load()
         {
-            if (Globals.Global.RundownIdToLoad > 1)
+            if (Global.RundownIdToLoad > 1)
             {
                 // This plugin is only for modded rundowns with ID 1
                 return;

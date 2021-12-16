@@ -1,12 +1,13 @@
 ﻿using CinematographyPlugin.Cinematography;
 using CinematographyPlugin.Cinematography.Networking;
 using CinematographyPlugin.UI;
+using Globals;
 using HarmonyLib;
 using UnityEngine;
 
 namespace CinematographyPlugin
 {
-    
+
     [HarmonyPatch]
     public class Entry
     {
@@ -20,12 +21,12 @@ namespace CinematographyPlugin
             {
                 case eGameStateName.InLevel:
                 {
-                    if (Globals.Global.RundownIdToLoad > 1)
+                    if (Global.RundownIdToLoad > 1)
                     {
                         // This plugin is only for modded rundowns with ID 1
                         return;
                     }
-                    
+
                     CinematographyCore.log.LogMessage("Initializing " + CinematographyCore.NAME);
 
                     var gameObject = new GameObject(CinematographyCore.AUTHOR + " - " + CinematographyCore.NAME);
@@ -48,7 +49,7 @@ namespace CinematographyPlugin
                     if (_go != null)
                     {
                         CinematographyCore.log.LogMessage("Closing " + CinematographyCore.NAME);
-                        
+
                         if (CinemaUIManager.MenuOpen)
                         {
                             CinemaUIManager.CloseUI();
@@ -56,9 +57,10 @@ namespace CinematographyPlugin
 
                         TimeScaleController.ResetTimeScale();
                         ScreenClutterController.GetInstance().HideUI();
-                        
+
                         Object.Destroy(_go);
                     }
+
                     break;
             }
         }
