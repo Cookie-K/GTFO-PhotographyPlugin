@@ -1,16 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Agents;
-using CellMenu;
 using ChainedPuzzles;
-using CinematographyPlugin.Cinematography;
 using CinematographyPlugin.Cinematography.Networking;
 using CinematographyPlugin.UI;
-using CinematographyPlugin.UI.Enums;
 using Enemies;
-using Globals;
 using HarmonyLib;
-using Il2CppSystem;
 using Player;
 using UnityEngine;
 
@@ -20,7 +16,7 @@ namespace CinematographyPlugin
     public class CinemaPluginPatches
     {
 
-        public static event System.Action<bool> OnLocalPlayerDieOrRevive;
+        public static event Action<bool> OnLocalPlayerDieOrRevive;
 
         private static readonly List<int> PrevRequiredTeamScanIDs = new List<int>();
    
@@ -76,18 +72,17 @@ namespace CinematographyPlugin
                 value = true;
             }
         }
-
+        
         [HarmonyPostfix]
-        [HarmonyPatch(typeof(PlayerAgent), "Alive", MethodType.Setter)]
+        [HarmonyPatch(typeof(PlayerAgent), nameof(PlayerAgent.Alive), MethodType.Setter)]
         private static void Prefix_PlayerAlive(bool value, PlayerAgent __instance)
         {
-            if (__instance.IsLocallyOwned)
+            if (__instance != null && __instance.IsLocallyOwned)
             {
-                // CinematographyCore.log.LogInfo($"{__instance.name} is alive {value}");
                 OnLocalPlayerDieOrRevive?.Invoke(value);
             }
         }
-
+        
         [HarmonyPrefix]
         [HarmonyPatch(typeof(EnemyAI), "Target", MethodType.Setter)]
         private static void Prefix_SetTargetDivertAwayFromCameraMan(ref AgentTarget value)
