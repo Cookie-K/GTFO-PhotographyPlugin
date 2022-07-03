@@ -4,6 +4,7 @@ using BepInEx.Logging;
 using CinematographyPlugin.Cinematography;
 using CinematographyPlugin.Cinematography.Networking;
 using CinematographyPlugin.UI;
+using CinematographyPlugin.Util;
 using Globals;
 using HarmonyLib;
 using Il2CppInterop.Runtime.Injection;
@@ -46,6 +47,7 @@ namespace CinematographyPlugin
             ClassInjector.RegisterTypeInIl2Cpp<LookSmoothingController>();
             ClassInjector.RegisterTypeInIl2Cpp<CinemaNetworkingManager>();
             ClassInjector.RegisterTypeInIl2Cpp<PostProcessingController>();
+            ClassInjector.RegisterTypeInIl2Cpp<IndependentDeltaTimeManager>();
 
             HarmonyPatches = new Harmony(GUID);
             HarmonyPatches.PatchAll();

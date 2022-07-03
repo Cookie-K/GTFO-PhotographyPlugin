@@ -1,5 +1,4 @@
-﻿using System;
-using CinematographyPlugin.UI;
+﻿using CinematographyPlugin.UI;
 using CinematographyPlugin.UI.Enums;
 using Player;
 using UnityEngine;

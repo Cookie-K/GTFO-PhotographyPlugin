@@ -1,6 +1,4 @@
-﻿using System;
-using CinematographyPlugin.UI.Enums;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -35,7 +33,7 @@ namespace CinematographyPlugin.UI
             OnSliderChange(initialValue);
         }
 
-        private void OnSliderChange(float value)
+        public void OnSliderChange(float value)
         {
             _valueText.text = value.ToString(Mathf.Abs(value) < 100 ? "0.00" : "0.0");
             OnValueChanged?.Invoke(value);

@@ -1,6 +1,7 @@
 ﻿using CinematographyPlugin.Cinematography;
 using CinematographyPlugin.Cinematography.Networking;
 using CinematographyPlugin.UI;
+using CinematographyPlugin.Util;
 using Globals;
 using HarmonyLib;
 using UnityEngine;
@@ -37,6 +38,7 @@ namespace CinematographyPlugin
                     gameObject.AddComponent<ScreenClutterController>();
                     gameObject.AddComponent<LookSmoothingController>();
                     gameObject.AddComponent<PostProcessingController>();
+                    gameObject.AddComponent<IndependentDeltaTimeManager>();
                     gameObject.AddComponent<CinemaNetworkingManager>().RegisterEvents();
                     Object.DontDestroyOnLoad(gameObject);
 

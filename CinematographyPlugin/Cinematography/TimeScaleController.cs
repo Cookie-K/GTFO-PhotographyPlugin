@@ -1,11 +1,9 @@
-﻿using System;
-using CinematographyPlugin.Cinematography.Networking;
+﻿using CinematographyPlugin.Cinematography.Networking;
 using CinematographyPlugin.UI;
 using CinematographyPlugin.UI.Enums;
-using Enemies;
-using Globals;
+using CinematographyPlugin.UI.UiInput;
+using CinematographyPlugin.Util;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace CinematographyPlugin.Cinematography
 {
@@ -14,11 +12,27 @@ namespace CinematographyPlugin.Cinematography
         public const float TimeScaleDefault = 1;
         public const float TimeScaleMin = 0.01f;
         public const float TimeScaleMax = 1;
+        private float TimeChangeSpeed = 1f;
+        
+        private float _targetTimeScale = TimeScaleDefault;
+        
+        private ToggleOption _timeScaleToggle;
+        private SliderOption _timeScaleSlider;
 
         private void Start()
         {
-            ((SliderOption) CinemaUIManager.Options[UIOption.TimeScaleSlider]).OnValueChanged +=  OnTimeScaleChange;
+            _timeScaleToggle = (ToggleOption) CinemaUIManager.Options[UIOption.ToggleTimeScale];
+            _timeScaleSlider = (SliderOption) CinemaUIManager.Options[UIOption.TimeScaleSlider];
+            _timeScaleSlider.OnValueChanged += OnTimeScaleChange;
             CinemaNetworkingManager.OnTimeScaleChangedByOtherPlayer += OnTimeScaleChange;
+        }
+
+        private void Update()
+        {
+            if (_timeScaleToggle.Toggle.isOn)
+            {
+                UpdateTimeScaleFromKeyBinds();
+            }
         }
 
         public static void ResetTimeScale()
@@ -29,6 +43,16 @@ namespace CinematographyPlugin.Cinematography
         private void OnTimeScaleChange(float value)
         {
             Time.timeScale = value;
+        }
+
+        private void UpdateTimeScaleFromKeyBinds()
+        {
+            _targetTimeScale = Mathf.Clamp(_targetTimeScale + InputManager.GetTimeScaleInput(), TimeScaleMin, TimeScaleMax);
+            if (Math.Abs(_targetTimeScale - Time.timeScale) > 0.001)
+            {
+                var newTimeScale = Mathf.MoveTowards(Time.timeScale, _targetTimeScale, IndependentDeltaTimeManager.GetDeltaTime() * TimeChangeSpeed);
+                _timeScaleSlider.OnSliderChange(newTimeScale);
+            }
         }
 
         private void OnDestroy()

@@ -41,6 +41,12 @@ namespace CinematographyPlugin.Cinematography
 
         private void OnFpsSmoothValChange(float value)
         {
+            if (value > TimeScaleController.TimeScaleMax)
+            {
+                // Do not update the sensitivity for values above max as it is more disorienting than useful
+                return;
+            }
+            
             _currVal = value;
             _fpsCamera.MouseSmoother.Curve = _currVal + 2 * (1 - Time.timeScale);
             _fpsCamera.MouseSmoother.Samples = Mathf.RoundToInt(_initialSamples / Time.timeScale);

@@ -1,9 +1,7 @@
-﻿using System;
-using CellMenu;
-using CinematographyPlugin.UI;
+﻿using CinematographyPlugin.UI;
 using CinematographyPlugin.UI.Enums;
 using CinematographyPlugin.UI.UiInput;
-using LevelGeneration;
+using CinematographyPlugin.Util;
 using Player;
 using UnityEngine;
 
@@ -57,8 +55,6 @@ namespace CinematographyPlugin.Cinematography
         private bool _alignRollAxisWCam = false;
         private bool _dynamicRotation = true;
         
-        private float _lastInterval;
-        private float _independentDeltaTime;
         private float _movementSpeed = MovementSpeedDefault;
         private float _rotationSpeed = _rotationSpeedDefault;
         private float _movementSmoothFactor = MovementSmoothTimeDefault;
@@ -145,7 +141,6 @@ namespace CinematographyPlugin.Cinematography
         {
             if (Cursor.lockState != CursorLockMode.Locked) return;
             
-            UpdateIndependentDeltaTime();
             UpdateRotation();
             UpdatePosition();
             UpdateCuller();
@@ -159,6 +154,8 @@ namespace CinematographyPlugin.Cinematography
 
         private void UpdatePosition()
         {
+            var independentDeltaTime = IndependentDeltaTimeManager.GetDeltaTime();
+
             // get directional vectors
             var x = InputManager.GetAxis(AxisName.PosX);
             var y = InputManager.GetAxis(AxisName.PosY);
@@ -176,17 +173,17 @@ namespace CinematographyPlugin.Cinematography
             var up = _alignPitchAxisWCam ? _rotTrans.up : Vector3.up;
 
             // calculate translation delta with smoothing
-            delta += _independentDeltaTime * speed * x * right;
-            delta += _independentDeltaTime * speed * y * up;
-            delta += _independentDeltaTime * speed * z * forward;
+            delta += independentDeltaTime * speed * x * right;
+            delta += independentDeltaTime * speed * y * up;
+            delta += independentDeltaTime * speed * z * forward;
             
             _targetPos += delta;
             
             var currPos = transform.position;
-            var t = 1.0f - Mathf.Pow(_movementSmoothFactor, _independentDeltaTime);
+            var t = 1.0f - Mathf.Pow(_movementSmoothFactor, independentDeltaTime);
             var newPos = Vector3.Lerp(currPos, _targetPos, t);
 
-            _movementVelocity = (newPos - _prevPos)/_independentDeltaTime;
+            _movementVelocity = (newPos - _prevPos)/independentDeltaTime;
             _prevPos = newPos;
             
             transform.position = newPos;
@@ -194,6 +191,8 @@ namespace CinematographyPlugin.Cinematography
         
         private void UpdateRotation()
         {
+            var independentDeltaTime = IndependentDeltaTimeManager.GetDeltaTime();
+            
             var worldTrans = transform;
             var localTrans = _rotTrans;
             
@@ -209,7 +208,7 @@ namespace CinematographyPlugin.Cinematography
             var speed = _rotationSpeed * SensitivityScaling;
 
             var deltaEuler = new Vector3(pitch, yaw, roll);
-            deltaEuler *= _independentDeltaTime * speed;
+            deltaEuler *= independentDeltaTime * speed;
             
             var deltaWorld = Quaternion.Euler(0, deltaEuler.y, deltaEuler.z);
             var deltaLocal = Quaternion.Euler(deltaEuler.x, 0, 0);
@@ -224,7 +223,7 @@ namespace CinematographyPlugin.Cinematography
                 _targetLocalRot *= deltaLocal;
             }
 
-            var t = 1.0f - Mathf.Pow(_rotationSmoothFactor, _independentDeltaTime);
+            var t = 1.0f - Mathf.Pow(_rotationSmoothFactor, independentDeltaTime);
             var newWorldRot = Quaternion.Slerp(worldTrans.localRotation, _targetWorldRot, t);
             var newLocalRot = Quaternion.Slerp(localTrans.localRotation, _targetLocalRot, t);
 
@@ -262,6 +261,8 @@ namespace CinematographyPlugin.Cinematography
         // Pitch causes more trouble than good so it is commented out
         private void CalculateDynamicRotationDelta()
         {
+            var independentDeltaTime = IndependentDeltaTimeManager.GetDeltaTime();
+            
             var worldTrans = transform;
             var localTrans = _rotTrans;
             
@@ -280,7 +281,7 @@ namespace CinematographyPlugin.Cinematography
             // var targetPitch = worldTrans.rotation * Quaternion.Euler(pitch, 0 , 0);
             var targetRoll = worldTrans.rotation * Quaternion.Euler(0, 0 , roll);
 
-            var t = 1.0f - Mathf.Pow(DynamicRotationSmoothFactor, _independentDeltaTime);
+            var t = 1.0f - Mathf.Pow(DynamicRotationSmoothFactor, independentDeltaTime);
             // var newLocalRot = Quaternion.Slerp(localTrans.localRotation, targetPitch, t);
             var newWorldRot = Quaternion.Slerp(worldTrans.localRotation, targetRoll, t);
 
@@ -290,12 +291,14 @@ namespace CinematographyPlugin.Cinematography
 
         private void UpdateZoom()
         {
+            var independentDeltaTime = IndependentDeltaTimeManager.GetDeltaTime();
+
             var dir = InputManager.GetAxis(AxisName.Zoom);
             var speed = _zoomSpeed * ZoomScaling;
             
-            _targetZoom = Mathf.Clamp(_targetZoom + _independentDeltaTime * speed * dir, ZoomMin, ZoomMax);
+            _targetZoom = Mathf.Clamp(_targetZoom + independentDeltaTime * speed * dir, ZoomMin, ZoomMax);
             
-            var t = 1.0f - Mathf.Pow(_zoomSmoothFactor, _independentDeltaTime);
+            var t = 1.0f - Mathf.Pow(_zoomSmoothFactor, independentDeltaTime);
             var newZoom = Mathf.Lerp(_currZoom, _targetZoom, t);
             
             _fpsCamera.m_camera.fieldOfView = newZoom;
@@ -324,13 +327,6 @@ namespace CinematographyPlugin.Cinematography
         {
             _targetZoom = _zoomDefault;
             _targetWorldRot = Quaternion.Euler(0, _targetWorldRot.eulerAngles.y, 0);
-        }
-
-        private void UpdateIndependentDeltaTime()
-        {
-            var now = Time.realtimeSinceStartup;
-            _independentDeltaTime = now - _lastInterval;
-            _lastInterval = now;
         }
 
         private Vector3 FlatForward()

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using CinematographyPlugin.Cinematography.Networking;
+﻿using CinematographyPlugin.Cinematography.Networking;
 using CinematographyPlugin.UI.Enums;
 using GTFO.API;
 using UnityEngine;
@@ -94,10 +92,14 @@ namespace CinematographyPlugin.UI
             if (enable)
             {
                 option.Enable(option.Toggle.isOn);
+                // Enter chat mode as an easy way to ignore inputs on character
+                PlayerChatManager.Current.EnterChatMode();
             }
             else
             {
                 option.Disable(false);
+                PlayerChatManager.Current.m_currentValue = "";
+                PlayerChatManager.Current.ExitChatMode();
             }
         }
         
@@ -118,7 +120,7 @@ namespace CinematographyPlugin.UI
         {
             if (!CinemaNetworkingManager.AssertAllPlayersHasPlugin()) return;
 
-                CursorLockLastMode = Cursor.lockState;
+            CursorLockLastMode = Cursor.lockState;
             CursorLastVisible = Cursor.visible;
             
             Cursor.lockState = CursorLockMode.None;

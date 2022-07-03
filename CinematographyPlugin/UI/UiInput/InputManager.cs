@@ -4,14 +4,22 @@ namespace CinematographyPlugin.UI.UiInput
 {
     public static class InputManager
     {
-        private static KeyCode PosX = KeyCode.D;
-        private static KeyCode NegX = KeyCode.A;
-        private static KeyCode PosY = ConfigManager.UpKey;
-        private static KeyCode NegY = ConfigManager.DownKey;
-        private static KeyCode PosZ = KeyCode.W;
-        private static KeyCode NegZ = KeyCode.S;
-        private static KeyCode PosS = ConfigManager.SpeedUpKey;
-        private static KeyCode NegS = ConfigManager.SlowDownKey;
+        private static readonly KeyCode PosX = KeyCode.D;
+        private static readonly KeyCode NegX = KeyCode.A;
+        private static readonly KeyCode PosY = ConfigManager.UpKey;
+        private static readonly KeyCode NegY = ConfigManager.DownKey;
+        private static readonly KeyCode PosZ = KeyCode.W;
+        private static readonly KeyCode NegZ = KeyCode.S;
+        private static readonly KeyCode PosS = ConfigManager.SpeedUpKey;
+        private static readonly KeyCode NegS = ConfigManager.SlowDownKey;
+
+        private static readonly KeyCode TimeInc01P = KeyCode.UpArrow;
+        private static readonly KeyCode TimeDec01P = KeyCode.DownArrow;
+        private static readonly KeyCode TimeInc10P = KeyCode.RightArrow;
+        private static readonly KeyCode TimeDec10P = KeyCode.LeftArrow;
+
+        private static float _lastTimeHeld;
+        private static float _timeCheckInterval = 0.1f;
         
         public static float GetAxis(AxisName axis)
         {
@@ -21,7 +29,7 @@ namespace CinematographyPlugin.UI.UiInput
                 case AxisName.PosY:
                 case AxisName.PosZ:
                 case AxisName.Speed:
-                    return GetKeyInput(axis);
+                    return GetAxisKeyInput(axis);
                 case AxisName.RotX:
                 case AxisName.RotY:
                 case AxisName.RotZ:
@@ -43,14 +51,14 @@ namespace CinematographyPlugin.UI.UiInput
             {
                 case AxisName.RotX:
                     // Invert Y for +ve up, -ve down
-                    return -UnityEngine.Input.GetAxis("MouseY");
+                    return -Input.GetAxis("MouseY");
                 case AxisName.RotY:
-                    return UnityEngine.Input.GetAxis("MouseX");
+                    return Input.GetAxis("MouseX");
                 case AxisName.RotZ:
                     return GetMouseButtonAxisFloat();
                 case AxisName.Zoom:
                     // Invert for +ve zoom in, -ve zoom out
-                    return -UnityEngine.Input.mouseScrollDelta.y;
+                    return -Input.mouseScrollDelta.y;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(axis), axis, $"Invalid axis sent to GetMouseAxis: {axis}");
             }
@@ -60,8 +68,8 @@ namespace CinematographyPlugin.UI.UiInput
         {
             return Input.GetMouseButton(0) ? 1 : Input.GetMouseButton(1) ? -1 : 0;
         }
-
-        private static float GetKeyInput(AxisName axis)
+        
+        private static float GetAxisKeyInput(AxisName axis)
         {
             switch (axis)
             {
@@ -76,6 +84,44 @@ namespace CinematographyPlugin.UI.UiInput
                 default:
                     throw new ArgumentOutOfRangeException(nameof(axis), axis, $"Invalid axis sent to GetKeyAxis: {axis}");
             }
+        }
+
+        public static float GetTimeScaleInput()
+        {
+            var newTimeDelta = 0f;
+
+            // Check for time change input at a frame independent interval 
+            if (Time.realtimeSinceStartup - _lastTimeHeld < _timeCheckInterval)
+            {
+                return newTimeDelta;
+            }
+           
+            if (Input.GetKey(TimeInc01P))
+            {
+                newTimeDelta = 0.01f;
+            }
+
+            if (Input.GetKey(TimeDec01P))
+            {
+                newTimeDelta = -0.01f;
+            }
+            
+            if (Input.GetKey(TimeInc10P))
+            {
+                newTimeDelta = 0.10f;
+            }
+
+            if (Input.GetKey(TimeDec10P))
+            {
+                newTimeDelta = -0.10f;
+            }
+
+            if (newTimeDelta != 0f) 
+            {
+                _lastTimeHeld = Time.realtimeSinceStartup;
+            }
+            
+            return newTimeDelta;
         }
     }
 }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using CinematographyPlugin.UI.Enums;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace CinematographyPlugin.UI
 {

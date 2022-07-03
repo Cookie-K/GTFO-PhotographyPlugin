@@ -1,7 +1,4 @@
-﻿using System;
-using CinematographyPlugin.UI.Enums;
-using LibCpp2IL;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
