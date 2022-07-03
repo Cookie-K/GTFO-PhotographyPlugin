@@ -1,5 +1,7 @@
 # Cinematography Plugin
 
+**Go to the thunderstore page here for the releases and to see all the gifs load properly: https://gtfo.thunderstore.io/package/Cookie_K/CinematographyPlugin/
+
 A bepinex plugin to enable a cinematic camera mode 
 | ![drone fpv 1](https://i.imgur.com/W00cemO.gif) | ![drone fpv 2](https://i.imgur.com/021Qiji.gif) |
 |---|---|
@@ -11,7 +13,7 @@ Pressing `F4` will open the following menu:
 
 ![Plugin Menu](https://i.imgur.com/LV8iRto.png)
 
-1. `Free Camera`: The main tool of the plugin. Strips the entire UI and FPS effects off the screen (except the modded watermark) and enters the player into free camera mode. You cannot interact with anything while in this state and the player will return to where they started free cam when exiting (the world may be gone when you exit but just walk and the culler should update).
+1. `Free Camera`: The main tool of the plugin. Strips the entire UI and FPS effects off the screen and enters the player into free camera mode. You cannot interact with anything while in this state and the player will return to where they started free cam when exiting (the world may be gone when you exit but just walk and the culler should update).
 
     When entering free cam, the UI, Body, and FPS look smoothing options are disabled. The free cam option it self will also be disabled too if everyone else in the lobby is already in free cam.
 
@@ -38,7 +40,7 @@ Pressing `F4` will open the following menu:
     - `Align Pitch Axis w/ Cam`: Aligns the camera's axis of forwards and backwards movement with the camera's pitch. It's like the G-Mod no-clip controls when on and like the Minecraft creative controls when off.
     - `Align Roll Axis w/ Cam`: Aligns the camera's axis of left and right movement with the camera's roll. When turned off the camera's horizontal movement will be parallel to the horizon regardless of camera roll. When turned on, moving left and right will move the camera along the camera's rolled axis.
 
-2. `UI`: Strip the UI of UI elements (except the watermark)
+2. `UI`: Strip the UI of UI elements
 3. `Body`: Hides the body from the camera (arms and legs)
 4. `FPS Look Smoothing`: Smooths the FPS camera movements for use outside of free cam
 5. `DoF`: Adjusts the depth of field of the camera to get the blur effect on the foreground. Google will tell you more about what the sliders do better than I can. (Animation updates to your weapons seems to reset the changes to DoF. It's recommended to be in free cam or to turn off the body if you are trying to use this feature)
@@ -56,8 +58,6 @@ Pressing `F4` will open the following menu:
 
 If something doesn't work quite right or you want something specific added feel free to ping me on the official modding discord.
 
-###### (btw, there is no guarantee that this will work correctly when R6 comes around soon lul (or even now...))
-
 ### Credits
 
 - Developed by Cookie_K
@@ -65,6 +65,21 @@ If something doesn't work quite right or you want something specific added feel 
 - Special thanks to Basrijs, iRekia, and Kolfo for testing
 ---
 ### Patches
+
+- 1.1.4:
+    - Updated to fix the mod from crashing on start up due to an oversight in the last patch
+
+- 1.1.3:
+    - Updated to fix a crash caused by the 2022-01-27 patch 
+
+- 1.1.2: 
+    - Fixed issue where bots will prevent the plugin from opening
+	- Added chat message when plugin not installed by all players
+	- Removed watermark when UI is stripped
+
+- 1.1.1: 
+    - Fixed issue where weapons were still active when menu is open
+
 - 1.1.0: 
     - Updated to work with R6
     - Added ambient particle toggle
