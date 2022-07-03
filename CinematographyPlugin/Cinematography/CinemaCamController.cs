@@ -1,8 +1,8 @@
 ﻿using System;
 using CellMenu;
-using CinematographyPlugin.Cinematography.CinemaInput;
 using CinematographyPlugin.UI;
 using CinematographyPlugin.UI.Enums;
+using CinematographyPlugin.UI.UiInput;
 using LevelGeneration;
 using Player;
 using UnityEngine;
@@ -78,11 +78,6 @@ namespace CinematographyPlugin.Cinematography
         private Quaternion _targetWorldRot = Quaternion.identity;
         private Quaternion _targetLocalRot = Quaternion.identity;
 
-        public CinemaCamController(IntPtr intPtr) : base(intPtr)
-        {
-            // For Il2CppAssemblyUnhollower
-        }
-
         private void Awake()
         {
             CinemaUIManager.Sliders[UIOption.MovementSpeedSlider].OnValueChanged += SetMovementSpeed;
@@ -126,7 +121,7 @@ namespace CinematographyPlugin.Cinematography
             _targetPos = transform.position = _fpsCamera.Position;
         }
 
-        public static float GetDefaultZoom()
+        private static float GetDefaultZoom()
         {
             if (_zoomDefault < 0.001)
             {

@@ -1,4 +1,4 @@
-﻿namespace CinematographyPlugin.Cinematography.CinemaInput
+﻿namespace CinematographyPlugin.UI.UiInput
 {
     public enum AxisName
     {

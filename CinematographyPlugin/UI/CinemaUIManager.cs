@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using BepInEx;
-using CinematographyPlugin.Cinematography;
 using CinematographyPlugin.Cinematography.Networking;
 using CinematographyPlugin.UI.Enums;
 using GTFO.API;
@@ -29,15 +27,12 @@ namespace CinematographyPlugin.UI
 
         private static GameObject _cinemaUIgo;
 
-        public CinemaUIManager(IntPtr intPtr) : base(intPtr)
-        {
-            // For Il2CppAssemblyUnhollower
-        }
-
         public void Awake()
         {
             var loadedAsset = AssetAPI.GetLoadedAsset(PrefabPath);
-            _cinemaUIgo = Instantiate(loadedAsset).TryCast<GameObject>();
+            
+            var instantiate = Instantiate(loadedAsset);
+            _cinemaUIgo = instantiate.TryCast<GameObject>();
             
             if (_cinemaUIgo is null)
             {

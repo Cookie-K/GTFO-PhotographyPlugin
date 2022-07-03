@@ -27,11 +27,6 @@ namespace CinematographyPlugin.Cinematography
         private Vignette _vin;
         private AmbientParticles _ambientParticles;
         
-        public PostProcessingController(IntPtr intPtr) : base(intPtr)
-        {
-            // For Il2CppAssemblyUnhollower
-        }
-
         private void Awake()
         {
             _ambientParticles = PlayerManager.GetLocalPlayerAgent().FPSCamera.GetComponent<AmbientParticles>();

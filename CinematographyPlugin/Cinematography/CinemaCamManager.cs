@@ -16,9 +16,9 @@ namespace CinematographyPlugin.Cinematography
         private const float DelayBeforeLocomotionEnable = 0.1f;
         private const float PlayerInvulnerabilityHealth = 999_999f;
 
-        private readonly Dictionary<string, float> _playerPrevMaxHealthByName = new Dictionary<string, float>();
-        private readonly Dictionary<string, float> _playerPrevHealthByName = new Dictionary<string, float>();
-        private readonly Dictionary<string, float> _playerPrevInfectionByName = new Dictionary<string, float>();
+        private readonly Dictionary<string, float> _playerPrevMaxHealthByName = new ();
+        private readonly Dictionary<string, float> _playerPrevHealthByName = new ();
+        private readonly Dictionary<string, float> _playerPrevInfectionByName = new ();
 
         private bool _freeCamEnabled;
         private bool _locomotionDisabled;
@@ -32,11 +32,6 @@ namespace CinematographyPlugin.Cinematography
         private PlayerAgent _playerAgent;
         private PlayerLocomotion _playerLocomotion;
         private CinemaCamController _cinemaCamController;
-
-        public CinemaCamManager(IntPtr intPtr) : base(intPtr)
-        {
-            // For Il2CppAssemblyUnhollower
-        }
 
         private void Awake()
         {
@@ -92,7 +87,7 @@ namespace CinematographyPlugin.Cinematography
         {
 	        if (!_locomotionDisabled) return;
 	        
-	        // Update locomotion a frame after to avoid rubber banding 
+	        // Update locomotion a few frames after to avoid rubber banding 
 	        var delayTimeUp = Time.realtimeSinceStartup - _freeCamDisabledTime > DelayBeforeLocomotionEnable / Time.timeScale;
 	        if (!delayTimeUp) return;
 	        
@@ -167,7 +162,7 @@ namespace CinematographyPlugin.Cinematography
 
 				if (player.IsLocallyOwned)
 				{
-					damage.TryCast<Dam_PlayerDamageLocal>().UpdateHealthGui();
+					damage.TryCast<Dam_PlayerDamageLocal>()?.UpdateHealthGui();
 				}
 			}
 		}
@@ -191,7 +186,7 @@ namespace CinematographyPlugin.Cinematography
 					var delegateAgent = CinemaNetworkingManager.GetPlayersNotInFreeCam().Aggregate(
 							(currMin, pa) => pa.GetAttackersScore() < currMin.GetAttackersScore() ? pa : currMin);
 					CinematographyCore.log.LogInfo($"Diverting {attacker.name} to {delegateAgent}");
-					attacker.TryCast<EnemyAgent>().AI.SetTarget(delegateAgent);
+					((EnemyAgent) attacker).AI.SetTarget(delegateAgent);
 				}
 			}
 		}

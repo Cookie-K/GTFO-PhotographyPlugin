@@ -1,16 +1,7 @@
-﻿using System;
-using System.Numerics;
-using CinematographyPlugin.Cinematography.Networking;
+﻿using CinematographyPlugin.Cinematography.Networking;
 using CinematographyPlugin.UI;
 using CinematographyPlugin.UI.Enums;
-using InControl;
-using Player;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.UI;
-using Quaternion = UnityEngine.Quaternion;
-using Vector2 = UnityEngine.Vector2;
-using Vector3 = UnityEngine.Vector3;
 
 namespace CinematographyPlugin.Cinematography
 {
@@ -24,11 +15,6 @@ namespace CinematographyPlugin.Cinematography
         private int _initialSamples = 8;
                
         private FPSCamera _fpsCamera;
-
-        public LookSmoothingController(IntPtr intPtr) : base(intPtr)
-        {
-            // For Il2CppAssemblyUnhollower
-        }
 
         private void Awake()
         {

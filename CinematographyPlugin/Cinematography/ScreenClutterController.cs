@@ -21,11 +21,6 @@ namespace CinematographyPlugin.Cinematography
         private static GameObject _watermarkLayer;
         private static PE_FPSDamageFeedback _damageFeedback;
 
-        public ScreenClutterController(IntPtr intPtr) : base(intPtr)
-        {
-            // For Il2CppAssemblyUnhollower
-        }
-
         public static ScreenClutterController GetInstance()
         {
             if (_init)

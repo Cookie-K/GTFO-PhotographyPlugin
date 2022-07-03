@@ -1,7 +1,6 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace CinematographyPlugin.Cinematography.CinemaInput
+namespace CinematographyPlugin.UI.UiInput
 {
     public static class InputManager
     {
@@ -44,14 +43,14 @@ namespace CinematographyPlugin.Cinematography.CinemaInput
             {
                 case AxisName.RotX:
                     // Invert Y for +ve up, -ve down
-                    return -Input.GetAxis("MouseY");
+                    return -UnityEngine.Input.GetAxis("MouseY");
                 case AxisName.RotY:
-                    return Input.GetAxis("MouseX");
+                    return UnityEngine.Input.GetAxis("MouseX");
                 case AxisName.RotZ:
                     return GetMouseButtonAxisFloat();
                 case AxisName.Zoom:
                     // Invert for +ve zoom in, -ve zoom out
-                    return -Input.mouseScrollDelta.y;
+                    return -UnityEngine.Input.mouseScrollDelta.y;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(axis), axis, $"Invalid axis sent to GetMouseAxis: {axis}");
             }

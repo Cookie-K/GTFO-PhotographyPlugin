@@ -7,13 +7,13 @@ namespace CinematographyPlugin.UI
 {
     public abstract class Option
     {
-        internal GameObject Root { get; }
+        private GameObject Root { get; }
         private bool StartActive { get; }
         private string Name { get; }
 
-        internal List<Option> SubOptions { get; } = new List<Option>();
+        internal List<Option> SubOptions { get; } = new ();
 
-        internal Dictionary<Option, bool> StateByDisableOnSelectOptions { get; } = new Dictionary<Option, bool>();
+        internal Dictionary<Option, bool> StateByDisableOnSelectOptions { get; } = new ();
 
         protected Option(GameObject root, bool startActive)
         {

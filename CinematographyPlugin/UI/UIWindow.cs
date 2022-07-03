@@ -12,11 +12,6 @@ namespace CinematographyPlugin.UI
         private RectTransform _dragRectTransform;
         private CanvasGroup _canvasGroup;
         private Canvas _canvas;
-
-        public UIWindow(IntPtr intPtr) : base(intPtr)
-        {
-            // For Il2CppAssemblyUnhollower
-        }
         
         private void Awake()
         {

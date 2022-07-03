@@ -10,7 +10,7 @@ namespace CinematographyPlugin.UI
     public sealed class SliderOption : Option
     {
         internal event Action<float> OnValueChanged;
-        internal Slider Slider { get; }
+        private Slider Slider { get; }
 
         private readonly float _initialValue;
 

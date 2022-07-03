@@ -14,27 +14,19 @@ namespace CinematographyPlugin.Cinematography.Networking
     public class CinemaNetworkingManager : MonoBehaviour
     {
         public static event Action<float> OnTimeScaleChangedByOtherPlayer;
-        
         public static event Action<PlayerAgent, bool> OnOtherPlayerEnterExitFreeCam;
-        
         public static event Action<bool> OnFreeCamEnableOrDisable;
-        
         public static event Action<bool> OnTimeScaleEnableOrDisable;
 
-        private static readonly Dictionary<string, CinemaSyncPlayer> PlayersByName = new Dictionary<string, CinemaSyncPlayer>();
+        private static readonly Dictionary<string, CinemaSyncPlayer> PlayersByName = new ();
 
         private const string SyncCinemaStateEvent = "Sync_CinemaPlugin_States";
-        
         private const string SyncCinemaAlterTimeScaleEvent = "Sync_CinemaPlugin_Time_Scale";
-        
         private const string CinemaPingEvent = "Sync_CinemaPlugin_Ping";
 
         private static bool _prevCanUseFreeCam;
-        
         private static bool _prevCanUseTimeScale;
-        
         private static bool _canUseFreeCam = true;
-
         private static bool _canUseTimeScale = true;
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -53,6 +45,7 @@ namespace CinematographyPlugin.Cinematography.Networking
             
             [MarshalAs(UnmanagedType.Bool)]
             public bool StoppingTimeScale;
+            
         }
                 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -60,8 +53,7 @@ namespace CinematographyPlugin.Cinematography.Networking
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 50)]
             public string PlayerName;
 
-            [MarshalAs(UnmanagedType.R8)]
-            public float TimeScale;
+            public double TimeScale;
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -70,11 +62,6 @@ namespace CinematographyPlugin.Cinematography.Networking
             public string PlayerName;
         }
         
-        public CinemaNetworkingManager(IntPtr intPtr) : base(intPtr)
-        {
-            // For Il2CppAssemblyUnhollower
-        }
-
         public void RegisterEvents()
         {
             if (!NetworkAPI.IsEventRegistered(SyncCinemaStateEvent))
@@ -228,7 +215,7 @@ namespace CinematographyPlugin.Cinematography.Networking
         {
             if (PlayersByName.ContainsKey(data.PlayerName) && PlayersByName[data.PlayerName].IsInCtrlOfTime)
             {
-                OnTimeScaleChangedByOtherPlayer?.Invoke(data.TimeScale);
+                OnTimeScaleChangedByOtherPlayer?.Invoke((float) data.TimeScale);
             }
         }
 
@@ -282,7 +269,7 @@ namespace CinematographyPlugin.Cinematography.Networking
                 agentsNames.Add(agentName);
                 if (!PlayersByName.ContainsKey(agentName))
                 {
-                    CinematographyCore.log.LogInfo($"Adding {agentName} to list");
+                    CinematographyCore.log.LogDebug($"Adding {agentName} to active players list");
 
                     PlayersByName.Add(agentName, new CinemaSyncPlayer(agent));
                 }

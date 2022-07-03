@@ -88,7 +88,7 @@ namespace CinematographyPlugin
         private static void Prefix_SetTargetDivertAwayFromCameraMan(ref AgentTarget value)
         {
             if (value == null || PlayerManager.PlayerAgentsInLevel.Count == 1) return;
-            var playerAgent = value.m_agent.TryCast<PlayerAgent>();
+            var playerAgent = (PlayerAgent) value.m_agent;
             if (playerAgent == null) return;
             
             if (CinemaNetworkingManager.GetPlayersInFreeCam().Any(p => p.Sync.PlayerNick == playerAgent.Sync.PlayerNick))
