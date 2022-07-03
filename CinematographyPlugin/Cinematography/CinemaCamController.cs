@@ -317,7 +317,7 @@ namespace CinematographyPlugin.Cinematography
 
         private void CheckReset()
         {
-            if (InputManager.GetReset())
+            if (InputManager.GetMiddleMouse())
             {
                 OnReset();
             }

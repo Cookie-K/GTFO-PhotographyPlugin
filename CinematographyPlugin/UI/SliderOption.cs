@@ -37,6 +37,7 @@ namespace CinematographyPlugin.UI
         {
             _valueText.text = value.ToString(Mathf.Abs(value) < 100 ? "0.00" : "0.0");
             OnValueChanged?.Invoke(value);
+            Slider.value = value;
         }
 
         public override void Disable(bool state)

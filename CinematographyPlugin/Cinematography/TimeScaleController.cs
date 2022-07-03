@@ -12,8 +12,10 @@ namespace CinematographyPlugin.Cinematography
         public const float TimeScaleDefault = 1;
         public const float TimeScaleMin = 0.01f;
         public const float TimeScaleMax = 1;
-        private float TimeChangeSpeed = 1f;
-        
+        private const float TimeChangeSpeed = 1f;
+
+        private static bool _paused;
+        private static float _prevTimeScale = 1f;
         private float _targetTimeScale = TimeScaleDefault;
         
         private ToggleOption _timeScaleToggle;
@@ -29,7 +31,7 @@ namespace CinematographyPlugin.Cinematography
 
         private void Update()
         {
-            if (_timeScaleToggle.Toggle.isOn)
+            if (CinemaCamManager.Current.FreeCamEnabled())
             {
                 UpdateTimeScaleFromKeyBinds();
             }
@@ -48,11 +50,30 @@ namespace CinematographyPlugin.Cinematography
         private void UpdateTimeScaleFromKeyBinds()
         {
             _targetTimeScale = Mathf.Clamp(_targetTimeScale + InputManager.GetTimeScaleInput(), TimeScaleMin, TimeScaleMax);
+
+            if (InputManager.GetTimeScalePausePlay())
+            {
+                TogglePausePlay();
+            }
+            
             if (Math.Abs(_targetTimeScale - Time.timeScale) > 0.001)
             {
                 var newTimeScale = Mathf.MoveTowards(Time.timeScale, _targetTimeScale, IndependentDeltaTimeManager.GetDeltaTime() * TimeChangeSpeed);
                 _timeScaleSlider.OnSliderChange(newTimeScale);
             }
+            
+            // Automatically turn on the time scale toggle if it's off and are using the key binds
+            if (Math.Abs(_targetTimeScale - TimeScaleMax) > 0.001 && !_timeScaleToggle.Toggle.isOn)
+            {
+                _timeScaleToggle.Toggle.Set(true);
+            }
+        }
+        
+        private void TogglePausePlay()
+        {
+            var newTimeScale = Math.Abs(_targetTimeScale - TimeScaleMin) > 0.01 ? TimeScaleMin : TimeScaleMax;
+            _targetTimeScale = newTimeScale;
+            _timeScaleSlider.OnSliderChange(newTimeScale);
         }
 
         private void OnDestroy()

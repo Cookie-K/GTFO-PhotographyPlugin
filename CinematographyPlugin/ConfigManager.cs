@@ -28,11 +28,22 @@ namespace CinematographyPlugin
         private static readonly ConfigEntry<KeyCode> SlowDown = ConfigFile
             .Bind("Key Binds", "Slow Down", KeyCode.LeftAlt, "Key to slow down movement speed (x1/2)");
         
+        private static readonly ConfigEntry<KeyCode> TimeInc = ConfigFile
+            .Bind("Key Binds", "Time Increment", KeyCode.E, "Speedup time (only work while in free cam)");
+        
+        private static readonly ConfigEntry<KeyCode> TimeDec = ConfigFile
+            .Bind("Key Binds", "Time Decrement", KeyCode.Q, "Slowdown time (only work while in free cam)");
+        
+        private static readonly ConfigEntry<KeyCode> TimePausePlay = ConfigFile
+            .Bind("Key Binds", "Time Pause/Play", KeyCode.R, "Pause/play time (only work while in free cam)");
+        
         public static KeyCode MenuKey => MenuOpenClose.Value;
-        public static bool IsUseAlpha => UseAlpha.Value;
         public static KeyCode UpKey => GoUp.Value;
         public static KeyCode DownKey => GoDown.Value;
         public static KeyCode SpeedUpKey => SpeedUp.Value;
         public static KeyCode SlowDownKey => SlowDown.Value;
+        public static KeyCode TimeIncKey => TimeInc.Value;
+        public static KeyCode TimeDecKey => TimeDec.Value;
+        public static KeyCode TimePausePlayKey => TimePausePlay.Value;
     }
 }

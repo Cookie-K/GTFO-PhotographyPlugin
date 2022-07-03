@@ -42,7 +42,6 @@ namespace CinematographyPlugin.Cinematography.Networking
             
             [MarshalAs(UnmanagedType.Bool)]
             public bool StoppingTimeScale;
-            
         }
                 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]

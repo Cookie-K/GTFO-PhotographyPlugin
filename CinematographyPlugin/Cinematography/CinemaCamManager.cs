@@ -10,6 +10,8 @@ namespace CinematographyPlugin.Cinematography
 {
     public class CinemaCamManager : MonoBehaviour
     {
+        public static CinemaCamManager Current;
+        
         private const float DelayBeforeLocomotionEnable = 0.1f;
         private const float PlayerInvulnerabilityHealth = 999_999f;
 
@@ -32,6 +34,8 @@ namespace CinematographyPlugin.Cinematography
 
         private void Awake()
         {
+            Current = this;
+            
             // Comps reference set up
             _playerAgent = PlayerManager.GetLocalPlayerAgent();
             _fpsCamera = _playerAgent.FPSCamera;
@@ -69,6 +73,11 @@ namespace CinematographyPlugin.Cinematography
             {
                 CheckAndEnableLocomotionOnExitCinemaCam();
             }
+        }
+
+        public bool FreeCamEnabled()
+        {
+            return _freeCamEnabled;
         }
 
         private void CheckAndForceUiHidden()

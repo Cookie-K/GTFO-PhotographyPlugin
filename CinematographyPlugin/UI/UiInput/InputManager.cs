@@ -1,9 +1,13 @@
-﻿using UnityEngine;
+﻿using CinematographyPlugin.Util;
+using UnityEngine;
 
 namespace CinematographyPlugin.UI.UiInput
 {
     public static class InputManager
     {
+        private const float TimeCheckIntervalStart = 0.1f;
+        private const float TimeScaleSmallDelta = 0.01f;
+
         private static readonly KeyCode PosX = KeyCode.D;
         private static readonly KeyCode NegX = KeyCode.A;
         private static readonly KeyCode PosY = ConfigManager.UpKey;
@@ -13,14 +17,13 @@ namespace CinematographyPlugin.UI.UiInput
         private static readonly KeyCode PosS = ConfigManager.SpeedUpKey;
         private static readonly KeyCode NegS = ConfigManager.SlowDownKey;
 
-        private static readonly KeyCode TimeInc01P = KeyCode.UpArrow;
-        private static readonly KeyCode TimeDec01P = KeyCode.DownArrow;
-        private static readonly KeyCode TimeInc10P = KeyCode.RightArrow;
-        private static readonly KeyCode TimeDec10P = KeyCode.LeftArrow;
+        private static readonly KeyCode TimeInc = ConfigManager.TimeIncKey;
+        private static readonly KeyCode TimeDec = ConfigManager.TimeDecKey;
+        private static readonly KeyCode TimePausePlay = ConfigManager.TimePausePlayKey;
 
         private static float _lastTimeHeld;
-        private static float _timeCheckInterval = 0.1f;
-        
+        private static float _timeCheckInterval = TimeCheckIntervalStart;
+
         public static float GetAxis(AxisName axis)
         {
             switch (axis)
@@ -40,9 +43,47 @@ namespace CinematographyPlugin.UI.UiInput
             }
         }
 
-        public static bool GetReset()
+        public static bool GetMiddleMouse()
         {
             return Input.GetMouseButtonDown(2);
+        }
+        
+        public static float GetTimeScaleInput()
+        {
+            var newTimeDelta = 0f;
+
+            // Check for time change input at a frame independent interval 
+            if (Time.realtimeSinceStartup - _lastTimeHeld < _timeCheckInterval)
+            {
+                _timeCheckInterval = Mathf.MoveTowards(_timeCheckInterval, 0, IndependentDeltaTimeManager.GetDeltaTime());
+                return newTimeDelta;
+            }
+            
+            if (Input.GetKey(TimeInc))
+            {
+                newTimeDelta = TimeScaleSmallDelta;
+            }
+
+            if (Input.GetKey(TimeDec))
+            {
+                newTimeDelta = -TimeScaleSmallDelta;
+            }
+
+            if (newTimeDelta != 0f) 
+            {
+                _lastTimeHeld = Time.realtimeSinceStartup;
+            }
+            else
+            {
+                _timeCheckInterval = TimeCheckIntervalStart;
+            }
+            
+            return newTimeDelta;
+        }
+        
+        public static bool GetTimeScalePausePlay()
+        {
+            return Input.GetKeyDown(TimePausePlay);
         }
 
         private static float GetMouseInput(AxisName axis)
@@ -86,42 +127,5 @@ namespace CinematographyPlugin.UI.UiInput
             }
         }
 
-        public static float GetTimeScaleInput()
-        {
-            var newTimeDelta = 0f;
-
-            // Check for time change input at a frame independent interval 
-            if (Time.realtimeSinceStartup - _lastTimeHeld < _timeCheckInterval)
-            {
-                return newTimeDelta;
-            }
-           
-            if (Input.GetKey(TimeInc01P))
-            {
-                newTimeDelta = 0.01f;
-            }
-
-            if (Input.GetKey(TimeDec01P))
-            {
-                newTimeDelta = -0.01f;
-            }
-            
-            if (Input.GetKey(TimeInc10P))
-            {
-                newTimeDelta = 0.10f;
-            }
-
-            if (Input.GetKey(TimeDec10P))
-            {
-                newTimeDelta = -0.10f;
-            }
-
-            if (newTimeDelta != 0f) 
-            {
-                _lastTimeHeld = Time.realtimeSinceStartup;
-            }
-            
-            return newTimeDelta;
-        }
     }
 }
