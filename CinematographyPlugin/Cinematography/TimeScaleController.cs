@@ -16,7 +16,7 @@ namespace CinematographyPlugin.Cinematography
 
         private static bool _paused;
         private static float _prevTimeScale = 1f;
-        private float _targetTimeScale = TimeScaleDefault;
+        private static float _targetTimeScale = TimeScaleDefault;
         
         private ToggleOption _timeScaleToggle;
         private SliderOption _timeScaleSlider;
@@ -39,31 +39,30 @@ namespace CinematographyPlugin.Cinematography
 
         public static void ResetTimeScale()
         {
-            Time.timeScale = 1;
+            _targetTimeScale = TimeScaleDefault;
+            Time.timeScale = TimeScaleDefault;
         }
 
         private void OnTimeScaleChange(float value)
         {
             Time.timeScale = value;
         }
-
+ 
         private void UpdateTimeScaleFromKeyBinds()
         {
-            _targetTimeScale = Mathf.Clamp(_targetTimeScale + InputManager.GetTimeScaleInput(), TimeScaleMin, TimeScaleMax);
+            var timeScaleInput = InputManager.GetTimeScaleInput();
+            if (timeScaleInput != 0f)
+            {
+                _timeScaleSlider.OnSliderChange(Mathf.Clamp(Time.timeScale + timeScaleInput, TimeScaleMin, TimeScaleMax));    
+            }
 
             if (InputManager.GetTimeScalePausePlay())
             {
                 TogglePausePlay();
             }
             
-            if (Math.Abs(_targetTimeScale - Time.timeScale) > 0.001)
-            {
-                var newTimeScale = Mathf.MoveTowards(Time.timeScale, _targetTimeScale, IndependentDeltaTimeManager.GetDeltaTime() * TimeChangeSpeed);
-                _timeScaleSlider.OnSliderChange(newTimeScale);
-            }
-            
             // Automatically turn on the time scale toggle if it's off and are using the key binds
-            if (Math.Abs(_targetTimeScale - TimeScaleMax) > 0.001 && !_timeScaleToggle.Toggle.isOn)
+            if (Math.Abs(Time.timeScale - TimeScaleMax) > 0.001 && !_timeScaleToggle.Toggle.isOn)
             {
                 _timeScaleToggle.Toggle.Set(true);
             }
@@ -71,8 +70,8 @@ namespace CinematographyPlugin.Cinematography
         
         private void TogglePausePlay()
         {
-            var newTimeScale = Math.Abs(_targetTimeScale - TimeScaleMin) > 0.01 ? TimeScaleMin : TimeScaleMax;
-            _targetTimeScale = newTimeScale;
+            var newTimeScale = Math.Abs(Time.timeScale - TimeScaleMin) > 0.01 ? TimeScaleMin : TimeScaleMax;
+            // _targetTimeScale = newTimeScale;
             _timeScaleSlider.OnSliderChange(newTimeScale);
         }
 

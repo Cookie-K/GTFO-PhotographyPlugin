@@ -1,5 +1,6 @@
 ﻿using Agents;
 using ChainedPuzzles;
+using CinematographyPlugin.Cinematography;
 using CinematographyPlugin.Cinematography.Networking;
 using CinematographyPlugin.UI;
 using Enemies;
@@ -15,7 +16,7 @@ namespace CinematographyPlugin
 
         public static event Action<bool> OnLocalPlayerDieOrRevive;
 
-        private static readonly List<int> PrevRequiredTeamScanIDs = new List<int>();
+        private static readonly List<int> PrevRequiredTeamScanIDs = new ();
    
         [HarmonyPrefix]
         [HarmonyPatch(typeof (InputMapper), "DoGetButton")]
@@ -85,7 +86,7 @@ namespace CinematographyPlugin
         private static void Prefix_SetTargetDivertAwayFromCameraMan(ref AgentTarget value)
         {
             if (value == null || PlayerManager.PlayerAgentsInLevel.Count == 1) return;
-            var playerAgent = (PlayerAgent) value.m_agent;
+            var playerAgent = value.m_agent as PlayerAgent;
             if (playerAgent == null) return;
             
             if (CinemaNetworkingManager.GetPlayersInFreeCam().Any(p => p.Sync.PlayerNick == playerAgent.Sync.PlayerNick))
@@ -114,5 +115,13 @@ namespace CinematographyPlugin
                 PrevRequiredTeamScanIDs.Remove(__instance.GetInstanceID());
             } 
         }
+
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(PostProcessingAdapter), "SetDOF", typeof(float), typeof(float), typeof(float))]
+        private static bool Prefix_OverrideDoF(ref float focusDistance, ref float aperture, ref float focalLength)
+        {
+            return !PostProcessingController.IsDoFSet();
+        }
+        
     }
 }

@@ -14,7 +14,7 @@ namespace CinematographyPlugin.Cinematography
         
         public const float MovementSpeedDefault = 0.5f;
         public const float MovementSpeedMin = 0f;
-        public const float MovementSpeedMax = 1f;
+        public const float MovementSpeedMax = 2f;
         private const float MovementSpeedScale = 10;
 
         public const float MovementSmoothTimeDefault = 0.2f;
@@ -22,12 +22,12 @@ namespace CinematographyPlugin.Cinematography
         public const float MovementSmoothTimeMax = 1f;
 
         private const float SensitivityScaling = 100f;
-        private static float _rotationSpeedDefault = .65f;
+        private static float RotationSpeedDefault = 0.9f;
         public const float RotationSpeedMin = 0f;
-        public const float RotationSpeedMax = 1f;
+        public const float RotationSpeedMax = 2f;
         private const float RotationDiffMax = 90f;
 
-        public const float RotationSmoothTimeDefault = 0.2f;
+        public const float RotationSmoothTimeDefault = 0.1f;
         public const float RotationSmoothTimeMin = 0f;
         public const float RotationSmoothTimeMax = 1f;
 
@@ -35,12 +35,12 @@ namespace CinematographyPlugin.Cinematography
         private const float ZoomMin = 1f;
         private const float ZoomMax = 160f;
 
-        private const float ZoomScaling = 100f;
-        public const float ZoomSpeedDefault = .65f;
+        private const float ZoomScaling = 200f;
+        public const float ZoomSpeedDefault = 0.9f;
         public const float ZoomSpeedMin = 0f;
         public const float ZoomSpeedMax = 1f;
 
-        public const float ZoomSmoothTimeDefault = 0.2f;
+        public const float ZoomSmoothTimeDefault = 0.1f;
         public const float ZoomSmoothTimeMin = 0f;
         public const float ZoomSmoothTimeMax = 1f;
 
@@ -56,7 +56,7 @@ namespace CinematographyPlugin.Cinematography
         private bool _dynamicRotation = true;
         
         private float _movementSpeed = MovementSpeedDefault;
-        private float _rotationSpeed = _rotationSpeedDefault;
+        private float _rotationSpeed = RotationSpeedDefault;
         private float _movementSmoothFactor = MovementSmoothTimeDefault;
         private float _rotationSmoothFactor = RotationSmoothTimeDefault;
         private float _targetZoom = _zoomDefault;
@@ -93,12 +93,8 @@ namespace CinematographyPlugin.Cinematography
             _playerAgent = PlayerManager.GetLocalPlayerAgent();
             
             _fpsCamera = FindObjectOfType<FPSCamera>();
-            _rotTrans = transform.GetChild(0);
-            
-            // Get default sensitivity 
-            _rotationSpeedDefault = CellSettingsManager.GetFloatValue(eCellSettingID.Gameplay_LookSpeed);
-            _rotationSpeed = _rotationSpeedDefault;
-            
+            _childTrans = transform.GetChild(0);
+
             // Get default FoV
             _zoomDefault = GetDefaultZoom();
             _targetZoom = _zoomDefault;
@@ -129,12 +125,7 @@ namespace CinematographyPlugin.Cinematography
         
         public static float GetDefaultRotationSpeed()
         {
-            if (_rotationSpeedDefault < 0.001)
-            {
-                _rotationSpeedDefault = CellSettingsManager.GetFloatValue(eCellSettingID.Gameplay_LookSpeed);
-            }
-
-            return _rotationSpeedDefault;
+            return RotationSpeedDefault;
         }
 
         private void Update()
@@ -146,7 +137,7 @@ namespace CinematographyPlugin.Cinematography
             UpdateCuller();
             UpdateZoom();
             CheckReset();
-
+        
             if (!_dynamicRotation) return;
             
             CalculateDynamicRotationDelta();

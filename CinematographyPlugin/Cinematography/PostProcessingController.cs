@@ -2,6 +2,7 @@
 using CinematographyPlugin.UI.Enums;
 using Player;
 using UnityEngine;
+using UnityEngine.PostProcessing;
 using UnityEngine.Rendering.PostProcessing;
 
 namespace CinematographyPlugin.Cinematography
@@ -9,28 +10,40 @@ namespace CinematographyPlugin.Cinematography
     public class PostProcessingController : MonoBehaviour
     {
         public const float FocusDistanceMin = 0f;
-        public const float FocusDistanceMax = 10f;
+        public const float FocusDistanceMax = 50f;
         private static float _focusDistanceDefault;
         
         public const float ApertureMin = 0f;
-        public const float ApertureMax = 5f;
+        public const float ApertureMax = 10f;
         private static float _apertureDefault;
         
-        public const float FocalLenghtMin = 0.1f;
-        public const float FocalLenghtMax = 10f;
+        public const float FocalLenghtMin = 0f;
+        public const float FocalLenghtMax = 100f;
         private static float _focalLenghtDefault;
 
+        private static float _currFocusDistance;
+        private static float _currAperture;
+        private static float _currFocalLenght;
+        private static bool _init;
+
+        private static ToggleOption _dofToggle;
         private PostProcessVolume _ppv;
+        private DepthOfFieldModel _dofModel;
         private DepthOfField _dof;
         private Vignette _vin;
         private AmbientParticles _ambientParticles;
         
         private void Awake()
         {
-            _ambientParticles = PlayerManager.GetLocalPlayerAgent().FPSCamera.GetComponent<AmbientParticles>();
-            _ppv = GetPostProcessVolume();
+            var fpsCamera = PlayerManager.GetLocalPlayerAgent().FPSCamera;
+
+            _dofToggle = (ToggleOption) CinemaUIManager.Options[UIOption.ToggleVignette];
+            _ambientParticles = fpsCamera.GetComponent<AmbientParticles>();
+            _ppv = fpsCamera.GetComponent<PostProcessVolume>();
             _dof = _ppv.profile.GetSetting<DepthOfField>();
             _vin = _ppv.profile.GetSetting<Vignette>();
+            
+            _init = true;
         }
 
         private void Start()
@@ -40,6 +53,25 @@ namespace CinematographyPlugin.Cinematography
             ((SliderOption) CinemaUIManager.Options[UIOption.FocusDistanceSlider]).OnValueChanged +=  OnFocusDistanceChange;
             ((SliderOption) CinemaUIManager.Options[UIOption.ApertureSlider]).OnValueChanged +=  OnApertureChange;
             ((SliderOption) CinemaUIManager.Options[UIOption.FocalLenghtSlider]).OnValueChanged +=  OnFocalLenghtChange;
+        }
+
+        public static bool IsDoFSet()
+        {
+            return _init && _dofToggle.Toggle.isOn;
+        }
+
+        private void SetDoF()
+        {
+            _dofModel.settings = _dofModel.settings with
+            {
+                focusDistance = _currFocusDistance,
+                aperture = _currAperture,
+                focalLength = _currFocalLenght,
+            };
+
+            _dof.focusDistance.value = _currFocusDistance;
+            _dof.aperture.value = _currAperture;
+            _dof.focalLength.value = _currFocalLenght;
         }
 
         private static PostProcessVolume GetPostProcessVolume()
@@ -91,17 +123,20 @@ namespace CinematographyPlugin.Cinematography
 
         private void OnFocusDistanceChange(float value)
         {
-            _dof.focusDistance.value = value;
+            _currFocusDistance = value;
+            SetDoF();
         }
         
         private void OnApertureChange(float value)
         {
-            _dof.focusDistance.value = value;
+            _currAperture = value;
+            SetDoF();
         }
         
         private void OnFocalLenghtChange(float value)
         {
-            _dof.focusDistance.value = value;
+            _currFocalLenght = value;
+            SetDoF();
         }
 
         private void OnDestroy()
@@ -111,6 +146,8 @@ namespace CinematographyPlugin.Cinematography
             ((SliderOption) CinemaUIManager.Options[UIOption.FocusDistanceSlider]).OnValueChanged -=  OnFocusDistanceChange;
             ((SliderOption) CinemaUIManager.Options[UIOption.ApertureSlider]).OnValueChanged -=  OnApertureChange;
             ((SliderOption) CinemaUIManager.Options[UIOption.FocalLenghtSlider]).OnValueChanged -=  OnFocalLenghtChange;
+
+            _init = false;
         }
     }
 }

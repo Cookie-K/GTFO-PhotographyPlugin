@@ -11,8 +11,7 @@ namespace CinematographyPlugin.Cinematography
     public class CinemaCamManager : MonoBehaviour
     {
         public static CinemaCamManager Current;
-        
-        private const float DelayBeforeLocomotionEnable = 0.1f;
+
         private const float PlayerInvulnerabilityHealth = 999_999f;
 
         private readonly Dictionary<string, float> _playerPrevMaxHealthByName = new ();
@@ -69,10 +68,6 @@ namespace CinematographyPlugin.Cinematography
                 CheckAndForceUiHidden();
                 DivertEnemiesAwayFromCameraMan();
             }
-            else
-            {
-                CheckAndEnableLocomotionOnExitCinemaCam();
-            }
         }
 
         public bool FreeCamEnabled()
@@ -85,21 +80,8 @@ namespace CinematographyPlugin.Cinematography
             if (ScreenClutterController.GetInstance().IsBodyOrUiVisible())
             {
                 // force hide all ui when in free cam
-                ScreenClutterController.GetInstance().ToggleAllScreenClutterExceptWaterMark(false);
+                ScreenClutterController.GetInstance().ToggleAllScreenClutter(false);
             }
-        }
-
-        private void CheckAndEnableLocomotionOnExitCinemaCam()
-        {
-            if (!_locomotionDisabled) return;
-	        
-            // Update locomotion a few frames after to avoid rubber banding 
-            var delayTimeUp = Time.realtimeSinceStartup - _freeCamDisabledTime > DelayBeforeLocomotionEnable / Time.timeScale;
-            if (!delayTimeUp) return;
-	        
-            _fpsCamera.m_orgParent.localPosition = Vector3.zero;
-            _playerLocomotion.enabled = true;
-            _locomotionDisabled = false;
         }
 
         private void OnFreeCameraToggle(bool value)
@@ -111,12 +93,11 @@ namespace CinematographyPlugin.Cinematography
         private void EnableOrDisableCinemaCam(bool enable)
         {
             SetCameraManHealth(_playerAgent, enable);
-            ScreenClutterController.GetInstance().ToggleAllScreenClutterExceptWaterMark(!enable);
+            ScreenClutterController.GetInstance().ToggleAllScreenClutter(!enable);
 
             if (enable)
             {
                 _playerLocomotion.enabled = false;
-                _locomotionDisabled = true;
                 _prevParent = _fpsCamera.m_orgParent.parent;
 				
                 _cinemaCamController.SyncWithCameraTransform();
@@ -131,11 +112,11 @@ namespace CinematographyPlugin.Cinematography
                 _cinemaCamController.enabled = false;
                 _fpsCamera.MouseLookEnabled = true;
                 _prevParent.gameObject.active = true;
-
+                
                 _fpsCamera.m_orgParent.parent = _prevParent;
-
-                // Enable player locomotion later to avoid rubber banding
-                _freeCamDisabledTime = Time.realtimeSinceStartup;
+                
+                _fpsCamera.m_orgParent.localPosition = Vector3.zero;
+                _playerLocomotion.enabled = true;
             }
 
             CinematographyCore.log.LogMessage(enable ? "Cinema cam enabled" : "Cinema cam disabled");
@@ -183,16 +164,18 @@ namespace CinematographyPlugin.Cinematography
         private void DivertEnemiesAwayFromCameraMan()
         {
             if (PlayerManager.PlayerAgentsInLevel.Count == 1) return;
-			
+			     
             foreach (var playerAgent in CinemaNetworkingManager.GetPlayersInFreeCam())
             {
                 foreach (var attacker in new List<Agent>(playerAgent.GetAttackers().ToArray()))
                 {
+                    if (attacker.Type != AgentType.Enemy) continue;
+                    
                     playerAgent.UnregisterAttacker(attacker);
                     var delegateAgent = CinemaNetworkingManager.GetPlayersNotInFreeCam().Aggregate(
                         (currMin, pa) => pa.GetAttackersScore() < currMin.GetAttackersScore() ? pa : currMin);
-                    CinematographyCore.log.LogInfo($"Diverting {attacker.name} to {delegateAgent}");
-                    ((EnemyAgent) attacker).AI.SetTarget(delegateAgent);
+                    // CinematographyCore.log.LogDebug($"Diverting {attacker.name} to {delegateAgent.name}");
+                    attacker.TryCast<EnemyAgent>()!.AI.SetTarget(delegateAgent);
                 }
             }
         }

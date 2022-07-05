@@ -15,7 +15,7 @@ namespace CinematographyPlugin.Cinematography.Networking
         public static event Action<bool> OnFreeCamEnableOrDisable;
         public static event Action<bool> OnTimeScaleEnableOrDisable;
 
-        private static readonly Dictionary<string, CinemaSyncPlayer> PlayersByName = new ();
+        private static readonly Dictionary<string, CinemaSyncPlayer> SyncPlayersByName = new ();
 
         private const string SyncCinemaStateEvent = "Sync_CinemaPlugin_States";
         private const string SyncCinemaAlterTimeScaleEvent = "Sync_CinemaPlugin_Time_Scale";
@@ -100,21 +100,21 @@ namespace CinematographyPlugin.Cinematography.Networking
 
         public static IEnumerable<PlayerAgent> GetPlayersNotInFreeCam()
         {
-            return PlayersByName.Values.Where(p => !p.IsInFreeCam).Select(p => p.Agent).ToList();
+            return SyncPlayersByName.Values.Where(p => !p.IsInFreeCam).Select(p => p.Agent).ToList();
         }
         
         public static IEnumerable<PlayerAgent> GetPlayersInFreeCam()
         {
-            return PlayersByName.Values.Where(p => p.IsInFreeCam).Select(p => p.Agent).ToList();
+            return SyncPlayersByName.Values.Where(p => p.IsInFreeCam).Select(p => p.Agent).ToList();
         }
 
         public static bool AssertAllPlayersHasPlugin()
         {
-            var assertAll = PlayersByName.Values.All(p => p.HasPlugin);
+            var assertAll = SyncPlayersByName.Values.All(p => p.IsBot || p.HasPlugin);
             
             if (!assertAll)
             {
-                var names = PlayersByName.Values.Where(p => !p.HasPlugin).Join(p => p.Agent.Sync.PlayerNick);
+                var names = SyncPlayersByName.Values.Where(p => !p.HasPlugin).Join(p => p.Agent.Sync.PlayerNick);
                 var msg = new[] {
                     "Cinematography plugin cannot be started.",
                     "All must have the plugin installed to continue.",
@@ -136,7 +136,7 @@ namespace CinematographyPlugin.Cinematography.Networking
         private static void OnPing(CinemaPluginPingData data)
         {
             UpdatePlayersList();
-            PlayersByName[data.PlayerName].HasPlugin = true;
+            SyncPlayersByName[data.PlayerName].HasPlugin = true;
         }
 
         private static void UpdateStatesAndTriggerEvents(CinemaPluginStateData stateData)
@@ -147,32 +147,32 @@ namespace CinematographyPlugin.Cinematography.Networking
             var playerName = agent.Sync.PlayerNick;
             UpdatePlayersList();
             
-            if (stateData.StartingFreeCam && !PlayersByName[playerName].IsInFreeCam)
+            if (stateData.StartingFreeCam && !SyncPlayersByName[playerName].IsInFreeCam)
             {
                 CinematographyCore.log.LogInfo($"{stateData.PlayerName} is starting free cam");
                 OnOtherPlayerEnterExitFreeCam?.Invoke(agent, true);
             }
-            if (stateData.StoppingFreeCam && PlayersByName[playerName].IsInFreeCam)
+            if (stateData.StoppingFreeCam && SyncPlayersByName[playerName].IsInFreeCam)
             {
                 CinematographyCore.log.LogInfo($"{stateData.PlayerName} is stopping free cam");
                 OnOtherPlayerEnterExitFreeCam?.Invoke(agent, false);
             }
-            if (stateData.StartingTimeScale && !PlayersByName[playerName].IsInCtrlOfTime)
+            if (stateData.StartingTimeScale && !SyncPlayersByName[playerName].IsInCtrlOfTime)
             {
                 CinematographyCore.log.LogInfo($"{stateData.PlayerName} is starting to change time scale");
             }
-            if (stateData.StoppingTimeScale && PlayersByName[playerName].IsInCtrlOfTime)
+            if (stateData.StoppingTimeScale && SyncPlayersByName[playerName].IsInCtrlOfTime)
             {
                 CinematographyCore.log.LogInfo($"{stateData.PlayerName} has stopped altering time scale");
             }
             
-            PlayersByName[playerName].UpdateUIStates(stateData);
+            SyncPlayersByName[playerName].UpdateUIStates(stateData);
 
             var nPlayersInLvl = PlayerManager.PlayerAgentsInLevel.Count;
             var localPlayerAgent = PlayerManager.GetLocalPlayerAgent();
             var isAlone = nPlayersInLvl == 1;
-            var nOtherPlayersInFreeCam = PlayersByName.Values.Count(p => p.IsInFreeCam && p.Agent.Sync.PlayerNick != localPlayerAgent.Sync.PlayerNick);
-            var anotherPlayerInCtrlOfTime = PlayersByName.Values.Any(p => p.IsInCtrlOfTime && p.Agent.Sync.PlayerNick != localPlayerAgent.Sync.PlayerNick);
+            var nOtherPlayersInFreeCam = SyncPlayersByName.Values.Count(p => p.IsInFreeCam && p.Agent.Sync.PlayerNick != localPlayerAgent.Sync.PlayerNick);
+            var anotherPlayerInCtrlOfTime = SyncPlayersByName.Values.Any(p => p.IsInCtrlOfTime && p.Agent.Sync.PlayerNick != localPlayerAgent.Sync.PlayerNick);
             var isEveryOneElseInFreeCam = nOtherPlayersInFreeCam == nPlayersInLvl - 1;
 
             _canUseFreeCam = isAlone || !isEveryOneElseInFreeCam;
@@ -203,13 +203,13 @@ namespace CinematographyPlugin.Cinematography.Networking
             UpdatePlayersList();
             var playerName = PlayerManager.GetLocalPlayerAgent().Sync.PlayerNick;
             var data = new CinemaPluginPingData { PlayerName = playerName };
-            PlayersByName[data.PlayerName].HasPlugin = true;
+            SyncPlayersByName[data.PlayerName].HasPlugin = true;
             NetworkAPI.InvokeEvent(CinemaPingEvent, data);
         }
 
         private static void OnTimeScaleSetByOtherPlayer(CinemaPluginTimeScaleData data)
         {
-            if (PlayersByName.ContainsKey(data.PlayerName) && PlayersByName[data.PlayerName].IsInCtrlOfTime)
+            if (SyncPlayersByName.ContainsKey(data.PlayerName) && SyncPlayersByName[data.PlayerName].IsInCtrlOfTime)
             {
                 OnTimeScaleChangedByOtherPlayer?.Invoke((float) data.TimeScale);
             }
@@ -225,7 +225,7 @@ namespace CinematographyPlugin.Cinematography.Networking
                 StoppingFreeCam = !enteringFreeCam
             };
 
-            PlayersByName[playerName].IsInFreeCam = enteringFreeCam;
+            SyncPlayersByName[playerName].IsInFreeCam = enteringFreeCam;
             // CinematographyCore.log.LogInfo($"{data.PlayerName} broadcasting free cam {enteringFreeCam}");
             NetworkAPI.InvokeEvent(SyncCinemaStateEvent, data);
         }
@@ -240,7 +240,7 @@ namespace CinematographyPlugin.Cinematography.Networking
                 StoppingTimeScale = !alteringTimeScale
             };
             
-            PlayersByName[playerName].IsInCtrlOfTime = alteringTimeScale;
+            SyncPlayersByName[playerName].IsInCtrlOfTime = alteringTimeScale;
             // CinematographyCore.log.LogInfo($"{data.PlayerName} broadcasting time scale {alteringTimeScale}");
             NetworkAPI.InvokeEvent(SyncCinemaStateEvent, data);
         }
@@ -257,24 +257,24 @@ namespace CinematographyPlugin.Cinematography.Networking
         private static void UpdatePlayersList()
         {
             var agentsNames = new List<string>();
+
             foreach (var agent in PlayerManager.PlayerAgentsInLevel)
             {
-                if (agent.gameObject.GetComponent<PlayerAIBot>() != null) continue;
-                
+                var isBot = agent.gameObject.GetComponent<PlayerAIBot>() != null;
                 var agentName = agent.Sync.PlayerNick;
                 agentsNames.Add(agentName);
-                if (!PlayersByName.ContainsKey(agentName))
+                if (!SyncPlayersByName.ContainsKey(agentName))
                 {
                     CinematographyCore.log.LogDebug($"Adding {agentName} to active players list");
 
-                    PlayersByName.Add(agentName, new CinemaSyncPlayer(agent));
+                    SyncPlayersByName.Add(agentName, new CinemaSyncPlayer(agent, isBot));
                 }
             }
             
-            var playersNoLongerInLobby = PlayersByName.Keys.Where(playerName => !agentsNames.Contains(playerName)).ToList();
+            var playersNoLongerInLobby = SyncPlayersByName.Keys.Where(playerName => !agentsNames.Contains(playerName)).ToList();
             foreach (var playerName in playersNoLongerInLobby)
             {
-                PlayersByName.Remove(playerName);
+                SyncPlayersByName.Remove(playerName);
             }
         }
 
@@ -298,7 +298,7 @@ namespace CinematographyPlugin.Cinematography.Networking
             CinemaUIManager.Toggles[UIOption.ToggleTimeScale].OnValueChanged -= SyncLocalPlayerEnterExitTimeScale;
             CinemaUIManager.Sliders[UIOption.TimeScaleSlider].OnValueChanged -= SyncLocalPlayerAlterTimeScale;
             
-            PlayersByName.Clear();
+            SyncPlayersByName.Clear();
 
             _prevCanUseFreeCam = false;
             _prevCanUseTimeScale = false;
