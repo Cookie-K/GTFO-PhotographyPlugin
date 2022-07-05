@@ -1,6 +1,7 @@
 ﻿using CinematographyPlugin.Cinematography.Networking;
 using CinematographyPlugin.UI.Enums;
 using GTFO.API;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -9,24 +10,29 @@ namespace CinematographyPlugin.UI
 {
     public class CinemaUIManager : MonoBehaviour
     {
+        public static CinemaUIManager Current;
         public static event Action OnUIStart;
-        
-        private const string PrefabPath = "Assets/UI/CinemaUI.prefab";
+
         private static readonly KeyCode UIOpenKey = ConfigManager.MenuKey;
+        private const string PrefabPath = "Assets/UI/CinemaUI.prefab";
 
         internal static Dictionary<UIOption, Option> Options { get; set; }
         internal static Dictionary<UIOption, ToggleOption> Toggles; 
-        internal static Dictionary<UIOption, SliderOption> Sliders; 
+        internal static Dictionary<UIOption, SliderOption> Sliders;
 
         internal static CursorLockMode CursorLockLastMode { get; set; }
         internal static bool CursorLastVisible { get; set; }
         internal static bool MenuOpen { get; set; }
         private static bool _init;
 
+        private static TMP_Text _centerText;
+        private static GameObject _centerTextWindow;
+        private static GameObject _window;
         private static GameObject _cinemaUIgo;
 
         public void Awake()
         {
+            Current = this;
             var loadedAsset = AssetAPI.GetLoadedAsset(PrefabPath);
             
             var instantiate = Instantiate(loadedAsset);
@@ -41,8 +47,10 @@ namespace CinematographyPlugin.UI
             {
                 // CinemaUI/Canvas/Window
                 var canvas = _cinemaUIgo.transform.GetChild(0);
-                var window = canvas.GetChild(0);
-                window.gameObject.AddComponent<UIWindow>();
+                _window = canvas.GetChild(0).gameObject;
+                _centerTextWindow = canvas.GetChild(1).gameObject;
+                _centerText = _centerTextWindow.GetComponentInChildren<TMP_Text>();
+                _window.gameObject.AddComponent<UIWindow>();
                 
                 var resetButton = _cinemaUIgo.GetComponentInChildren<Button>();;
                 resetButton.onClick.AddListener((UnityAction) OnCloseButton);
@@ -50,8 +58,10 @@ namespace CinematographyPlugin.UI
                 Options = UIFactory.BuildOptions(_cinemaUIgo);
                 Toggles = UIFactory.GetToggles(Options);
                 Sliders = UIFactory.GetSliders(Options);
-                
-                _cinemaUIgo.active = false;
+
+                _window.active = false;
+                _centerTextWindow.active = false;
+                _cinemaUIgo.active = true;
                 _init = true;
             }
         }
@@ -85,6 +95,23 @@ namespace CinematographyPlugin.UI
         {
             CloseUI();
         }
+
+        public void ShowTextOnScreen(string text)
+        {
+            _centerText.SetText($"[{text}]");
+            _centerTextWindow.gameObject.active = true;
+        }
+        
+        public void ShowNoTargetTextOnScreen()
+        {
+            _centerText.SetText("[NO TARGET]");
+            _centerTextWindow.gameObject.active = true;
+        }
+        
+        public void HideTextOnScreen()
+        {
+            _centerTextWindow.gameObject.active = false;
+        }
         
         private void OnFreeCamEnableOrDisable(bool enable)
         {
@@ -92,14 +119,10 @@ namespace CinematographyPlugin.UI
             if (enable)
             {
                 option.Enable(option.Toggle.isOn);
-                // Enter chat mode as an easy way to ignore inputs on character
-                PlayerChatManager.Current.EnterChatMode();
             }
             else
             {
                 option.Disable(false);
-                PlayerChatManager.Current.m_currentValue = "";
-                PlayerChatManager.Current.ExitChatMode();
             }
         }
         
@@ -125,7 +148,7 @@ namespace CinematographyPlugin.UI
             
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
-            _cinemaUIgo.active = true;
+            _window.active = true;
             MenuOpen = true;
         }
         
@@ -133,7 +156,7 @@ namespace CinematographyPlugin.UI
         {
             Cursor.lockState = CursorLockLastMode;
             Cursor.visible = CursorLastVisible;
-            _cinemaUIgo.active = false;
+            _window.active = false;
             MenuOpen = false;
         }
 

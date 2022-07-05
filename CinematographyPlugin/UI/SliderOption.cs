@@ -11,8 +11,12 @@ namespace CinematographyPlugin.UI
         private Slider Slider { get; }
 
         private readonly float _initialValue;
-
+        
         private readonly TMP_Text _valueText;
+        
+        private bool _prevValueSet;
+        
+        private float _prevValue;
 
         private int _nDisabled;
 
@@ -54,14 +58,39 @@ namespace CinematographyPlugin.UI
             {
                 Slider.enabled = true;
                 Slider.interactable = true;
-                OnReset();
+                if (_prevValueSet)
+                {
+                    SetPreviousValue();
+                }
+                else
+                {
+                    OnReset();
+                }
             }
         }
 
         public override void OnReset()
         {
-            Slider.Set(_initialValue);
-            OnSliderChange(_initialValue);
+            SetSliderValue(_initialValue);
+        }
+        
+        public override void SetPreviousValue()
+        {
+            SetSliderValue(_prevValueSet ? _prevValue : _initialValue);
+        }
+
+        public override void OnSetActive(bool state)
+        {
+            if (state || !Root.active) return;
+            
+            _prevValue = Slider.value;
+            _prevValueSet = true;
+        }
+        
+        private void SetSliderValue(float value)
+        {
+            Slider.Set(value);
+            OnSliderChange(value);
         }
 
     }

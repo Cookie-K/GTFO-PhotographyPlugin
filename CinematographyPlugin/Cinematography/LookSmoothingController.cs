@@ -1,4 +1,5 @@
 ﻿using CinematographyPlugin.Cinematography.Networking;
+using CinematographyPlugin.Cinematography.Settings;
 using CinematographyPlugin.UI;
 using CinematographyPlugin.UI.Enums;
 using UnityEngine;
@@ -7,11 +8,6 @@ namespace CinematographyPlugin.Cinematography
 {
     public class LookSmoothingController : MonoBehaviour
     {
-        public const float SmoothDefault = 0.2f;
-        public const float SmoothMax = 5f;
-        public const float SmoothMin = 0f;
-        
-        private const float SmoothingScale = 4f;
         private float _currVal;
         private int _initialSamples = 8;
                
@@ -35,21 +31,21 @@ namespace CinematographyPlugin.Cinematography
         {
             if (!value)
             {
-                _currVal = SmoothDefault;
-                _fpsCamera.MouseSmoother.m_curve = SmoothDefault;
+                _currVal = CinCamSettings.LookSmoothDefault;
+                _fpsCamera.MouseSmoother.m_curve = CinCamSettings.LookSmoothDefault;
             }
         }
 
         private void OnFpsSmoothValChange(float value)
         {
-            if (Time.timeScale > TimeScaleController.TimeScaleMax)
+            if (Time.timeScale > CinCamSettings.TimeScaleMax)
             {
                 // Do not update the sensitivity for values above max as it is more disorienting than useful
                 return;
             }
             
             _currVal = value;
-            _fpsCamera.MouseSmoother.Curve = _currVal + SmoothingScale * (1 - Time.timeScale);
+            _fpsCamera.MouseSmoother.Curve = _currVal + CinCamSettings.LookSmoothingScale * (1 - Time.timeScale);
             _fpsCamera.MouseSmoother.Samples = Mathf.RoundToInt(_initialSamples / Time.timeScale);
         }
 

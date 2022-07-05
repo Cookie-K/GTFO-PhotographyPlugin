@@ -2,6 +2,7 @@
 using CinematographyPlugin.Cinematography.Networking;
 using CinematographyPlugin.UI;
 using CinematographyPlugin.UI.Enums;
+using CinematographyPlugin.UI.UiInput;
 using Enemies;
 using Player;
 using UnityEngine;
@@ -13,16 +14,28 @@ namespace CinematographyPlugin.Cinematography
         public static CinemaCamManager Current;
 
         private const float PlayerInvulnerabilityHealth = 999_999f;
+        private const float RayCastMax = 50;
+        private const float RayCastRadius = 0.5f;
+        private const float OrbitReselectDelay = 0.5f;
 
-        private readonly Dictionary<string, float> _playerPrevMaxHealthByName = new ();
-        private readonly Dictionary<string, float> _playerPrevHealthByName = new ();
-        private readonly Dictionary<string, float> _playerPrevInfectionByName = new ();
+        private readonly Dictionary<string, float> _playerPrevMaxHealthByName = new();
+        private readonly Dictionary<string, float> _playerPrevHealthByName = new();
+        private readonly Dictionary<string, float> _playerPrevInfectionByName = new();
+
+        private readonly int _playerLayerMask = LayerMask.GetMask("PlayerSynced");
+        private readonly int _enemyLayerMask = LayerMask.GetMask("EnemyDamagable");
+        private readonly int _enemyLayer = LayerMask.NameToLayer("EnemyDamagable");
 
         private bool _freeCamEnabled;
-        private bool _locomotionDisabled;
-        private float _freeCamDisabledTime;
-
+        private bool _inOrbit;
+        private bool _orbitTargetSet;
+        private string _orbitTargetName;
+        private float _lastOrbitDeselect;
+        private Vector3 _orbitOffset;
+        private RaycastHit _cameraHit;
+        private GameObject _prevHit = new ();
         private FPSCamera _fpsCamera;
+        private Agent _orbitTarget;
         private Transform _prevParent;
         private Transform _cinemaCamCtrlHolder;
         private Transform _cinemaCam;
@@ -49,7 +62,7 @@ namespace CinematographyPlugin.Cinematography
             _fpsCamHolderSubstitute.parent = cinemaCamCamRotation;
             cinemaCamCamRotation.parent = _cinemaCamCtrlHolder;
             _cinemaCamCtrlHolder.parent = _cinemaCam;
-			
+
             _cinemaCamController = _cinemaCamCtrlHolder.gameObject.AddComponent<CinemaCamController>();
             _cinemaCamController.enabled = false;
         }
@@ -67,6 +80,7 @@ namespace CinematographyPlugin.Cinematography
             {
                 CheckAndForceUiHidden();
                 DivertEnemiesAwayFromCameraMan();
+                UpdateOrbitCamState();
             }
         }
 
@@ -120,6 +134,74 @@ namespace CinematographyPlugin.Cinematography
             }
 
             CinematographyCore.log.LogMessage(enable ? "Cinema cam enabled" : "Cinema cam disabled");
+        }
+
+        private void UpdateOrbitCamState()
+        {
+            if (InputManager.GetOrbitTargetSelect() && Time.realtimeSinceStartup - _lastOrbitDeselect > OrbitReselectDelay)
+            {
+                if (Physics.SphereCast(_fpsCamera.m_camRay, RayCastRadius, out _cameraHit, RayCastMax, _playerLayerMask | _enemyLayerMask))
+                {
+                    if (_prevHit.GetInstanceID() != _cameraHit.collider.gameObject.GetInstanceID())
+                    {
+                        var agent = _cameraHit.collider.GetComponentInParent<Agent>();
+                        _orbitTarget = agent;
+                        
+                        if (_cameraHit.collider.gameObject.layer == _enemyLayer)
+                        {
+                            _orbitTargetName = agent.TryCast<EnemyAgent>()!.EnemyData.name;
+                        }
+                        else
+                        {
+                            _orbitTargetName = agent.TryCast<PlayerAgent>()!.PlayerName;
+                        }
+
+                    }
+
+                    _prevHit = _cameraHit.collider.gameObject;
+                    _orbitTargetSet = true;
+                    CinemaUIManager.Current.ShowTextOnScreen(_orbitTargetName);
+                }
+                else
+                {
+                    CinemaUIManager.Current.ShowNoTargetTextOnScreen();
+                    _orbitTargetSet = false;
+                }
+                
+                if (_inOrbit)
+                {
+                    DisconnectOrbit();
+                }
+            }
+            else
+            {
+                CinemaUIManager.Current.HideTextOnScreen();
+                if (!_inOrbit && _orbitTargetSet)
+                {
+                    SetOrbit();
+                }
+            }
+
+            if (_orbitTargetSet && !_orbitTarget.Alive)
+            {
+                DisconnectOrbit();
+            }
+        }
+
+        private void SetOrbit()
+        {
+            _cinemaCamCtrlHolder.transform.parent = _orbitTarget.transform;
+            _cinemaCamController.SetOrbit(_orbitTarget);
+            _inOrbit = true;
+        }
+
+        private void DisconnectOrbit()
+        {
+            _cinemaCamCtrlHolder.transform.parent = _cinemaCam;
+            _cinemaCamController.DisableOrbit();
+            _inOrbit = false;
+            _orbitTargetSet = false;
+            _lastOrbitDeselect = Time.realtimeSinceStartup;
         }
 
         private void SetCameraManHealth(PlayerAgent player, bool enteringFreeCam)

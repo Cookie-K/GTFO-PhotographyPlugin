@@ -4,9 +4,10 @@ namespace CinematographyPlugin.UI
 {
     public abstract class Option
     {
-        private GameObject Root { get; }
+        protected GameObject Root { get; }
         private bool StartActive { get; }
-        private string Name { get; }
+        private bool _prevValueSet;
+        protected string Name { get; }
 
         internal List<Option> SubOptions { get; } = new ();
 
@@ -23,12 +24,14 @@ namespace CinematographyPlugin.UI
 
         public void SetActive(bool state)
         {
+            OnSetActive(state);
             Root.active = state;
         }
 
         public abstract void Disable(bool state);
         public abstract void Enable(bool state);
-
         public abstract void OnReset();
+        public abstract void SetPreviousValue();
+        public abstract void OnSetActive(bool state);
     }
 }

@@ -9,18 +9,6 @@ namespace CinematographyPlugin.Cinematography
 {
     public class PostProcessingController : MonoBehaviour
     {
-        public const float FocusDistanceMin = 0f;
-        public const float FocusDistanceMax = 50f;
-        private static float _focusDistanceDefault;
-        
-        public const float ApertureMin = 0f;
-        public const float ApertureMax = 10f;
-        private static float _apertureDefault;
-        
-        public const float FocalLenghtMin = 0f;
-        public const float FocalLenghtMax = 100f;
-        private static float _focalLenghtDefault;
-
         private static float _currFocusDistance;
         private static float _currAperture;
         private static float _currFocalLenght;
@@ -28,7 +16,6 @@ namespace CinematographyPlugin.Cinematography
 
         private static ToggleOption _dofToggle;
         private PostProcessVolume _ppv;
-        private DepthOfFieldModel _dofModel;
         private DepthOfField _dof;
         private Vignette _vin;
         private AmbientParticles _ambientParticles;
@@ -62,55 +49,11 @@ namespace CinematographyPlugin.Cinematography
 
         private void SetDoF()
         {
-            _dofModel.settings = _dofModel.settings with
-            {
-                focusDistance = _currFocusDistance,
-                aperture = _currAperture,
-                focalLength = _currFocalLenght,
-            };
-
             _dof.focusDistance.value = _currFocusDistance;
             _dof.aperture.value = _currAperture;
             _dof.focalLength.value = _currFocalLenght;
         }
 
-        private static PostProcessVolume GetPostProcessVolume()
-        {
-            return PlayerManager.GetLocalPlayerAgent().FPSCamera.GetComponent<PostProcessVolume>();
-        }
-
-        public static float GetDefaultFocusDistance()
-        {
-            if (_focusDistanceDefault < 0.001)
-            {
-                var dof = GetPostProcessVolume().profile.GetSetting<DepthOfField>();
-                _focusDistanceDefault = dof.focusDistance;
-            }
-            return _focusDistanceDefault;
-        }
-        
-        public static float GetDefaultAperture()
-        {
-            if (_apertureDefault < 0.001)
-            {
-                var dof = GetPostProcessVolume().profile.GetSetting<DepthOfField>();
-                _apertureDefault = dof.aperture;
-            }
-
-            return _apertureDefault;
-        }
-        
-        public static float GetDefaultFocalLenght()
-        {
-            if (_focalLenghtDefault < 0.001)
-            {
-                var dof = GetPostProcessVolume().profile.GetSetting<DepthOfField>();
-                _focalLenghtDefault = dof.focalLength;
-            }
-
-            return _focalLenghtDefault;
-        }
-        
         public void OnAmbientParticleToggle(bool value)
         {
             _ambientParticles.enabled = value;

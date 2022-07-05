@@ -20,6 +20,8 @@ namespace CinematographyPlugin.UI.UiInput
         private static readonly KeyCode TimeInc = ConfigManager.TimeIncKey;
         private static readonly KeyCode TimeDec = ConfigManager.TimeDecKey;
         private static readonly KeyCode TimePausePlay = ConfigManager.TimePausePlayKey;
+        
+        private static readonly KeyCode OrbitTargetSelect = ConfigManager.OrbitEnterExitKey;
 
         private static float _lastTimeHeld;
         private static float _timeCheckInterval = TimeCheckIntervalStart;
@@ -84,6 +86,11 @@ namespace CinematographyPlugin.UI.UiInput
         public static bool GetTimeScalePausePlay()
         {
             return Input.GetKeyDown(TimePausePlay);
+        }
+        
+        public static bool GetOrbitTargetSelect()
+        {
+            return Input.GetKey(OrbitTargetSelect);
         }
 
         private static float GetMouseInput(AxisName axis)
