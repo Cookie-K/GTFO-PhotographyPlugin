@@ -17,13 +17,13 @@ namespace CinematographyPlugin.UI.UiInput
         private static readonly KeyCode PosS = ConfigManager.SpeedUpKey;
         private static readonly KeyCode NegS = ConfigManager.SlowDownKey;
         
-        private static readonly KeyCode FlashLightKey = KeyCode.F;
-
         private static readonly KeyCode TimeInc = ConfigManager.TimeIncKey;
         private static readonly KeyCode TimeDec = ConfigManager.TimeDecKey;
         private static readonly KeyCode TimePausePlay = ConfigManager.TimePausePlayKey;
         
+        private static readonly KeyCode FlashLightKey = KeyCode.F;
         private static readonly KeyCode OrbitTargetSelect = ConfigManager.OrbitEnterExitKey;
+        private static readonly KeyCode WarpPlayerKey = ConfigManager.WarpPlayerKey;
 
         private static float _lastTimeHeld;
         private static float _timeCheckInterval = TimeCheckIntervalStart;
@@ -98,6 +98,11 @@ namespace CinematographyPlugin.UI.UiInput
         public static bool GetFlashLightOnOff()
         {
             return Input.GetKeyDown(FlashLightKey);
+        }
+
+        public static bool GetPlayerWarp()
+        {
+            return Input.GetKeyDown(WarpPlayerKey);
         }
 
         private static float GetMouseInput(AxisName axis)

@@ -143,7 +143,7 @@ namespace CinematographyPlugin
         [HarmonyPatch(typeof(Dam_PlayerDamageBase), nameof(Dam_PlayerDamageBase.OnIncomingDamage))]
         private static void Postfix_IgnoreAllDamage(ref float damage, ref bool triggerDialog, Dam_PlayerDamageBase __instance)
         {
-            if (__instance.TryCast<Dam_PlayerDamageBase>() != null && CinemaCamManager.Current.FreeCamEnabled())
+            if (__instance.TryCast<Dam_PlayerDamageBase>() != null && CinemaCamManager.Current.InGodMode())
             {
                 damage = 0;
                 triggerDialog = false;

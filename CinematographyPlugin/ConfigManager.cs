@@ -40,6 +40,9 @@ namespace CinematographyPlugin
         private static readonly ConfigEntry<KeyCode> OrbitEnterExit = ConfigFile
             .Bind("Key Binds", "Orbit cam enter/exit", KeyCode.C, "Enter/exit orbit cam");
         
+        private static readonly ConfigEntry<KeyCode> WarpPlayer = ConfigFile
+            .Bind("Key Binds", "Warp  Player", KeyCode.T, "Warp the player to where the camera is");
+        
         public static KeyCode MenuKey => MenuOpenClose.Value;
         public static KeyCode UpKey => GoUp.Value;
         public static KeyCode DownKey => GoDown.Value;
@@ -49,5 +52,6 @@ namespace CinematographyPlugin
         public static KeyCode TimeDecKey => TimeDec.Value;
         public static KeyCode TimePausePlayKey => TimePausePlay.Value;
         public static KeyCode OrbitEnterExitKey => OrbitEnterExit.Value;
+        public static KeyCode WarpPlayerKey => WarpPlayer.Value;
     }
 }
