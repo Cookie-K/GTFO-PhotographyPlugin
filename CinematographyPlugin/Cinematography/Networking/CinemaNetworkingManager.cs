@@ -88,9 +88,9 @@ namespace CinematographyPlugin.Cinematography.Networking
         private void Awake()
         {
             CinemaUIManager.OnUIStart += Ping;
-            CinemaUIManager.Toggles[UIOption.ToggleFreeCamera].OnValueChanged += SyncLocalPlayerEnterExitFreeCam;
-            CinemaUIManager.Toggles[UIOption.ToggleTimeScale].OnValueChanged += SyncLocalPlayerEnterExitTimeScale;
-            CinemaUIManager.Sliders[UIOption.TimeScaleSlider].OnValueChanged += SyncLocalPlayerAlterTimeScale;
+            CinemaUIManager.Current.Toggles[UIOption.ToggleFreeCamera].OnValueChanged += SyncLocalPlayerEnterExitFreeCam;
+            CinemaUIManager.Current.Toggles[UIOption.ToggleTimeScale].OnValueChanged += SyncLocalPlayerEnterExitTimeScale;
+            CinemaUIManager.Current.Sliders[UIOption.TimeScaleSlider].OnValueChanged += SyncLocalPlayerAlterTimeScale;
         }
 
         private void Start()
@@ -266,7 +266,11 @@ namespace CinematographyPlugin.Cinematography.Networking
                 if (!SyncPlayersByName.ContainsKey(agentName))
                 {
                     CinematographyCore.log.LogDebug($"Adding {agentName} to active players list");
-
+                    SyncPlayersByName.Add(agentName, new CinemaSyncPlayer(agent, isBot));
+                } else if (SyncPlayersByName[agentName].Agent == null)
+                {
+                    // It's possible for the agent to be destroyed on disconnects 
+                    SyncPlayersByName.Remove(agentName);
                     SyncPlayersByName.Add(agentName, new CinemaSyncPlayer(agent, isBot));
                 }
             }
@@ -294,9 +298,9 @@ namespace CinematographyPlugin.Cinematography.Networking
         private void OnDestroy()
         {
             CinemaUIManager.OnUIStart -= Ping;
-            CinemaUIManager.Toggles[UIOption.ToggleFreeCamera].OnValueChanged -= SyncLocalPlayerEnterExitFreeCam;
-            CinemaUIManager.Toggles[UIOption.ToggleTimeScale].OnValueChanged -= SyncLocalPlayerEnterExitTimeScale;
-            CinemaUIManager.Sliders[UIOption.TimeScaleSlider].OnValueChanged -= SyncLocalPlayerAlterTimeScale;
+            CinemaUIManager.Current.Toggles[UIOption.ToggleFreeCamera].OnValueChanged -= SyncLocalPlayerEnterExitFreeCam;
+            CinemaUIManager.Current.Toggles[UIOption.ToggleTimeScale].OnValueChanged -= SyncLocalPlayerEnterExitTimeScale;
+            CinemaUIManager.Current.Sliders[UIOption.TimeScaleSlider].OnValueChanged -= SyncLocalPlayerAlterTimeScale;
             
             SyncPlayersByName.Clear();
 

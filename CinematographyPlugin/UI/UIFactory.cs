@@ -29,6 +29,7 @@ namespace CinematographyPlugin.UI
                 { UIOption.DynamicRollIntensitySlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.DynamicRollIntensitySlider), false, CinCamSettings.DynamicRotationDefault, CinCamSettings.DynamicRotationMin, CinCamSettings.DynamicRotationMax) },
                 { UIOption.ToggleAlignPitchAxisWCam, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleAlignPitchAxisWCam), true, false) },
                 { UIOption.ToggleAlignRollAxisWCam, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleAlignRollAxisWCam), false, false) },
+                { UIOption.ToggleTargetingVisibility, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleTargetingVisibility), false, false) },
                 { UIOption.ToggleFpsLookSmoothing, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleFpsLookSmoothing), false, true) },
                 { UIOption.FpsLookSmoothingSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.FpsLookSmoothingSlider), false, CinCamSettings.LookSmoothDefault, CinCamSettings.LookSmoothMin, CinCamSettings.LookSmoothMax) },
                 { UIOption.ToggleDoF, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleDoF), false, true) },
@@ -38,7 +39,16 @@ namespace CinematographyPlugin.UI
                 { UIOption.ToggleVignette, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleVignette), true, true) },
                 { UIOption.ToggleAmbientParticles, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleAmbientParticles), true, true) },
                 { UIOption.ToggleTimeScale, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleTimeScale), false, true) },
-                { UIOption.TimeScaleSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.TimeScaleSlider), false, CinCamSettings.TimeScaleDefault, CinCamSettings.TimeScaleMin, CinCamSettings.TimeScaleMax) }
+                { UIOption.TimeScaleSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.TimeScaleSlider), false, CinCamSettings.TimeScaleDefault, CinCamSettings.TimeScaleMin, CinCamSettings.TimeScaleMax) },
+                
+                { UIOption.TogglePointLight, new ToggleOption(GetOptionObj(cinemaUI, UIOption.TogglePointLight), false, true) },
+                { UIOption.PointLightIntensitySlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.PointLightIntensitySlider), false, CinCamSettings.PointLightIntensityDefault, CinCamSettings.PointLightIntensityMin, CinCamSettings.PointLightIntensityMax) },
+                { UIOption.PointLightRangeSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.PointLightRangeSlider), false, CinCamSettings.PointLightRangeDefault, CinCamSettings.PointLightRangeMin, CinCamSettings.PointLightRangeMax) },
+
+                { UIOption.ToggleSpotLight, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleSpotLight), false, false) },
+                { UIOption.SpotLightIntensitySlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.SpotLightIntensitySlider), false, CinCamSettings.SpotLightIntensityDefault, CinCamSettings.SpotLightIntensityMin, CinCamSettings.SpotLightIntensityMax) },
+                { UIOption.SpotLightRangeSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.SpotLightRangeSlider), false, CinCamSettings.SpotLightRangeDefault, CinCamSettings.SpotLightRangeMin, CinCamSettings.SpotLightRangeMax) },
+                { UIOption.SpotLightAngleSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.SpotLightAngleSlider), false, CinCamSettings.SpotLightAngleDefault, CinCamSettings.SpotLightAngleMin, CinCamSettings.SpotLightAngleMax) },
             };
 
             // Add sub options
@@ -53,6 +63,8 @@ namespace CinematographyPlugin.UI
                 options[UIOption.ToggleDynamicRoll],
                 options[UIOption.ToggleAlignPitchAxisWCam],
                 options[UIOption.ToggleAlignRollAxisWCam],
+                options[UIOption.ToggleTargetingVisibility],
+                options[UIOption.ToggleSpotLight],
             });
             
             options[UIOption.ToggleDynamicRoll].SubOptions.Add(options[UIOption.DynamicRollIntensitySlider]);
@@ -64,6 +76,19 @@ namespace CinematographyPlugin.UI
             options[UIOption.ToggleTimeScale].SubOptions.Add(options[UIOption.TimeScaleSlider]);
             
             options[UIOption.ToggleUI].SubOptions.Add(options[UIOption.ToggleBio]);
+            
+            options[UIOption.TogglePointLight].SubOptions.AddRange(new []
+            {
+                options[UIOption.PointLightRangeSlider],
+                options[UIOption.PointLightIntensitySlider]
+            });
+            
+            options[UIOption.ToggleSpotLight].SubOptions.AddRange(new []
+            {
+                options[UIOption.SpotLightRangeSlider],
+                options[UIOption.SpotLightIntensitySlider],
+                options[UIOption.SpotLightAngleSlider]
+            });
             
             options[UIOption.ToggleDoF].SubOptions.AddRange(new []
             {

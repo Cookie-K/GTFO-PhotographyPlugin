@@ -14,22 +14,25 @@ namespace CinematographyPlugin.UI
         public static CinemaUIManager Current;
         public static event Action OnUIStart;
 
-        private static readonly KeyCode UIOpenKey = ConfigManager.MenuKey;
+        private readonly KeyCode UIOpenKey = ConfigManager.MenuKey;
         private const string PrefabPath = "Assets/UI/CinemaUI.prefab";
 
-        internal static Dictionary<UIOption, Option> Options { get; set; }
-        internal static Dictionary<UIOption, ToggleOption> Toggles; 
-        internal static Dictionary<UIOption, SliderOption> Sliders;
+        internal Dictionary<UIOption, Option> Options { get; set; }
+        internal Dictionary<UIOption, ToggleOption> Toggles; 
+        internal Dictionary<UIOption, SliderOption> Sliders;
 
-        internal static CursorLockMode CursorLockLastMode { get; set; }
-        internal static bool CursorLastVisible { get; set; }
-        internal static bool MenuOpen { get; set; }
-        private static bool _init;
+        internal CursorLockMode CursorLockLastMode { get; set; }
+        internal bool CursorLastVisible { get; set; }
+        internal bool MenuOpen { get; set; }
+        private bool _init;
+        private bool _hideTargetingText;
 
-        private static TMP_Text _centerText;
-        private static GameObject _centerTextWindow;
-        private static GameObject _window;
-        private static GameObject _cinemaUIgo;
+        private TMP_Text _centerText;
+        private GameObject _centerTextWindow;
+        private GameObject _window;
+        private GameObject _cinematicBars;
+        private GameObject _cinemaUIgo;
+        private LocalPlayerAgent _playerAgent;
 
         public void Awake()
         {
@@ -76,6 +79,11 @@ namespace CinematographyPlugin.UI
             CinemaNetworkingManager.OnTimeScaleEnableOrDisable += OnTimeScaleEnableOrDisable;
             CinemaPluginPatches.OnLocalPlayerDieOrRevive += OnFreeCamEnableOrDisable;
             
+            Toggles[UIOption.ToggleFreeCamera].OnValueChanged += OnFreeCamSetActive;
+            Toggles[UIOption.ToggleTargetingVisibility].OnValueChanged += SetHideTextOnScreen;
+
+            _playerAgent = FindObjectOfType<LocalPlayerAgent>();
+
             OnUIStart?.Invoke();
         }
 
@@ -107,21 +115,30 @@ namespace CinematographyPlugin.UI
         
         public void ShowTextOnScreen(string text)
         {
+            if (_hideTargetingText) return;
+            
             _centerText.SetText($"[{text}]");
             _centerTextWindow.gameObject.active = true;
         }
         
         public void ShowNoTargetTextOnScreen()
         {
+            if (_hideTargetingText) return;
+            
             _centerText.SetText("[NO TARGET]");
             _centerTextWindow.gameObject.active = true;
         }
-        
+
         public void HideTextOnScreen()
         {
             _centerTextWindow.gameObject.active = false;
         }
-        
+
+        private void SetHideTextOnScreen(bool value)
+        {
+            _hideTargetingText = value;
+        }
+
         private void OnFreeCamEnableOrDisable(bool enable)
         {
             var option = Toggles[UIOption.ToggleFreeCamera];
@@ -132,6 +149,14 @@ namespace CinematographyPlugin.UI
             else
             {
                 option.Disable(false);
+            }
+        }
+
+        private void OnFreeCamSetActive(bool active)
+        {
+            if (active)
+            {
+                _playerAgent.Sync.WantsToWieldSlot(InventorySlot.GearMelee);
             }
         }
         
@@ -161,7 +186,7 @@ namespace CinematographyPlugin.UI
             MenuOpen = true;
         }
         
-        public static void CloseUI()
+        public void CloseUI()
         {
             Cursor.lockState = CursorLockLastMode;
             Cursor.visible = CursorLastVisible;
@@ -175,6 +200,8 @@ namespace CinematographyPlugin.UI
             CinemaNetworkingManager.OnTimeScaleEnableOrDisable -= OnTimeScaleEnableOrDisable;
             CinemaPluginPatches.OnLocalPlayerDieOrRevive -= OnFreeCamEnableOrDisable;
             
+            Toggles[UIOption.ToggleTargetingVisibility].OnValueChanged -= SetHideTextOnScreen;
+
             if (_cinemaUIgo != null)
             {
                 Destroy(_cinemaUIgo);

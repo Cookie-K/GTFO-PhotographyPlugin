@@ -13,14 +13,9 @@ namespace CinematographyPlugin.Cinematography
     {
         public static CinemaCamManager Current;
 
-        private const float PlayerInvulnerabilityHealth = 999_999f;
         private const float RayCastMax = 50;
         private const float RayCastRadius = 0.5f;
         private const float OrbitReselectDelay = 0.5f;
-
-        private readonly Dictionary<string, float> _playerPrevMaxHealthByName = new();
-        private readonly Dictionary<string, float> _playerPrevHealthByName = new();
-        private readonly Dictionary<string, float> _playerPrevInfectionByName = new();
 
         private readonly int _playerLayerMask = LayerMask.GetMask("PlayerSynced");
         private readonly int _enemyLayerMask = LayerMask.GetMask("EnemyDamagable");
@@ -31,7 +26,6 @@ namespace CinematographyPlugin.Cinematography
         private bool _orbitTargetSet;
         private string _orbitTargetName;
         private float _lastOrbitDeselect;
-        private Vector3 _orbitOffset;
         private RaycastHit _cameraHit;
         private GameObject _prevHit = new ();
         private GameObject _shieldsphere;
@@ -74,7 +68,7 @@ namespace CinematographyPlugin.Cinematography
 
         private void Start()
         {
-            CinemaUIManager.Toggles[UIOption.ToggleFreeCamera].OnValueChanged += OnFreeCameraToggle;
+            CinemaUIManager.Current.Toggles[UIOption.ToggleFreeCamera].OnValueChanged += OnFreeCameraToggle;
 
             CinemaNetworkingManager.OnOtherPlayerEnterExitFreeCam += OnOtherPlayerEnterOrExitFreeCam;
         }
@@ -111,7 +105,6 @@ namespace CinematographyPlugin.Cinematography
 
         private void EnableOrDisableCinemaCam(bool enable)
         {
-            SetCameraManHealth(_playerAgent, enable);
             ScreenClutterController.GetInstance().ToggleAllScreenClutter(!enable);
 
             if (enable)
@@ -211,42 +204,10 @@ namespace CinematographyPlugin.Cinematography
             _lastOrbitDeselect = Time.realtimeSinceStartup;
         }
 
-        private void SetCameraManHealth(PlayerAgent player, bool enteringFreeCam)
-        {
-            var playerName = player.Sync.PlayerNick;
-            var damage = player.Damage;
-
-            if (enteringFreeCam && !_playerPrevMaxHealthByName.ContainsKey(playerName))
-            {
-                _playerPrevMaxHealthByName.Add(playerName, damage.HealthMax);
-                _playerPrevHealthByName.Add(playerName, damage.Health);
-                _playerPrevInfectionByName.Add(playerName, damage.Infection);
-
-                damage.HealthMax = PlayerInvulnerabilityHealth;
-                damage.Health = PlayerInvulnerabilityHealth;
-                damage.Infection = 0;
-            }
-            else if (!enteringFreeCam && _playerPrevMaxHealthByName.ContainsKey(playerName))
-            {
-                damage.HealthMax = _playerPrevMaxHealthByName[playerName];
-                damage.Health = _playerPrevHealthByName[playerName];
-                damage.Infection = _playerPrevInfectionByName[playerName];
-				
-                _playerPrevMaxHealthByName.Remove(playerName);
-                _playerPrevHealthByName.Remove(playerName);
-                _playerPrevInfectionByName.Remove(playerName);
-
-                if (player.IsLocallyOwned)
-                {
-                    damage.TryCast<Dam_PlayerDamageLocal>()?.UpdateHealthGui();
-                }
-            }
-        }
-
         private void OnOtherPlayerEnterOrExitFreeCam(PlayerAgent playerAgent, bool enteringFreeCam)
         {
-            CinematographyCore.log.LogInfo($"{playerAgent.Sync.PlayerNick} entering free cam : {enteringFreeCam}");
-            SetCameraManHealth(playerAgent, enteringFreeCam);
+            var enterExitTxt = enteringFreeCam ? "entering" : "exiting";
+            CinematographyCore.log.LogInfo($"{playerAgent.Sync.PlayerNick} {enterExitTxt} free cam");
             ScreenClutterController.GetInstance().ToggleClientVisibility(playerAgent, !enteringFreeCam);
         }
 		
@@ -271,7 +232,7 @@ namespace CinematographyPlugin.Cinematography
 
         private void OnDestroy()
         {
-            CinemaUIManager.Toggles[UIOption.ToggleFreeCamera].OnValueChanged -= OnFreeCameraToggle;
+            CinemaUIManager.Current.Toggles[UIOption.ToggleFreeCamera].OnValueChanged -= OnFreeCameraToggle;
 	
             CinemaNetworkingManager.OnOtherPlayerEnterExitFreeCam -= OnOtherPlayerEnterOrExitFreeCam;
         }

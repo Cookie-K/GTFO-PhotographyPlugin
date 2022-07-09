@@ -22,7 +22,7 @@ namespace CinematographyPlugin.UI
         
         private int _nDisabled;
 
-        public ToggleOption(GameObject root, bool initialValue, bool startActive) : base(root, startActive)
+        public ToggleOption(GameObject root, bool initialValue, bool startActive, bool activeWhenParentOff = false) : base(root, startActive, activeWhenParentOff)
         {
             Toggle = root.GetComponentInChildren<Toggle>();
             Toggle.onValueChanged.AddListener((UnityAction<bool>) OnToggleChange);

@@ -321,6 +321,9 @@
       <Reference Include="mscorlib">
         <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\mscorlib.dll</HintPath>
       </Reference>
+      <Reference Include="MTFO">
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\BepInEx\plugins\dakkhuza-MTFO\MTFO.dll</HintPath>
+      </Reference>
       <Reference Include="NativeHeap">
         <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\BepInEx\interop\NativeHeap.dll</HintPath>
       </Reference>

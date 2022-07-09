@@ -36,7 +36,7 @@ public class CinCamSettings : ScriptableObject
     public const float ZoomSpeedMin = 0f;
     public const float ZoomSpeedMax = 1f;
         
-    public const float OrbitSmoothingFactor = 0.0001f;
+    public const float OrbitSmoothingFactor = 0f;
     public const float OrbitDistanceDefault = 2f;
     public const float OrbitDistanceMoveSpeedDefault = 0.2f;
 
@@ -56,7 +56,7 @@ public class CinCamSettings : ScriptableObject
     public const float LookSmoothDefault = 0.2f;
     public const float LookSmoothMax = 5f;
     public const float LookSmoothMin = 0f;
-    public const float LookSmoothingScale = 4f;
+    public const float LookSmoothingScale = 2f;
     
     /// Post processing settings
     public const float FocusDistanceMin = 0f;
@@ -75,4 +75,27 @@ public class CinCamSettings : ScriptableObject
     public const float TimeScaleDefault = 1;
     public const float TimeScaleMin = 0.01f;
     public const float TimeScaleMax = 1;
+    
+    /// Light Settings
+    public const float FlashLightOffsetDefault = 0.7f;
+    
+    public const float PointLightRangeDefault = 5f;
+    public const float PointLightRangeMin = 0f;
+    public const float PointLightRangeMax = 100f;
+    
+    public const float PointLightIntensityDefault = 0.005f;
+    public const float PointLightIntensityMin = 0.005f;
+    public const float PointLightIntensityMax = 1f;
+
+    public const float SpotLightRangeDefault = 11f;
+    public const float SpotLightRangeMin = 0f;
+    public const float SpotLightRangeMax = 100f;
+    
+    public const float SpotLightIntensityDefault = 0.35f;
+    public const float SpotLightIntensityMin = 0f;
+    public const float SpotLightIntensityMax = 1f;
+    
+    public const float SpotLightAngleDefault = 40f;
+    public const float SpotLightAngleMin = 0f;
+    public const float SpotLightAngleMax = 179f;
 }

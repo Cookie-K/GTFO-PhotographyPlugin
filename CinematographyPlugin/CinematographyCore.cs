@@ -48,6 +48,8 @@ namespace CinematographyPlugin
             ClassInjector.RegisterTypeInIl2Cpp<CinemaNetworkingManager>();
             ClassInjector.RegisterTypeInIl2Cpp<PostProcessingController>();
             ClassInjector.RegisterTypeInIl2Cpp<IndependentDeltaTimeManager>();
+            ClassInjector.RegisterTypeInIl2Cpp<LightManager>();
+            ClassInjector.RegisterTypeInIl2Cpp<AspectRatioManager>();
 
             HarmonyPatches = new Harmony(GUID);
             HarmonyPatches.PatchAll();

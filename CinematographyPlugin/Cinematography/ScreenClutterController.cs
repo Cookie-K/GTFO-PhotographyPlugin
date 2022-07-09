@@ -39,8 +39,9 @@ namespace CinematographyPlugin.Cinematography
         
         private void Awake()
         {
-            CinemaUIManager.Toggles[UIOption.ToggleUI].OnValueChanged += ToggleUIElements;
-            CinemaUIManager.Toggles[UIOption.ToggleBody].OnValueChanged += ToggleBody;
+            CinemaUIManager.Current.Toggles[UIOption.ToggleUI].OnValueChanged += ToggleUIElements;
+            CinemaUIManager.Current.Toggles[UIOption.ToggleBio].OnValueChanged += ToggleBio;
+            CinemaUIManager.Current.Toggles[UIOption.ToggleBody].OnValueChanged += ToggleBody;
 
             var uiRoot = GuiManager.PlayerLayer.Root;
 
@@ -132,8 +133,9 @@ namespace CinematographyPlugin.Cinematography
 
         private void OnDestroy()
         {
-            CinemaUIManager.Toggles[UIOption.ToggleUI].OnValueChanged -= ToggleUIElements;
-            CinemaUIManager.Toggles[UIOption.ToggleBody].OnValueChanged -= ToggleBody;
+            CinemaUIManager.Current.Toggles[UIOption.ToggleUI].OnValueChanged -= ToggleUIElements;
+            CinemaUIManager.Current.Toggles[UIOption.ToggleBio].OnValueChanged -= ToggleBio;
+            CinemaUIManager.Current.Toggles[UIOption.ToggleBody].OnValueChanged -= ToggleBody;
             CellSettingsApply.ApplyPlayerGhostOpacity(_prevPlayerGhost);
         }
     }

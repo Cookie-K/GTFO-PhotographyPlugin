@@ -15,8 +15,8 @@ namespace CinematographyPlugin.Cinematography
 
         private void Start()
         {
-            _timeScaleToggle = (ToggleOption) CinemaUIManager.Options[UIOption.ToggleTimeScale];
-            _timeScaleSlider = (SliderOption) CinemaUIManager.Options[UIOption.TimeScaleSlider];
+            _timeScaleToggle = (ToggleOption) CinemaUIManager.Current.Options[UIOption.ToggleTimeScale];
+            _timeScaleSlider = (SliderOption) CinemaUIManager.Current.Options[UIOption.TimeScaleSlider];
             _timeScaleSlider.OnValueChanged += OnTimeScaleChange;
             CinemaNetworkingManager.OnTimeScaleChangedByOtherPlayer += OnTimeScaleChange;
         }
@@ -68,7 +68,7 @@ namespace CinematographyPlugin.Cinematography
         private void OnDestroy()
         {
             Time.timeScale = 1;
-            ((SliderOption) CinemaUIManager.Options[UIOption.TimeScaleSlider]).OnValueChanged -=  OnTimeScaleChange;
+            ((SliderOption) CinemaUIManager.Current.Options[UIOption.TimeScaleSlider]).OnValueChanged -=  OnTimeScaleChange;
             CinemaNetworkingManager.OnTimeScaleChangedByOtherPlayer -= OnTimeScaleChange;
         }
     }

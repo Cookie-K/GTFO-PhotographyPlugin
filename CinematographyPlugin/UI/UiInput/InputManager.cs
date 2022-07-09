@@ -16,6 +16,8 @@ namespace CinematographyPlugin.UI.UiInput
         private static readonly KeyCode NegZ = KeyCode.S;
         private static readonly KeyCode PosS = ConfigManager.SpeedUpKey;
         private static readonly KeyCode NegS = ConfigManager.SlowDownKey;
+        
+        private static readonly KeyCode FlashLightKey = KeyCode.F;
 
         private static readonly KeyCode TimeInc = ConfigManager.TimeIncKey;
         private static readonly KeyCode TimeDec = ConfigManager.TimeDecKey;
@@ -91,6 +93,11 @@ namespace CinematographyPlugin.UI.UiInput
         public static bool GetOrbitTargetSelect()
         {
             return Input.GetKey(OrbitTargetSelect);
+        }
+        
+        public static bool GetFlashLightOnOff()
+        {
+            return Input.GetKeyDown(FlashLightKey);
         }
 
         private static float GetMouseInput(AxisName axis)

@@ -13,6 +13,7 @@ namespace CinematographyPlugin
     [HarmonyPatch]
     public class Entry
     {
+        public static bool Init { get; private set; }
         private static GameObject _go;
 
         [HarmonyPostfix]
@@ -39,10 +40,13 @@ namespace CinematographyPlugin
                     gameObject.AddComponent<LookSmoothingController>();
                     gameObject.AddComponent<PostProcessingController>();
                     gameObject.AddComponent<IndependentDeltaTimeManager>();
+                    gameObject.AddComponent<LightManager>();
+                    gameObject.AddComponent<AspectRatioManager>();
                     gameObject.AddComponent<CinemaNetworkingManager>().RegisterEvents();
                     Object.DontDestroyOnLoad(gameObject);
 
                     _go = gameObject;
+                    Init = true;
                     break;
                 }
                 case eGameStateName.ExpeditionAbort:
@@ -53,15 +57,16 @@ namespace CinematographyPlugin
                     {
                         CinematographyCore.log.LogMessage("Closing " + CinematographyCore.NAME);
 
-                        if (CinemaUIManager.MenuOpen)
+                        if (CinemaUIManager.Current.MenuOpen)
                         {
-                            CinemaUIManager.CloseUI();
+                            CinemaUIManager.Current.CloseUI();
                         }
 
                         TimeScaleController.ResetTimeScale();
                         ScreenClutterController.GetInstance().HideUI();
 
                         Object.Destroy(_go);
+                        Init = false;
                     }
 
                     break;

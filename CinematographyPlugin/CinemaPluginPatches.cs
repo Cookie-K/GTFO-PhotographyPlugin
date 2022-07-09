@@ -4,6 +4,7 @@ using CinematographyPlugin.Cinematography;
 using CinematographyPlugin.Cinematography.Networking;
 using CinematographyPlugin.UI;
 using Enemies;
+using Gear;
 using HarmonyLib;
 using Player;
 using UnityEngine;
@@ -19,9 +20,9 @@ namespace CinematographyPlugin
         private static readonly List<int> PrevRequiredTeamScanIDs = new ();
    
         [HarmonyPrefix]
-        [HarmonyPatch(typeof (InputMapper), "DoGetButton")]
-        [HarmonyPatch(typeof (InputMapper), "DoGetButtonUp")]
-        [HarmonyPatch(typeof (InputMapper), "DoGetButtonDown")]
+        [HarmonyPatch(typeof (InputMapper), nameof(InputMapper.DoGetButton))]
+        [HarmonyPatch(typeof (InputMapper), nameof(InputMapper.DoGetButtonUp))]
+        [HarmonyPatch(typeof (InputMapper), nameof(InputMapper.DoGetButtonDown))]
         private static bool Prefix_DoGetButton(ref bool __result)
         {
             if (Cursor.lockState != CursorLockMode.None)
@@ -33,7 +34,7 @@ namespace CinematographyPlugin
         }
         
         [HarmonyPrefix]
-        [HarmonyPatch(typeof (InputMapper), "DoGetAxis")]
+        [HarmonyPatch(typeof (InputMapper), nameof(InputMapper.DoGetAxis))]
         private static bool Prefix_DoGetAxis(ref float __result)
         {
             if (Cursor.lockState != CursorLockMode.None)
@@ -46,14 +47,14 @@ namespace CinematographyPlugin
         
         // Force Curosr lock to none when cinema menu is open 
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(Cursor), "lockState", MethodType.Setter)]
+        [HarmonyPatch(typeof(Cursor), nameof(Cursor.lockState), MethodType.Setter)]
         private static void Prefix_SetLockState(ref CursorLockMode value)
         {
-            if (CinemaUIManager.MenuOpen)
+            if (Entry.Init && CinemaUIManager.Current.MenuOpen)
             {
                 if (value != CursorLockMode.None)
                 {
-                    CinemaUIManager.CursorLockLastMode = value;
+                    CinemaUIManager.Current.CursorLockLastMode = value;
                 }
                 value = CursorLockMode.None;
             }
@@ -61,12 +62,12 @@ namespace CinematographyPlugin
         
         // Force Curosr visible when cinema menu is open
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(Cursor), "visible", MethodType.Setter)]
+        [HarmonyPatch(typeof(Cursor), nameof(Cursor.visible), MethodType.Setter)]
         private static void Prefix_setVisible(ref bool value)
         {
-            if (CinemaUIManager.MenuOpen)
+            if (Entry.Init && CinemaUIManager.Current.MenuOpen)
             {
-                CinemaUIManager.CursorLastVisible = value;
+                CinemaUIManager.Current.CursorLastVisible = value;
                 value = true;
             }
         }
@@ -82,7 +83,7 @@ namespace CinematographyPlugin
         }
         
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(EnemyAI), "Target", MethodType.Setter)]
+        [HarmonyPatch(typeof(EnemyAI), nameof(EnemyAI.Target), MethodType.Setter)]
         private static void Prefix_SetTargetDivertAwayFromCameraMan(ref AgentTarget value)
         {
             if (value == null || PlayerManager.PlayerAgentsInLevel.Count == 1) return;
@@ -96,7 +97,22 @@ namespace CinematographyPlugin
         }
         
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(CP_Bioscan_Core), "Update")]
+        [HarmonyPatch(typeof(EnemyDetection), nameof(EnemyDetection.IsTargetValid), typeof(AgentTarget))]
+        private static bool Postfix_Prefix_SetTargetDivertAwayFromCameraMan(AgentTarget agentTarget)
+        {
+            var playerAgent = agentTarget.m_agent as PlayerAgent;
+            return playerAgent == null || CinemaNetworkingManager.GetPlayersInFreeCam().All(p => p.Sync.PlayerNick != playerAgent.Sync.PlayerNick);
+        }
+        
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(PlayerSync), nameof(PlayerSync.WantsToWieldSlot), typeof(InventorySlot), typeof(bool))]
+        private static bool Postfix_Prefix_DisableWeaponChange(InventorySlot slot, bool broadcastOnly, PlayerSync __instance)
+        {
+            return !Entry.Init || !CinemaCamManager.Current.FreeCamEnabled() || !__instance.m_agent.IsLocallyOwned;
+        }
+        
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(CP_Bioscan_Core), nameof(CP_Bioscan_Core.Update))]
         private static void Prefix_ReduceTeamScanSizeIfPlayerInFreeCam(CP_Bioscan_Core __instance)
         {
             if (!__instance.isActiveAndEnabled || __instance.m_currentPlayerCount == 0) return;
@@ -117,10 +133,39 @@ namespace CinematographyPlugin
         }
 
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(PostProcessingAdapter), "SetDOF", typeof(float), typeof(float), typeof(float))]
+        [HarmonyPatch(typeof(PostProcessingAdapter), nameof(PostProcessingAdapter.SetDOF), typeof(float), typeof(float), typeof(float))]
         private static bool Prefix_OverrideDoF(ref float focusDistance, ref float aperture, ref float focalLength)
         {
             return !PostProcessingController.IsDoFSet();
+        }
+        
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(Dam_PlayerDamageBase), nameof(Dam_PlayerDamageBase.OnIncomingDamage))]
+        private static void Postfix_IgnoreAllDamage(ref float damage, ref bool triggerDialog, Dam_PlayerDamageBase __instance)
+        {
+            if (__instance.TryCast<Dam_PlayerDamageBase>() != null && CinemaCamManager.Current.FreeCamEnabled())
+            {
+                damage = 0;
+                triggerDialog = false;
+            }
+        }
+        
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(PlayerDialogManager), nameof(PlayerDialogManager.WantToStartDialog), typeof(uint), typeof(PlayerAgent))]
+        private static bool Postfix_IgnorePlayerDialog(uint dialogID, PlayerAgent source)
+        {
+            return !CinemaCamManager.Current.FreeCamEnabled() || !source.IsLocallyOwned;
+        }
+        
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(PlayerDialogManager), nameof(PlayerDialogManager.WantToStartDialog), typeof(uint), typeof(int), typeof(bool), typeof(bool))]
+        private static bool Postfix_IgnorePlayerDialog(
+            uint dialogID,
+            int playerID,
+            bool overrideFilters,
+            bool forced)
+        {
+            return !CinemaCamManager.Current.FreeCamEnabled();
         }
         
     }

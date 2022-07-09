@@ -42,19 +42,19 @@ namespace CinematographyPlugin.Cinematography
 
         private void Awake()
         {
-            CinemaUIManager.Sliders[UIOption.MovementSpeedSlider].OnValueChanged += SetMovementSpeed;
-            CinemaUIManager.Sliders[UIOption.MovementSmoothingSlider].OnValueChanged += SetMovementSmoothTime;
+            CinemaUIManager.Current.Sliders[UIOption.MovementSpeedSlider].OnValueChanged += SetMovementSpeed;
+            CinemaUIManager.Current.Sliders[UIOption.MovementSmoothingSlider].OnValueChanged += SetMovementSmoothTime;
             
-            CinemaUIManager.Sliders[UIOption.RotationSpeedSlider].OnValueChanged += SetRotationSpeed;
-            CinemaUIManager.Sliders[UIOption.RotationSmoothingSlider].OnValueChanged += SetRotationSmoothTime;
+            CinemaUIManager.Current.Sliders[UIOption.RotationSpeedSlider].OnValueChanged += SetRotationSpeed;
+            CinemaUIManager.Current.Sliders[UIOption.RotationSmoothingSlider].OnValueChanged += SetRotationSmoothTime;
 
-            CinemaUIManager.Sliders[UIOption.ZoomSpeedSlider].OnValueChanged += SetZoomSpeed;
-            CinemaUIManager.Sliders[UIOption.ZoomSmoothingSlider].OnValueChanged += SetZoomSmoothTime;
+            CinemaUIManager.Current.Sliders[UIOption.ZoomSpeedSlider].OnValueChanged += SetZoomSpeed;
+            CinemaUIManager.Current.Sliders[UIOption.ZoomSmoothingSlider].OnValueChanged += SetZoomSmoothTime;
 
-            CinemaUIManager.Toggles[UIOption.ToggleDynamicRoll].OnValueChanged += SetDynamicRotation;
-            CinemaUIManager.Sliders[UIOption.DynamicRollIntensitySlider].OnValueChanged += SetDynamicRotationSpeed;
-            CinemaUIManager.Toggles[UIOption.ToggleAlignPitchAxisWCam].OnValueChanged += SetAlignPitchAxisWCam;
-            CinemaUIManager.Toggles[UIOption.ToggleAlignRollAxisWCam].OnValueChanged += SetAlignRollAxisWCam;
+            CinemaUIManager.Current.Toggles[UIOption.ToggleDynamicRoll].OnValueChanged += SetDynamicRotation;
+            CinemaUIManager.Current.Sliders[UIOption.DynamicRollIntensitySlider].OnValueChanged += SetDynamicRotationSpeed;
+            CinemaUIManager.Current.Toggles[UIOption.ToggleAlignPitchAxisWCam].OnValueChanged += SetAlignPitchAxisWCam;
+            CinemaUIManager.Current.Toggles[UIOption.ToggleAlignRollAxisWCam].OnValueChanged += SetAlignRollAxisWCam;
 
             _playerAgent = PlayerManager.GetLocalPlayerAgent();
             
@@ -90,14 +90,15 @@ namespace CinematographyPlugin.Cinematography
             {
                 UpdatePosition();
                 UpdateZoom();
+                
+                if (_dynamicRotation)
+                {
+                    CalculateDynamicRotationDelta();
+                }
             }
             
             UpdateCuller();
             CheckReset();
-        
-            if (!_dynamicRotation) return;
-            
-            CalculateDynamicRotationDelta();
         }
 
         public void SetOrbit(Agent targetAgent)
@@ -414,19 +415,19 @@ namespace CinematographyPlugin.Cinematography
 
         private void OnDestroy()
         {
-            CinemaUIManager.Sliders[UIOption.MovementSpeedSlider].OnValueChanged -= SetMovementSpeed;
-            CinemaUIManager.Sliders[UIOption.MovementSmoothingSlider].OnValueChanged -= SetMovementSmoothTime;
+            CinemaUIManager.Current.Sliders[UIOption.MovementSpeedSlider].OnValueChanged -= SetMovementSpeed;
+            CinemaUIManager.Current.Sliders[UIOption.MovementSmoothingSlider].OnValueChanged -= SetMovementSmoothTime;
             
-            CinemaUIManager.Sliders[UIOption.RotationSpeedSlider].OnValueChanged -= SetRotationSpeed;
-            CinemaUIManager.Sliders[UIOption.RotationSmoothingSlider].OnValueChanged -= SetRotationSmoothTime;
+            CinemaUIManager.Current.Sliders[UIOption.RotationSpeedSlider].OnValueChanged -= SetRotationSpeed;
+            CinemaUIManager.Current.Sliders[UIOption.RotationSmoothingSlider].OnValueChanged -= SetRotationSmoothTime;
 
-            CinemaUIManager.Sliders[UIOption.ZoomSpeedSlider].OnValueChanged -= SetZoomSpeed;
-            CinemaUIManager.Sliders[UIOption.ZoomSmoothingSlider].OnValueChanged -= SetZoomSmoothTime;
+            CinemaUIManager.Current.Sliders[UIOption.ZoomSpeedSlider].OnValueChanged -= SetZoomSpeed;
+            CinemaUIManager.Current.Sliders[UIOption.ZoomSmoothingSlider].OnValueChanged -= SetZoomSmoothTime;
             
-            CinemaUIManager.Toggles[UIOption.ToggleAlignPitchAxisWCam].OnValueChanged -= SetAlignPitchAxisWCam;
-            CinemaUIManager.Toggles[UIOption.ToggleAlignRollAxisWCam].OnValueChanged -= SetAlignRollAxisWCam;
-            CinemaUIManager.Toggles[UIOption.ToggleDynamicRoll].OnValueChanged -= SetDynamicRotation;
-            CinemaUIManager.Sliders[UIOption.DynamicRollIntensitySlider].OnValueChanged -= SetDynamicRotationSpeed;
+            CinemaUIManager.Current.Toggles[UIOption.ToggleAlignPitchAxisWCam].OnValueChanged -= SetAlignPitchAxisWCam;
+            CinemaUIManager.Current.Toggles[UIOption.ToggleAlignRollAxisWCam].OnValueChanged -= SetAlignRollAxisWCam;
+            CinemaUIManager.Current.Toggles[UIOption.ToggleDynamicRoll].OnValueChanged -= SetDynamicRotation;
+            CinemaUIManager.Current.Sliders[UIOption.DynamicRollIntensitySlider].OnValueChanged -= SetDynamicRotationSpeed;
         }
     }
 }

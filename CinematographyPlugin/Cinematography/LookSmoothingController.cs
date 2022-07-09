@@ -21,9 +21,9 @@ namespace CinematographyPlugin.Cinematography
 
         private void Start()
         {
-            CinemaUIManager.Toggles[UIOption.ToggleFpsLookSmoothing].OnValueChanged += OnFpsSmoothToggle;
-            CinemaUIManager.Sliders[UIOption.FpsLookSmoothingSlider].OnValueChanged += OnFpsSmoothValChange;
-            CinemaUIManager.Sliders[UIOption.TimeScaleSlider].OnValueChanged += OnTimeScaleChange;
+            CinemaUIManager.Current.Toggles[UIOption.ToggleFpsLookSmoothing].OnValueChanged += OnFpsSmoothToggle;
+            CinemaUIManager.Current.Sliders[UIOption.FpsLookSmoothingSlider].OnValueChanged += OnFpsSmoothValChange;
+            CinemaUIManager.Current.Sliders[UIOption.TimeScaleSlider].OnValueChanged += OnTimeScaleChange;
             CinemaNetworkingManager.OnTimeScaleChangedByOtherPlayer += OnTimeScaleChange;
         }
 
@@ -56,9 +56,9 @@ namespace CinematographyPlugin.Cinematography
 
         private void OnDestroy()
         {
-            CinemaUIManager.Toggles[UIOption.ToggleFpsLookSmoothing].OnValueChanged -= OnFpsSmoothToggle;
-            CinemaUIManager.Sliders[UIOption.FpsLookSmoothingSlider].OnValueChanged -= OnFpsSmoothValChange;
-            CinemaUIManager.Sliders[UIOption.TimeScaleSlider].OnValueChanged -= OnTimeScaleChange;
+            CinemaUIManager.Current.Toggles[UIOption.ToggleFpsLookSmoothing].OnValueChanged -= OnFpsSmoothToggle;
+            CinemaUIManager.Current.Sliders[UIOption.FpsLookSmoothingSlider].OnValueChanged -= OnFpsSmoothValChange;
+            CinemaUIManager.Current.Sliders[UIOption.TimeScaleSlider].OnValueChanged -= OnTimeScaleChange;
             CinemaNetworkingManager.OnTimeScaleChangedByOtherPlayer -= OnTimeScaleChange;
         }
     }

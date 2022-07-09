@@ -18,6 +18,7 @@
         DynamicRollIntensitySlider,
         ToggleAlignPitchAxisWCam,
         ToggleAlignRollAxisWCam,
+        ToggleTargetingVisibility,
         ToggleFpsLookSmoothing,
         FpsLookSmoothingSlider,
         ToggleDoF,
@@ -28,5 +29,12 @@
         ToggleAmbientParticles,
         ToggleTimeScale,
         TimeScaleSlider,
+        TogglePointLight,
+        PointLightIntensitySlider,
+        PointLightRangeSlider,
+        ToggleSpotLight,
+        SpotLightIntensitySlider,
+        SpotLightRangeSlider,
+        SpotLightAngleSlider,
     }
 }

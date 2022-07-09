@@ -24,7 +24,7 @@ namespace CinematographyPlugin.Cinematography
         {
             var fpsCamera = PlayerManager.GetLocalPlayerAgent().FPSCamera;
 
-            _dofToggle = (ToggleOption) CinemaUIManager.Options[UIOption.ToggleVignette];
+            _dofToggle = (ToggleOption) CinemaUIManager.Current.Options[UIOption.ToggleVignette];
             _ambientParticles = fpsCamera.GetComponent<AmbientParticles>();
             _ppv = fpsCamera.GetComponent<PostProcessVolume>();
             _dof = _ppv.profile.GetSetting<DepthOfField>();
@@ -35,11 +35,11 @@ namespace CinematographyPlugin.Cinematography
 
         private void Start()
         {
-            ((ToggleOption) CinemaUIManager.Options[UIOption.ToggleVignette]).OnValueChanged += OnVignetteToggle;
-            ((ToggleOption) CinemaUIManager.Options[UIOption.ToggleAmbientParticles]).OnValueChanged += OnAmbientParticleToggle;
-            ((SliderOption) CinemaUIManager.Options[UIOption.FocusDistanceSlider]).OnValueChanged +=  OnFocusDistanceChange;
-            ((SliderOption) CinemaUIManager.Options[UIOption.ApertureSlider]).OnValueChanged +=  OnApertureChange;
-            ((SliderOption) CinemaUIManager.Options[UIOption.FocalLenghtSlider]).OnValueChanged +=  OnFocalLenghtChange;
+            ((ToggleOption) CinemaUIManager.Current.Options[UIOption.ToggleVignette]).OnValueChanged += OnVignetteToggle;
+            ((ToggleOption) CinemaUIManager.Current.Options[UIOption.ToggleAmbientParticles]).OnValueChanged += OnAmbientParticleToggle;
+            ((SliderOption) CinemaUIManager.Current.Options[UIOption.FocusDistanceSlider]).OnValueChanged +=  OnFocusDistanceChange;
+            ((SliderOption) CinemaUIManager.Current.Options[UIOption.ApertureSlider]).OnValueChanged +=  OnApertureChange;
+            ((SliderOption) CinemaUIManager.Current.Options[UIOption.FocalLenghtSlider]).OnValueChanged +=  OnFocalLenghtChange;
         }
 
         public static bool IsDoFSet()
@@ -84,11 +84,11 @@ namespace CinematographyPlugin.Cinematography
 
         private void OnDestroy()
         {
-            ((ToggleOption) CinemaUIManager.Options[UIOption.ToggleVignette]).OnValueChanged -= OnVignetteToggle;
-            ((ToggleOption) CinemaUIManager.Options[UIOption.ToggleAmbientParticles]).OnValueChanged -= OnAmbientParticleToggle;
-            ((SliderOption) CinemaUIManager.Options[UIOption.FocusDistanceSlider]).OnValueChanged -=  OnFocusDistanceChange;
-            ((SliderOption) CinemaUIManager.Options[UIOption.ApertureSlider]).OnValueChanged -=  OnApertureChange;
-            ((SliderOption) CinemaUIManager.Options[UIOption.FocalLenghtSlider]).OnValueChanged -=  OnFocalLenghtChange;
+            ((ToggleOption) CinemaUIManager.Current.Options[UIOption.ToggleVignette]).OnValueChanged -= OnVignetteToggle;
+            ((ToggleOption) CinemaUIManager.Current.Options[UIOption.ToggleAmbientParticles]).OnValueChanged -= OnAmbientParticleToggle;
+            ((SliderOption) CinemaUIManager.Current.Options[UIOption.FocusDistanceSlider]).OnValueChanged -=  OnFocusDistanceChange;
+            ((SliderOption) CinemaUIManager.Current.Options[UIOption.ApertureSlider]).OnValueChanged -=  OnApertureChange;
+            ((SliderOption) CinemaUIManager.Current.Options[UIOption.FocalLenghtSlider]).OnValueChanged -=  OnFocalLenghtChange;
 
             _init = false;
         }
