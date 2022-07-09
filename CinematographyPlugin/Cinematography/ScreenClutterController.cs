@@ -1,4 +1,5 @@
-﻿using CinematographyPlugin.UI;
+﻿using CellMenu;
+using CinematographyPlugin.UI;
 using CinematographyPlugin.UI.Enums;
 using Player;
 using UnityEngine;
@@ -10,6 +11,8 @@ namespace CinematographyPlugin.Cinematography
         private static ScreenClutterController _instance;
         private static bool _init;
         private static float _prevPlayerGhost;
+        private static bool _prevTeamPlayerInfoVisibility;
+        private static bool _uiOn;
         
         private static GameObject _body;
         private static GameObject _fpArms;
@@ -47,6 +50,7 @@ namespace CinematographyPlugin.Cinematography
             _uiNavMarkerLayer = uiRoot.FindChild("NavMarkerLayer").gameObject;
             _uiCrosshairLayer = GuiManager.CrosshairLayer.Root.FindChild("CrosshairLayer").gameObject;
             _prevPlayerGhost = Shader.GetGlobalFloat(PlayerGhostOpacity);
+            _prevTeamPlayerInfoVisibility = CellSettingsManager.GetBoolValue(eCellSettingID.HUD_Player_AlwaysShowTeammateInfo);
 
             _body = PlayerManager.GetLocalPlayerAgent().AnimatorBody.transform.parent.gameObject;
             _fpArms = PlayerManager.GetLocalPlayerAgent().FPItemHolder.gameObject;
@@ -93,10 +97,27 @@ namespace CinematographyPlugin.Cinematography
             _uiPlayerLayer.active = value;
             _uiCrosshairLayer.active = value;
             _uiInteractionLayer.active = value;
-            _uiNavMarkerLayer.active = value;
             _watermarkLayer.active = value;
 
-            CellSettingsApply.ApplyPlayerGhostOpacity(value ? _prevPlayerGhost : 0f);
+            CellSettingsManager.SetFloatValue(eCellSettingID.HUD_Player_GhostOpacity, value ? _prevPlayerGhost : 0f);
+            CellSettingsManager.SetBoolValue(eCellSettingID.HUD_Player_AlwaysShowTeammateInfo, value && _prevTeamPlayerInfoVisibility);
+            CellSettingsManager.ApplyAllSettings();
+
+            _uiOn = value;
+        }
+        
+        private void ToggleBio(bool value)
+        {
+            if (_uiOn)
+            {
+                _uiNavMarkerLayer.active = true;
+                ToggleUIElements(true);    
+            }
+            else
+            {
+                _uiNavMarkerLayer.active = value;
+                ToggleUIElements(false);    
+            }
         }
 
         private void ToggleScreenShake(bool value)

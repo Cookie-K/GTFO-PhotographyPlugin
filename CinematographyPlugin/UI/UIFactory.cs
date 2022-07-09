@@ -1,6 +1,7 @@
 ﻿using CinematographyPlugin.Cinematography;
 using CinematographyPlugin.Cinematography.Settings;
 using CinematographyPlugin.UI.Enums;
+using MonoMod.Utils;
 using UnityEngine;
 
 namespace CinematographyPlugin.UI
@@ -13,6 +14,9 @@ namespace CinematographyPlugin.UI
             var options = new Dictionary<UIOption, Option>
             {
                 { UIOption.ToggleUI, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleUI), true, true) },
+                { UIOption.ToggleBio, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleBio), false, false, true) },
+                { UIOption.ToggleAspectRatio, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleAspectRatio), false, true) },
+                { UIOption.AspectRatioSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.AspectRatioSlider), false, 1.777f, 0, 5) },
                 { UIOption.ToggleBody, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleBody), true, true) },
                 { UIOption.ToggleFreeCamera, new ToggleOption(GetOptionObj(cinemaUI, UIOption.ToggleFreeCamera), false, true) },
                 { UIOption.MovementSpeedSlider, new SliderOption(GetOptionObj(cinemaUI, UIOption.MovementSpeedSlider), false, CinCamSettings.MovementSpeedDefault, CinCamSettings.MovementSpeedMin, CinCamSettings.MovementSpeedMax) },
@@ -53,9 +57,13 @@ namespace CinematographyPlugin.UI
             
             options[UIOption.ToggleDynamicRoll].SubOptions.Add(options[UIOption.DynamicRollIntensitySlider]);
             
+            options[UIOption.ToggleAspectRatio].SubOptions.Add(options[UIOption.AspectRatioSlider]);
+            
             options[UIOption.ToggleFpsLookSmoothing].SubOptions.Add(options[UIOption.FpsLookSmoothingSlider]);
             
             options[UIOption.ToggleTimeScale].SubOptions.Add(options[UIOption.TimeScaleSlider]);
+            
+            options[UIOption.ToggleUI].SubOptions.Add(options[UIOption.ToggleBio]);
             
             options[UIOption.ToggleDoF].SubOptions.AddRange(new []
             {
@@ -69,52 +77,25 @@ namespace CinematographyPlugin.UI
             options[UIOption.ToggleFreeCamera].StateByDisableOnSelectOptions.Add(options[UIOption.ToggleBody], false);
             options[UIOption.ToggleFreeCamera].StateByDisableOnSelectOptions.Add(options[UIOption.ToggleFpsLookSmoothing], false);
             
+            options[UIOption.ToggleTimeScale].StateByDisableOnSelectOptions.Add(options[UIOption.ToggleFpsLookSmoothing], false);
+            
             return options;
         }
 
         public static Dictionary<UIOption, ToggleOption> GetToggles(Dictionary<UIOption, Option> options)
         {
-            var toggles = new Dictionary<UIOption, ToggleOption>();
-            
-            toggles.Add(UIOption.ToggleUI, (ToggleOption) options[UIOption.ToggleUI]);
-            toggles.Add(UIOption.ToggleBody, (ToggleOption) options[UIOption.ToggleBody]);
-            toggles.Add(UIOption.ToggleFreeCamera, (ToggleOption) options[UIOption.ToggleFreeCamera]);
-            toggles.Add(UIOption.ToggleAlignPitchAxisWCam, (ToggleOption) options[UIOption.ToggleAlignPitchAxisWCam]);
-            toggles.Add(UIOption.ToggleAlignRollAxisWCam, (ToggleOption) options[UIOption.ToggleAlignRollAxisWCam]);
-            toggles.Add(UIOption.ToggleDynamicRoll, (ToggleOption) options[UIOption.ToggleDynamicRoll]);
-            toggles.Add(UIOption.ToggleVignette, (ToggleOption) options[UIOption.ToggleVignette]);
-            toggles.Add(UIOption.ToggleAmbientParticles, (ToggleOption) options[UIOption.ToggleAmbientParticles]);
-            toggles.Add(UIOption.ToggleDoF, (ToggleOption) options[UIOption.ToggleDoF]);
-            toggles.Add(UIOption.ToggleFpsLookSmoothing, (ToggleOption) options[UIOption.ToggleFpsLookSmoothing]);
-            toggles.Add(UIOption.ToggleTimeScale, (ToggleOption) options[UIOption.ToggleTimeScale]);
-
-            return toggles;
+            return options.Where(o => o.Value is ToggleOption).ToDictionary(o => o.Key, o => o.Value as ToggleOption);
         }
         
         public static Dictionary<UIOption, SliderOption> GetSliders(Dictionary<UIOption, Option> options)
         {
-            var sliders = new Dictionary<UIOption, SliderOption>();
-            
-            sliders.Add(UIOption.MovementSpeedSlider, (SliderOption) options[UIOption.MovementSpeedSlider]);
-            sliders.Add(UIOption.MovementSmoothingSlider, (SliderOption) options[UIOption.MovementSmoothingSlider]);
-            sliders.Add(UIOption.RotationSpeedSlider, (SliderOption) options[UIOption.RotationSpeedSlider]);
-            sliders.Add(UIOption.RotationSmoothingSlider, (SliderOption) options[UIOption.RotationSmoothingSlider]);
-            sliders.Add(UIOption.DynamicRollIntensitySlider, (SliderOption) options[UIOption.DynamicRollIntensitySlider]);
-            sliders.Add(UIOption.FpsLookSmoothingSlider, (SliderOption) options[UIOption.FpsLookSmoothingSlider]);
-            sliders.Add(UIOption.TimeScaleSlider, (SliderOption) options[UIOption.TimeScaleSlider]);
-            sliders.Add(UIOption.ZoomSpeedSlider, (SliderOption) options[UIOption.ZoomSpeedSlider]);
-            sliders.Add(UIOption.ZoomSmoothingSlider, (SliderOption) options[UIOption.ZoomSmoothingSlider]);
-            sliders.Add(UIOption.FocusDistanceSlider, (SliderOption) options[UIOption.FocusDistanceSlider]);
-            sliders.Add(UIOption.FocalLenghtSlider, (SliderOption) options[UIOption.FocalLenghtSlider]);
-            sliders.Add(UIOption.ApertureSlider, (SliderOption) options[UIOption.ApertureSlider]);
-
-            return sliders;
+            return options.Where(o => o.Value is SliderOption).ToDictionary(o => o.Key, o => o.Value as SliderOption);
         }
 
         private static GameObject GetOptionObj(GameObject cinemaUI, UIOption option)
         {
             // CinemaUI/Canvas/Window/ViewPort
-            var windowViewPort = cinemaUI.transform.GetChild(0).GetChild(0).GetChild(0);
+            var windowViewPort = cinemaUI.transform.GetChild(0).GetChild(1).GetChild(0);
             // ViewPort/Body/ViewPort
             var bodyViewPort = windowViewPort.GetChild(1).GetChild(0);
             var gameObject = bodyViewPort.transform.Find(option.ToString()).gameObject;

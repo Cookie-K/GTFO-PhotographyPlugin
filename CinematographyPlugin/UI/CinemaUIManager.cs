@@ -1,6 +1,7 @@
 ﻿using CinematographyPlugin.Cinematography.Networking;
 using CinematographyPlugin.UI.Enums;
 using GTFO.API;
+using Player;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -47,9 +48,11 @@ namespace CinematographyPlugin.UI
             {
                 // CinemaUI/Canvas/Window
                 var canvas = _cinemaUIgo.transform.GetChild(0);
-                _window = canvas.GetChild(0).gameObject;
-                _centerTextWindow = canvas.GetChild(1).gameObject;
+                _cinematicBars = canvas.GetChild(0).gameObject;
+                _window = canvas.GetChild(1).gameObject;
+                _centerTextWindow = canvas.GetChild(2).gameObject;
                 _centerText = _centerTextWindow.GetComponentInChildren<TMP_Text>();
+
                 _window.gameObject.AddComponent<UIWindow>();
                 
                 var resetButton = _cinemaUIgo.GetComponentInChildren<Button>();;
@@ -61,6 +64,7 @@ namespace CinematographyPlugin.UI
 
                 _window.active = false;
                 _centerTextWindow.active = false;
+                _cinematicBars.active = false;
                 _cinemaUIgo.active = true;
                 _init = true;
             }
@@ -96,6 +100,11 @@ namespace CinematographyPlugin.UI
             CloseUI();
         }
 
+        public GameObject GetCinematicBars()
+        {
+            return _cinematicBars;
+        }
+        
         public void ShowTextOnScreen(string text)
         {
             _centerText.SetText($"[{text}]");

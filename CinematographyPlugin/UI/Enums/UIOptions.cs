@@ -3,6 +3,9 @@
     public enum UIOption
     {
         ToggleUI,
+        ToggleBio,
+        ToggleAspectRatio,
+        AspectRatioSlider,
         ToggleBody,
         ToggleFreeCamera,
         MovementSpeedSlider,

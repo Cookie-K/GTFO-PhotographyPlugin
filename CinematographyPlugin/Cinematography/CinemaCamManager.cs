@@ -34,6 +34,7 @@ namespace CinematographyPlugin.Cinematography
         private Vector3 _orbitOffset;
         private RaycastHit _cameraHit;
         private GameObject _prevHit = new ();
+        private GameObject _shieldsphere;
         private FPSCamera _fpsCamera;
         private Agent _orbitTarget;
         private Transform _prevParent;
@@ -65,6 +66,10 @@ namespace CinematographyPlugin.Cinematography
 
             _cinemaCamController = _cinemaCamCtrlHolder.gameObject.AddComponent<CinemaCamController>();
             _cinemaCamController.enabled = false;
+            
+            _shieldsphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            _shieldsphere.GetComponent<MeshRenderer>().enabled = false;
+            _shieldsphere.transform.localScale = new Vector3(3f, 3f, 3f);
         }
 
         private void Start()
@@ -111,6 +116,7 @@ namespace CinematographyPlugin.Cinematography
 
             if (enable)
             {
+                _shieldsphere.transform.position = _fpsCamera.Position;
                 _playerLocomotion.enabled = false;
                 _prevParent = _fpsCamera.m_orgParent.parent;
 				
@@ -123,6 +129,7 @@ namespace CinematographyPlugin.Cinematography
             }
             else
             {
+                _shieldsphere.transform.position = Vector3.zero;
                 _cinemaCamController.enabled = false;
                 _fpsCamera.MouseLookEnabled = true;
                 _prevParent.gameObject.active = true;

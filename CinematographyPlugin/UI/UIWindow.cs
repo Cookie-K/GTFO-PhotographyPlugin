@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using CinematographyPlugin.UI.Enums;
+using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
@@ -6,6 +7,7 @@ namespace CinematographyPlugin.UI
 {
     public class UIWindow : MonoBehaviour
     {
+        private bool _aspectRatioOn;
         private float _lastCanvasAlpha;
         private RectTransform _dragRectTransform;
         private CanvasGroup _canvasGroup;
@@ -36,6 +38,11 @@ namespace CinematographyPlugin.UI
             trigger.triggers.Add(exit);
         }
 
+        private void Start()
+        {
+            CinemaUIManager.Current.Toggles[UIOption.ToggleAspectRatio].OnValueChanged += OnToggleAspectRatio;
+        }
+
         public void OnDrag(BaseEventData data)
         {
             _dragRectTransform.anchoredPosition += data.TryCast<PointerEventData>().delta / _canvas.scaleFactor;
@@ -55,13 +62,23 @@ namespace CinematographyPlugin.UI
         
         public void OnExit(BaseEventData data)
         {
-            _canvasGroup.alpha = _lastCanvasAlpha;
+            _canvasGroup.alpha = _aspectRatioOn ? 1 : _lastCanvasAlpha;
         }
 
         public void OnPointerDown(PointerEventData data)
         {
             _dragRectTransform.SetAsLastSibling();
         }
-        
+
+        private void OnToggleAspectRatio(bool value)
+        {
+            _canvasGroup.alpha = value ? 1 : _lastCanvasAlpha;
+            _aspectRatioOn = value;
+        }
+
+        private void OnDestroy()
+        {
+            CinemaUIManager.Current.Toggles[UIOption.ToggleAspectRatio].OnValueChanged -= OnToggleAspectRatio;
+        }
     }
 }
