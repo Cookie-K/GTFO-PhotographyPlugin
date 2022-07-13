@@ -4,6 +4,7 @@ using CinematographyPlugin.UI;
 using CinematographyPlugin.UI.Enums;
 using CinematographyPlugin.UI.UiInput;
 using Enemies;
+using FluffyUnderware.DevTools.Extensions;
 using Player;
 using UnityEngine;
 
@@ -16,6 +17,7 @@ namespace CinematographyPlugin.Cinematography
         private const float RayCastMax = 50;
         private const float RayCastRadius = 0.5f;
         private const float OrbitReselectDelay = 0.5f;
+        private const float PlayerBodyOffset = 2f;
         private const float GodModeDisableDelay = 3f;
 
         private readonly int _playerLayerMask = LayerMask.GetMask("PlayerSynced");
@@ -28,9 +30,9 @@ namespace CinematographyPlugin.Cinematography
         private string _orbitTargetName;
         private float _lastOrbitDeselect;
         private float _lastFreeCamEnded;
+        private Vector3 _originalPlayerPos;
         private RaycastHit _cameraHit;
         private GameObject _prevHit = new ();
-        private SphereCollider _shieldSphere;
         private FPSCamera _fpsCamera;
         private Agent _orbitTarget;
         private Transform _prevParent;
@@ -40,6 +42,7 @@ namespace CinematographyPlugin.Cinematography
         private PlayerAgent _playerAgent;
         private PlayerLocomotion _playerLocomotion;
         private CinemaCamController _cinemaCamController;
+        private Dictionary<String, SphereCollider> _shieldSphereByAgentName = new ();
 
         private void Awake()
         {
@@ -62,10 +65,6 @@ namespace CinematographyPlugin.Cinematography
 
             _cinemaCamController = _cinemaCamCtrlHolder.gameObject.AddComponent<CinemaCamController>();
             _cinemaCamController.enabled = false;
-            
-            _shieldSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere).GetComponent<SphereCollider>();
-            _shieldSphere.GetComponent<MeshRenderer>().enabled = false;
-            _shieldSphere.transform.localScale = new Vector3(3f, 3f, 3f);
         }
 
         private void Start()
@@ -84,6 +83,8 @@ namespace CinematographyPlugin.Cinematography
                 UpdateOrbitCamState();
                 CheckPlayerWarp();
             }
+            
+            CheckFreeCamHotKey();
         }
 
         public bool FreeCamEnabled()
@@ -94,6 +95,91 @@ namespace CinematographyPlugin.Cinematography
         public bool InGodMode()
         {
             return _freeCamEnabled && Time.realtimeSinceStartup - _lastFreeCamEnded < GodModeDisableDelay;
+        }
+
+        public Vector3 GetOriginalPlayerPosition()
+        {
+            return _originalPlayerPos;
+        }
+        
+        public void EnableOrDisableCinemaCam(bool enable)
+        {
+            ScreenClutterController.GetInstance().ToggleAllScreenClutter(!enable);
+
+            if (enable)
+            {
+                _playerLocomotion.enabled = false;
+                _prevParent = _fpsCamera.m_orgParent.parent;
+				
+                _cinemaCamController.SyncWithCameraTransform();
+                _fpsCamera.m_orgParent.parent = _fpsCamHolderSubstitute;
+
+                _fpsCamera.MouseLookEnabled = false;
+                _prevParent.gameObject.active = false;
+                _cinemaCamController.enabled = true;
+
+                UpdatePlayerPositionAndShield(_playerAgent, true);
+            }
+            else
+            {
+                _cinemaCamController.enabled = false;
+                _fpsCamera.MouseLookEnabled = true;
+                _prevParent.gameObject.active = true;
+                
+                _fpsCamera.m_orgParent.parent = _prevParent;
+                
+                _fpsCamera.m_orgParent.localPosition = Vector3.zero;
+                _playerLocomotion.enabled = true;
+
+                if (_inOrbit)
+                {
+                    DisconnectOrbit();
+                }
+                
+                _lastFreeCamEnded = Time.realtimeSinceStartup;
+                
+                UpdatePlayerPositionAndShield(_playerAgent, false);
+                
+                _playerLocomotion.DisableFallDamageTemporarily = true;
+            }
+
+            CinematographyCore.log.LogMessage(enable ? "Cinema cam enabled" : "Cinema cam disabled");
+        }
+
+        private void UpdatePlayerPositionAndShield(PlayerAgent agent, bool setUp)
+        {
+            UpdatePlayerPositionAndShield(agent, agent.transform.position, setUp);
+        }
+
+        public void UpdatePlayerPositionAndShield(PlayerAgent agent, Vector3 playerPosition, bool setUp)
+        {
+            if (setUp)
+            {
+                _originalPlayerPos = playerPosition;
+            }
+            
+            var newPlayerPosition = new Vector3(playerPosition.x, playerPosition.y + (setUp ? -PlayerBodyOffset : +PlayerBodyOffset), playerPosition.z);
+            agent.transform.position = newPlayerPosition;
+            _playerAgent.TryCast<LocalPlayerAgent>()?.PlayerCharacterController.ManualMoveTo(newPlayerPosition);
+            
+            var agentName = agent.Sync.name;
+            if (!_shieldSphereByAgentName.ContainsKey(agentName))
+            {
+                _shieldSphereByAgentName[agentName] = GameObject.CreatePrimitive(PrimitiveType.Sphere).GetComponent<SphereCollider>();
+                _shieldSphereByAgentName[agentName].GetComponent<MeshRenderer>().enabled = false;
+                _shieldSphereByAgentName[agentName].transform.localScale = new Vector3(3f, 3f, 3f);
+            }
+            
+            _shieldSphereByAgentName[agentName].transform.position = newPlayerPosition;
+            _shieldSphereByAgentName[agentName].enabled = setUp;
+        }
+
+        private void CheckFreeCamHotKey()
+        {
+            if (KeyBindInputManager.GetFreeCamToggle())
+            {
+                CinemaUIManager.Current.Toggles[UIOption.ToggleFreeCamera].Toggle.isOn = !_freeCamEnabled;
+            }
         }
 
         private void CheckAndForceUiHidden()
@@ -111,51 +197,9 @@ namespace CinematographyPlugin.Cinematography
             _freeCamEnabled = value;
         }
 
-        private void EnableOrDisableCinemaCam(bool enable)
-        {
-            ScreenClutterController.GetInstance().ToggleAllScreenClutter(!enable);
-
-            if (enable)
-            {
-                _shieldSphere.transform.position = _fpsCamera.Position;
-                _shieldSphere.enabled = true;
-                
-                _playerLocomotion.enabled = false;
-                _prevParent = _fpsCamera.m_orgParent.parent;
-				
-                _cinemaCamController.SyncWithCameraTransform();
-                _fpsCamera.m_orgParent.parent = _fpsCamHolderSubstitute;
-
-                _fpsCamera.MouseLookEnabled = false;
-                _prevParent.gameObject.active = false;
-                _cinemaCamController.enabled = true;
-            }
-            else
-            {
-                _shieldSphere.enabled = false;
-                _cinemaCamController.enabled = false;
-                _fpsCamera.MouseLookEnabled = true;
-                _prevParent.gameObject.active = true;
-                
-                _fpsCamera.m_orgParent.parent = _prevParent;
-                
-                _fpsCamera.m_orgParent.localPosition = Vector3.zero;
-                _playerLocomotion.enabled = true;
-
-                if (_inOrbit)
-                {
-                    DisconnectOrbit();
-                }
-                
-                _lastFreeCamEnded = Time.realtimeSinceStartup;
-            }
-
-            CinematographyCore.log.LogMessage(enable ? "Cinema cam enabled" : "Cinema cam disabled");
-        }
-
         private void UpdateOrbitCamState()
         {
-            if (InputManager.GetOrbitTargetSelect() && Time.realtimeSinceStartup - _lastOrbitDeselect > OrbitReselectDelay)
+            if (KeyBindInputManager.GetOrbitTargetSelect() && Time.realtimeSinceStartup - _lastOrbitDeselect > OrbitReselectDelay)
             {
                 if (Physics.SphereCast(_fpsCamera.m_camRay, RayCastRadius, out _cameraHit, RayCastMax, _playerLayerMask | _enemyLayerMask))
                 {
@@ -221,16 +265,17 @@ namespace CinematographyPlugin.Cinematography
             _lastOrbitDeselect = Time.realtimeSinceStartup;
         }
 
-        private void OnOtherPlayerEnterOrExitFreeCam(PlayerAgent playerAgent, bool enteringFreeCam)
+        private void OnOtherPlayerEnterOrExitFreeCam(PlayerAgent playerAgent, bool enter)
         {
-            var enterExitTxt = enteringFreeCam ? "entering" : "exiting";
+            var enterExitTxt = enter ? "entering" : "exiting";
             CinematographyCore.log.LogInfo($"{playerAgent.Sync.PlayerNick} {enterExitTxt} free cam");
-            ScreenClutterController.GetInstance().ToggleClientVisibility(playerAgent, !enteringFreeCam);
+            ScreenClutterController.GetInstance().ToggleClientVisibility(playerAgent, !enter);
+            UpdatePlayerPositionAndShield(playerAgent, enter);
         }
 		
         private void DivertEnemiesAwayFromCameraMan()
         {
-            if (PlayerManager.PlayerAgentsInLevel.Count == 1) return;
+            if (PlayerManager.PlayerAgentsInLevel.Count == 1 || CinemaNetworkingManager.GetPlayersInFreeCam().Count() == PlayerManager.PlayerAgentsInLevel.Count) return;
 			     
             foreach (var playerAgent in CinemaNetworkingManager.GetPlayersInFreeCam())
             {
@@ -249,10 +294,17 @@ namespace CinematographyPlugin.Cinematography
         
         private void CheckPlayerWarp()
         {
-            if (InputManager.GetPlayerWarp())
+            if (KeyBindInputManager.GetPlayerWarp())
             {
-                _playerAgent.TryWarpTo(_playerAgent.DimensionIndex, _fpsCamera.Position, _fpsCamera.Forward, true);
+                var pos = _fpsCamera.transform.position;
+                var lookDir = _fpsCamera.Forward;
+                
                 CinemaUIManager.Current.Toggles[UIOption.ToggleFreeCamera].Toggle.isOn = false;
+                
+                _playerAgent.transform.position = pos;
+                _playerAgent.TryCast<LocalPlayerAgent>()!.PlayerCharacterController.ManualMoveTo(pos);
+                _fpsCamera.SetLookDirection(lookDir);
+                _fpsCamera.TransitionFX.Play();
             }
         }
 

@@ -2,13 +2,13 @@
 
 namespace CinematographyPlugin.Cinematography.Settings;
 
-public class CinCamSettings : ScriptableObject
+public class CinemaCamSettings : ScriptableObject
 {
     /// Camera controller settings
     public const float FastSpeedScale = 2;
     public const float SlowSpeedScale = 1f/2f;
         
-    public const float MovementSpeedDefault = 0.5f;
+    public const float MovementSpeedDefault = 1f;
     public const float MovementSpeedMin = 0f;
     public const float MovementSpeedMax = 2f;
     public const float MovementSpeedScale = 10;
@@ -35,16 +35,16 @@ public class CinCamSettings : ScriptableObject
     public const float ZoomSpeedDefault = 0.9f;
     public const float ZoomSpeedMin = 0f;
     public const float ZoomSpeedMax = 1f;
-        
+
+    public const float ZoomSmoothTimeDefault = 0.02f;
+    public const float ZoomSmoothTimeMin = 0f;
+    public const float ZoomSmoothTimeMax = 1f;
+    
     public const float OrbitSmoothingFactor = 0f;
     public const float OrbitDistanceDefault = 2f;
     public const float OrbitDistanceMoveSpeedDefault = 0.2f;
 
-    public const float ZoomSmoothTimeDefault = 0.1f;
-    public const float ZoomSmoothTimeMin = 0f;
-    public const float ZoomSmoothTimeMax = 1f;
-
-    public const float DynamicRotationDefault = 1f;
+    public const float DynamicRotationDefault = 0.6f;
     public const float DynamicRotationMin = 0f;
     public const float DynamicRotationMax = 2f;
     

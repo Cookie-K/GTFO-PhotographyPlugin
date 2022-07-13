@@ -12,7 +12,7 @@ namespace CinematographyPlugin.Cinematography.Networking
     {
         public static event Action<float> OnTimeScaleChangedByOtherPlayer;
         public static event Action<PlayerAgent, bool> OnOtherPlayerEnterExitFreeCam;
-        public static event Action<bool> OnFreeCamEnableOrDisable;
+        // public static event Action<bool> OnFreeCamEnableOrDisable;
         public static event Action<bool> OnTimeScaleEnableOrDisable;
 
         private static readonly Dictionary<string, CinemaSyncPlayer> SyncPlayersByName = new ();
@@ -168,23 +168,25 @@ namespace CinematographyPlugin.Cinematography.Networking
             
             SyncPlayersByName[playerName].UpdateUIStates(stateData);
 
-            var nPlayersInLvl = PlayerManager.PlayerAgentsInLevel.Count;
             var localPlayerAgent = PlayerManager.GetLocalPlayerAgent();
-            var isAlone = nPlayersInLvl == 1;
-            var nOtherPlayersInFreeCam = SyncPlayersByName.Values.Count(p => p.IsInFreeCam && p.Agent.Sync.PlayerNick != localPlayerAgent.Sync.PlayerNick);
             var anotherPlayerInCtrlOfTime = SyncPlayersByName.Values.Any(p => p.IsInCtrlOfTime && p.Agent.Sync.PlayerNick != localPlayerAgent.Sync.PlayerNick);
-            var isEveryOneElseInFreeCam = nOtherPlayersInFreeCam == nPlayersInLvl - 1;
-
-            _canUseFreeCam = isAlone || !isEveryOneElseInFreeCam;
             _canUseTimeScale = !anotherPlayerInCtrlOfTime;
 
-            if (_canUseFreeCam != _prevCanUseFreeCam)
-            {
-                CinematographyCore.log.LogInfo(isEveryOneElseInFreeCam
-                    ? "Free cam disabled: everyone else in lobby is in free cam"
-                    : "Free cam enabled: not everyone else in lobby is in free cam");
-                OnFreeCamEnableOrDisable?.Invoke(_canUseFreeCam);
-            }
+            // Commenting this out since it's probably fine that everyone can use free cam mode
+            
+            // var nPlayersInLvl = PlayerManager.PlayerAgentsInLevel.Count;
+            // var isAlone = nPlayersInLvl == 1;
+            // var nOtherPlayersInFreeCam = SyncPlayersByName.Values.Count(p => p.IsInFreeCam && p.Agent.Sync.PlayerNick != localPlayerAgent.Sync.PlayerNick);
+            // var isEveryOneElseInFreeCam = nOtherPlayersInFreeCam == nPlayersInLvl - 1;
+            // _canUseFreeCam = isAlone || !isEveryOneElseInFreeCam;
+            
+            // if (_canUseFreeCam != _prevCanUseFreeCam)
+            // {
+            //     CinematographyCore.log.LogInfo(isEveryOneElseInFreeCam
+            //         ? "Free cam disabled: everyone else in lobby is in free cam"
+            //         : "Free cam enabled: not everyone else in lobby is in free cam");
+            //     OnFreeCamEnableOrDisable?.Invoke(_canUseFreeCam);
+            // }
             
             if (_canUseTimeScale != _prevCanUseTimeScale)
             {

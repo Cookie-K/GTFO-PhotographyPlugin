@@ -1,5 +1,8 @@
-﻿using CinematographyPlugin.Cinematography.Networking;
+﻿using System.Collections;
+using BepInEx.IL2CPP.Utils.Collections;
+using CinematographyPlugin.Cinematography.Networking;
 using CinematographyPlugin.UI.Enums;
+using CinematographyPlugin.UI.UiInput;
 using GTFO.API;
 using Player;
 using TMPro;
@@ -32,6 +35,7 @@ namespace CinematographyPlugin.UI
         private GameObject _window;
         private GameObject _cinematicBars;
         private GameObject _cinemaUIgo;
+        private CanvasGroup _canvasGroup;
         private LocalPlayerAgent _playerAgent;
 
         public void Awake()
@@ -51,6 +55,7 @@ namespace CinematographyPlugin.UI
             {
                 // CinemaUI/Canvas/Window
                 var canvas = _cinemaUIgo.transform.GetChild(0);
+                _canvasGroup = canvas.GetComponent<CanvasGroup>();
                 _cinematicBars = canvas.GetChild(0).gameObject;
                 _window = canvas.GetChild(1).gameObject;
                 _centerTextWindow = canvas.GetChild(2).gameObject;
@@ -65,17 +70,19 @@ namespace CinematographyPlugin.UI
                 Toggles = UIFactory.GetToggles(Options);
                 Sliders = UIFactory.GetSliders(Options);
 
-                _window.active = false;
+                _window.active = true;
                 _centerTextWindow.active = false;
                 _cinematicBars.active = false;
                 _cinemaUIgo.active = true;
+                
+                CloseUI();
+                
                 _init = true;
             }
         }
 
         public void Start()
         {
-            CinemaNetworkingManager.OnFreeCamEnableOrDisable += OnFreeCamEnableOrDisable;
             CinemaNetworkingManager.OnTimeScaleEnableOrDisable += OnTimeScaleEnableOrDisable;
             CinemaPluginPatches.OnLocalPlayerDieOrRevive += OnFreeCamEnableOrDisable;
             
@@ -89,6 +96,8 @@ namespace CinematographyPlugin.UI
 
         public void Update()
         {
+            UpdateInputEnableDisable();
+            
             if (!_init) return;
             if (Input.GetKeyDown(UIOpenKey))
             {
@@ -101,6 +110,11 @@ namespace CinematographyPlugin.UI
                     OpenUI();
                 }
             }
+        }
+
+        private void UpdateInputEnableDisable()
+        {
+            KeyBindInputManager.SetInputsEnabled(Cursor.lockState == CursorLockMode.None);
         }
 
         public void OnCloseButton()
@@ -182,7 +196,10 @@ namespace CinematographyPlugin.UI
             
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
-            _window.active = true;
+            
+            StartCoroutine(ExpandUI().WrapToIl2Cpp());
+            _canvasGroup.interactable = true;
+            
             MenuOpen = true;
         }
         
@@ -190,13 +207,42 @@ namespace CinematographyPlugin.UI
         {
             Cursor.lockState = CursorLockLastMode;
             Cursor.visible = CursorLastVisible;
-            _window.active = false;
+            
+            StartCoroutine(ShrinkUI().WrapToIl2Cpp());
+            _canvasGroup.interactable = false;
+
             MenuOpen = false;
+        }
+
+        private IEnumerator ShrinkUI()
+        {
+            var finalScale = new Vector3(0, 1, 1);
+
+            while (_window.transform.localScale != finalScale)
+            {
+                var newX = Mathf.MoveTowards(_window.transform.localScale.x, 0, Time.deltaTime * 10f);
+                _window.transform.localScale = new Vector3(newX, 1, 1);
+
+                yield return null;
+            }
+        }
+        
+        
+        private IEnumerator ExpandUI()
+        {
+            var finalScale = new Vector3(1, 1, 1);
+            
+            while (_window.transform.localScale != finalScale)
+            {
+                var newX = Mathf.MoveTowards(_window.transform.localScale.x, 1, Time.deltaTime * 10f);
+                _window.transform.localScale = new Vector3(newX, 1, 1);
+
+                yield return null;
+            }
         }
 
         public void OnDestroy()
         {
-            CinemaNetworkingManager.OnFreeCamEnableOrDisable -= OnFreeCamEnableOrDisable;
             CinemaNetworkingManager.OnTimeScaleEnableOrDisable -= OnTimeScaleEnableOrDisable;
             CinemaPluginPatches.OnLocalPlayerDieOrRevive -= OnFreeCamEnableOrDisable;
             

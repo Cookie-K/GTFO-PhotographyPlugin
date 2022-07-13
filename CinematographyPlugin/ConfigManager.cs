@@ -11,6 +11,9 @@ namespace CinematographyPlugin
         private static readonly ConfigEntry<KeyCode> MenuOpenClose = ConfigFile
             .Bind("Key Binds", "Menu Open Close", KeyCode.F4, "The key to open / close the plugin menu");
 
+        private static readonly ConfigEntry<KeyCode> FreeCamToggle = ConfigFile
+            .Bind("Key Binds", "Free Cam Toggle", KeyCode.F5, "The key to enable / disable free cam");
+
         private static readonly ConfigEntry<bool> UseAlpha = ConfigFile
             .Bind("Key Binds", "Use Alphanumeric keys for Time Controls", false, 
                 "The time scale percentages are bound to the numpad keys by default, change this to false to use the alpha numeric keys in stead " +
@@ -41,9 +44,13 @@ namespace CinematographyPlugin
             .Bind("Key Binds", "Orbit cam enter/exit", KeyCode.C, "Enter/exit orbit cam");
         
         private static readonly ConfigEntry<KeyCode> WarpPlayer = ConfigFile
-            .Bind("Key Binds", "Warp  Player", KeyCode.T, "Warp the player to where the camera is");
+            .Bind("Key Binds", "Warp Player", KeyCode.T, "Warp the player to where the camera is");
+        
+        private static readonly ConfigEntry<KeyCode> DimensionWarp = ConfigFile
+            .Bind("Key Binds", "Warp to Dimension", KeyCode.Y, "Warp the everyone to a different dimension");
         
         public static KeyCode MenuKey => MenuOpenClose.Value;
+        public static KeyCode FreeCamToggleKey => FreeCamToggle.Value;
         public static KeyCode UpKey => GoUp.Value;
         public static KeyCode DownKey => GoDown.Value;
         public static KeyCode SpeedUpKey => SpeedUp.Value;
@@ -53,5 +60,6 @@ namespace CinematographyPlugin
         public static KeyCode TimePausePlayKey => TimePausePlay.Value;
         public static KeyCode OrbitEnterExitKey => OrbitEnterExit.Value;
         public static KeyCode WarpPlayerKey => WarpPlayer.Value;
+        public static KeyCode DimensionWarpKey => DimensionWarp.Value;
     }
 }

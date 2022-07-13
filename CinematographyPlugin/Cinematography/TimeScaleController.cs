@@ -31,7 +31,7 @@ namespace CinematographyPlugin.Cinematography
 
         public static void ResetTimeScale()
         {
-            Time.timeScale = CinCamSettings.TimeScaleDefault;
+            Time.timeScale = CinemaCamSettings.TimeScaleDefault;
         }
 
         private void OnTimeScaleChange(float value)
@@ -41,19 +41,19 @@ namespace CinematographyPlugin.Cinematography
  
         private void UpdateTimeScaleFromKeyBinds()
         {
-            var timeScaleInput = InputManager.GetTimeScaleInput();
+            var timeScaleInput = KeyBindInputManager.GetTimeScaleInput();
             if (timeScaleInput != 0f)
             {
-                _timeScaleSlider.OnSliderChange(Mathf.Clamp(Time.timeScale + timeScaleInput, CinCamSettings.TimeScaleMin, CinCamSettings.TimeScaleMax));    
+                _timeScaleSlider.OnSliderChange(Mathf.Clamp(Time.timeScale + timeScaleInput, CinemaCamSettings.TimeScaleMin, CinemaCamSettings.TimeScaleMax));    
             }
 
-            if (InputManager.GetTimeScalePausePlay())
+            if (KeyBindInputManager.GetTimeScalePausePlay())
             {
                 TogglePausePlay();
             }
             
             // Automatically turn on the time scale toggle if it's off and are using the key binds
-            if (Math.Abs(Time.timeScale - CinCamSettings.TimeScaleMax) > 0.001 && !_timeScaleToggle.Toggle.isOn)
+            if (Math.Abs(Time.timeScale - CinemaCamSettings.TimeScaleMax) > 0.001 && !_timeScaleToggle.Toggle.isOn)
             {
                 _timeScaleToggle.Toggle.Set(true);
             }
@@ -61,7 +61,7 @@ namespace CinematographyPlugin.Cinematography
         
         private void TogglePausePlay()
         {
-            var newTimeScale = Math.Abs(Time.timeScale - CinCamSettings.TimeScaleMin) > 0.01 ? CinCamSettings.TimeScaleMin : CinCamSettings.TimeScaleMax;
+            var newTimeScale = Math.Abs(Time.timeScale - CinemaCamSettings.TimeScaleMin) > 0.01 ? CinemaCamSettings.TimeScaleMin : CinemaCamSettings.TimeScaleMax;
             _timeScaleSlider.OnSliderChange(newTimeScale);
         }
 

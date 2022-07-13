@@ -3,10 +3,12 @@ using UnityEngine;
 
 namespace CinematographyPlugin.UI.UiInput
 {
-    public static class InputManager
+    public static class KeyBindInputManager
     {
         private const float TimeCheckIntervalStart = 0.1f;
         private const float TimeScaleSmallDelta = 0.01f;
+
+        private static bool _disableInputs;
 
         private static readonly KeyCode PosX = KeyCode.D;
         private static readonly KeyCode NegX = KeyCode.A;
@@ -21,15 +23,23 @@ namespace CinematographyPlugin.UI.UiInput
         private static readonly KeyCode TimeDec = ConfigManager.TimeDecKey;
         private static readonly KeyCode TimePausePlay = ConfigManager.TimePausePlayKey;
         
-        private static readonly KeyCode FlashLightKey = KeyCode.F;
+        private static readonly KeyCode FreeCamToggleKey = ConfigManager.FreeCamToggleKey;
         private static readonly KeyCode OrbitTargetSelect = ConfigManager.OrbitEnterExitKey;
         private static readonly KeyCode WarpPlayerKey = ConfigManager.WarpPlayerKey;
+        private static readonly KeyCode DimensionWarpKey = ConfigManager.DimensionWarpKey;
 
         private static float _lastTimeHeld;
         private static float _timeCheckInterval = TimeCheckIntervalStart;
 
+        public static void SetInputsEnabled(bool enable)
+        {
+            _disableInputs = enable;
+        }
+        
         public static float GetAxis(AxisName axis)
         {
+            if (_disableInputs) return 0;
+            
             switch (axis)
             {
                 case AxisName.PosX:
@@ -47,13 +57,24 @@ namespace CinematographyPlugin.UI.UiInput
             }
         }
 
+        public static bool GetFreeCamToggle()
+        {
+            if (_disableInputs) return false;
+            
+            return Input.GetKeyDown(FreeCamToggleKey);
+        }
+        
         public static bool GetMiddleMouse()
         {
+            if (_disableInputs) return false;
+            
             return Input.GetMouseButtonDown(2);
         }
         
         public static float GetTimeScaleInput()
         {
+            if (_disableInputs) return 0;
+
             var newTimeDelta = 0f;
 
             // Check for time change input at a frame independent interval 
@@ -87,26 +108,32 @@ namespace CinematographyPlugin.UI.UiInput
         
         public static bool GetTimeScalePausePlay()
         {
+            if (_disableInputs) return false;
             return Input.GetKeyDown(TimePausePlay);
         }
         
         public static bool GetOrbitTargetSelect()
         {
+            if (_disableInputs) return false;
             return Input.GetKey(OrbitTargetSelect);
-        }
-        
-        public static bool GetFlashLightOnOff()
-        {
-            return Input.GetKeyDown(FlashLightKey);
         }
 
         public static bool GetPlayerWarp()
         {
+            if (_disableInputs) return false;
             return Input.GetKeyDown(WarpPlayerKey);
+        }
+        
+        public static bool GetDimensionWarp()
+        {
+            if (_disableInputs) return false;
+            return Input.GetKeyDown(DimensionWarpKey);
         }
 
         private static float GetMouseInput(AxisName axis)
         {
+            if (_disableInputs) return 0;
+
             switch (axis)
             {
                 case AxisName.RotX:
@@ -126,11 +153,15 @@ namespace CinematographyPlugin.UI.UiInput
 
         private static float GetMouseButtonAxisFloat()
         {
+            if (_disableInputs) return 0;
+
             return Input.GetMouseButton(0) ? 1 : Input.GetMouseButton(1) ? -1 : 0;
         }
         
         private static float GetAxisKeyInput(AxisName axis)
         {
+            if (_disableInputs) return 0;
+
             switch (axis)
             {
                 case AxisName.PosX:

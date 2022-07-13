@@ -31,21 +31,21 @@ namespace CinematographyPlugin.Cinematography
         {
             if (!value)
             {
-                _currVal = CinCamSettings.LookSmoothDefault;
-                _fpsCamera.MouseSmoother.m_curve = CinCamSettings.LookSmoothDefault;
+                _currVal = CinemaCamSettings.LookSmoothDefault;
+                _fpsCamera.MouseSmoother.m_curve = CinemaCamSettings.LookSmoothDefault;
             }
         }
 
         private void OnFpsSmoothValChange(float value)
         {
-            if (Time.timeScale > CinCamSettings.TimeScaleMax)
+            if (Time.timeScale > CinemaCamSettings.TimeScaleMax)
             {
                 // Do not update the sensitivity for values above max as it is more disorienting than useful
                 return;
             }
             
             _currVal = value;
-            _fpsCamera.MouseSmoother.Curve = _currVal + CinCamSettings.LookSmoothingScale * (1 - Time.timeScale);
+            _fpsCamera.MouseSmoother.Curve = _currVal + CinemaCamSettings.LookSmoothingScale * (1 - Time.timeScale);
             _fpsCamera.MouseSmoother.Samples = Mathf.RoundToInt(_initialSamples / Time.timeScale);
         }
 

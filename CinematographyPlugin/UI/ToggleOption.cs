@@ -22,9 +22,9 @@ namespace CinematographyPlugin.UI
         
         private int _nDisabled;
 
-        public ToggleOption(GameObject root, bool initialValue, bool startActive, bool activeWhenParentOff = false) : base(root, startActive, activeWhenParentOff)
+        public ToggleOption(GameObject go, bool initialValue, bool startActive, bool activeWhenParentOff = false) : base(go, startActive, activeWhenParentOff)
         {
-            Toggle = root.GetComponentInChildren<Toggle>();
+            Toggle = go.GetComponentInChildren<Toggle>();
             Toggle.onValueChanged.AddListener((UnityAction<bool>) OnToggleChange);
             _tmp = Toggle.transform.GetComponentInChildren<TMP_Text>();
             Toggle.Set(initialValue);
@@ -115,7 +115,7 @@ namespace CinematographyPlugin.UI
 
         public override void OnSetActive(bool state)
         {
-            if (state || !Root.active) return;
+            if (state || !Go.active) return;
 
             _prevValue = Toggle.isOn;
             _prevValueSet = true;

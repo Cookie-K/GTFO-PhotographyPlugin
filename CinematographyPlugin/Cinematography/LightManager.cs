@@ -42,7 +42,7 @@ public class LightManager : MonoBehaviour
     {
         if (_freeCamOn)
         {
-            LightOnOff(InputManager.GetFlashLightOnOff());
+            UpdateLightOnOffSettings(_clSpotLight.m_isOn);
         }
     }
     
@@ -51,12 +51,10 @@ public class LightManager : MonoBehaviour
         _freeCamOn = !_freeCamOn;
     }    
     
-    private void LightOnOff(bool value)
+    private void UpdateLightOnOffSettings(bool value)
     {
         if (value)
         {
-            _clSpotLight.m_isOn = !_clSpotLight.m_isOn;
-            
             // Light seems to get reset on every toggle so it must be reset
             _spotLight.range = _currSpotLightRange;
             _spotLight.intensity = _currSpotLightIntensity;
@@ -66,7 +64,7 @@ public class LightManager : MonoBehaviour
 
     private void SetSpotLightOffset(bool value)
     {
-        _fpsCamera.FPSFlashlightAdjustment = value ? 0f : CinCamSettings.FlashLightOffsetDefault;
+        _fpsCamera.FPSFlashlightAdjustment = value ? 0f : CinemaCamSettings.FlashLightOffsetDefault;
     }
     
     private void SetPointLightRange(float value)

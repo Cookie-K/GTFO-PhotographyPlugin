@@ -86,7 +86,7 @@ namespace CinematographyPlugin
         [HarmonyPatch(typeof(EnemyAI), nameof(EnemyAI.Target), MethodType.Setter)]
         private static void Prefix_SetTargetDivertAwayFromCameraMan(ref AgentTarget value)
         {
-            if (value == null || PlayerManager.PlayerAgentsInLevel.Count == 1) return;
+            if (value == null || PlayerManager.PlayerAgentsInLevel.Count == 1 || CinemaNetworkingManager.GetPlayersInFreeCam().Count() == PlayerManager.PlayerAgentsInLevel.Count) return;
             var playerAgent = value.m_agent as PlayerAgent;
             if (playerAgent == null) return;
             

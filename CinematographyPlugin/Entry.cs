@@ -42,6 +42,7 @@ namespace CinematographyPlugin
                     gameObject.AddComponent<IndependentDeltaTimeManager>();
                     gameObject.AddComponent<LightManager>();
                     gameObject.AddComponent<AspectRatioManager>();
+                    gameObject.AddComponent<DimensionManager>();
                     gameObject.AddComponent<CinemaNetworkingManager>().RegisterEvents();
                     Object.DontDestroyOnLoad(gameObject);
 

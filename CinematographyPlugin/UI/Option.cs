@@ -4,27 +4,25 @@ namespace CinematographyPlugin.UI
 {
     public abstract class Option
     {
-        public string Name { get; }
-        protected GameObject Root { get; }
-        private readonly bool _activeWhenParentOff;
+        protected GameObject Go { get; }
+        protected readonly bool ActiveWhenParentOff;
 
         internal List<Option> SubOptions { get; } = new ();
 
         internal Dictionary<Option, bool> StateByDisableOnSelectOptions { get; } = new ();
 
-        protected Option(GameObject root, bool startActive, bool activeWhenParentOff = false)
+        protected Option(GameObject go, bool startActive, bool activeWhenParentOff = false)
         {
-            Root = root;
-            Name = root.name;
-            _activeWhenParentOff = activeWhenParentOff;
+            Go = go;
+            ActiveWhenParentOff = activeWhenParentOff;
 
-            root.active = startActive;
+            go.active = startActive;
         }
 
         public void SetActive(bool state)
         {
-            OnSetActive(state != _activeWhenParentOff);
-            Root.active = state != _activeWhenParentOff;
+            OnSetActive(state != ActiveWhenParentOff);
+            Go.active = state != ActiveWhenParentOff;
         }
 
         public abstract void Disable(bool state);

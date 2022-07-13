@@ -20,11 +20,11 @@ namespace CinematographyPlugin.UI
 
         private int _nDisabled;
 
-        public SliderOption(GameObject root, bool startActive, float initialValue, float minValue, float maxValue) : base(root, startActive)
+        public SliderOption(GameObject go, bool startActive, float initialValue, float minValue, float maxValue) : base(go, startActive)
         {
-            Slider = root.GetComponentInChildren<Slider>();
-            _valueText = root.transform.GetChild(1).GetComponentInChildren<TMP_Text>();
-            var resetButton = root.transform.GetChild(3).GetComponentInChildren<Button>();
+            Slider = go.GetComponentInChildren<Slider>();
+            _valueText = go.transform.GetChild(1).GetComponentInChildren<TMP_Text>();
+            var resetButton = go.transform.GetChild(3).GetComponentInChildren<Button>();
 
             Slider.onValueChanged.AddListener((UnityAction<float>) OnSliderChange);
             resetButton.onClick.AddListener((UnityAction) OnReset);
@@ -81,7 +81,7 @@ namespace CinematographyPlugin.UI
 
         public override void OnSetActive(bool state)
         {
-            if (state || !Root.active) return;
+            if (state || !Go.active) return;
             
             _prevValue = Slider.value;
             _prevValueSet = true;

@@ -11,22 +11,24 @@ namespace CinematographyPlugin.Cinematography
 {
     public class CinemaCamController : MonoBehaviour
     {
+        private readonly Vector3 _warpOffset = new (0, 0.8f, 0);
+
         private bool _alignPitchAxisWCam = true;
         private bool _alignRollAxisWCam;
         private bool _dynamicRotation = true;
         private bool _inOrbit;
 
-        private float _movementSpeed = CinCamSettings.MovementSpeedDefault;
-        private float _rotationSpeed = CinCamSettings.RotationSpeedDefault;
-        private float _movementSmoothFactor = CinCamSettings.MovementSmoothTimeDefault;
-        private float _rotationSmoothFactor = CinCamSettings.RotationSmoothTimeDefault;
-        private float _orbitSmoothFactor = CinCamSettings.OrbitSmoothingFactor;
-        private float _targetZoom = CinCamSettings.ZoomDefault;
-        private float _currZoom = CinCamSettings.ZoomDefault;
-        private float _zoomSpeed = CinCamSettings.ZoomSpeedDefault;
-        private float _orbitDistance = CinCamSettings.OrbitDistanceDefault;
-        private float _zoomSmoothFactor = CinCamSettings.ZoomSmoothTimeDefault;
-        private float _dynamicRotationSpeed = CinCamSettings.DynamicRotationDefault;
+        private float _movementSpeed = CinemaCamSettings.MovementSpeedDefault;
+        private float _rotationSpeed = CinemaCamSettings.RotationSpeedDefault;
+        private float _movementSmoothFactor = CinemaCamSettings.MovementSmoothTimeDefault;
+        private float _rotationSmoothFactor = CinemaCamSettings.RotationSmoothTimeDefault;
+        private float _orbitSmoothFactor = CinemaCamSettings.OrbitSmoothingFactor;
+        private float _targetZoom = CinemaCamSettings.ZoomDefault;
+        private float _currZoom = CinemaCamSettings.ZoomDefault;
+        private float _zoomSpeed = CinemaCamSettings.ZoomSpeedDefault;
+        private float _orbitDistance = CinemaCamSettings.OrbitDistanceDefault;
+        private float _zoomSmoothFactor = CinemaCamSettings.ZoomSmoothTimeDefault;
+        private float _dynamicRotationSpeed = CinemaCamSettings.DynamicRotationDefault;
 
         private FPSCamera _fpsCamera;
         private PlayerAgent _playerAgent;
@@ -56,6 +58,8 @@ namespace CinematographyPlugin.Cinematography
             CinemaUIManager.Current.Toggles[UIOption.ToggleAlignPitchAxisWCam].OnValueChanged += SetAlignPitchAxisWCam;
             CinemaUIManager.Current.Toggles[UIOption.ToggleAlignRollAxisWCam].OnValueChanged += SetAlignRollAxisWCam;
 
+            DimensionManager.OnDimensionWarp += OnDimensionWarp;
+
             _playerAgent = PlayerManager.GetLocalPlayerAgent();
             
             _fpsCamera = FindObjectOfType<FPSCamera>();
@@ -80,7 +84,8 @@ namespace CinematographyPlugin.Cinematography
             if (Cursor.lockState != CursorLockMode.Locked) return;
             
             UpdateRotation();
-
+            CheckAndResetFpsCamRotation();
+            
             if (_inOrbit)
             {
                 UpdateOrbitPosition();
@@ -99,6 +104,18 @@ namespace CinematographyPlugin.Cinematography
             
             UpdateCuller();
             CheckReset();
+        }
+        
+        public void OnDimensionWarp(Vector3 targetPos)
+        {
+            // Reset the camera back to where the player will be warped to 
+            var rot = _playerAgent.GetHeadCamTransform().rotation.eulerAngles;
+            targetPos += _warpOffset; // move warp pos up a bit since target is on the ground
+            transform.position = targetPos;
+            _targetPos = targetPos;
+            
+            _targetWorldRot = Quaternion.Euler(0, rot.y, rot.z);
+            _targetLocalRot = Quaternion.Euler(rot.x, 0, 0);
         }
 
         public void SetOrbit(Agent targetAgent)
@@ -133,15 +150,15 @@ namespace CinematographyPlugin.Cinematography
             var independentDeltaTime = IndependentDeltaTimeManager.GetDeltaTime();
 
             // get directional vectors
-            var x = InputManager.GetAxis(AxisName.PosX);
-            var y = InputManager.GetAxis(AxisName.PosY);
-            var z = InputManager.GetAxis(AxisName.PosZ);
+            var x = KeyBindInputManager.GetAxis(AxisName.PosX);
+            var y = KeyBindInputManager.GetAxis(AxisName.PosY);
+            var z = KeyBindInputManager.GetAxis(AxisName.PosZ);
                 
             var delta = Vector3.zero;
 
             // calculate speed and smoothing time
-            var speedAxis = InputManager.GetAxis(AxisName.Speed);
-            var speedScale = CinCamSettings.MovementSpeedScale * (speedAxis > 0 ? CinCamSettings.FastSpeedScale : speedAxis < 0 ? CinCamSettings.SlowSpeedScale : 1);
+            var speedAxis = KeyBindInputManager.GetAxis(AxisName.Speed);
+            var speedScale = CinemaCamSettings.MovementSpeedScale * (speedAxis > 0 ? CinemaCamSettings.FastSpeedScale : speedAxis < 0 ? CinemaCamSettings.SlowSpeedScale : 1);
             var speed = _movementSpeed * speedScale;
 
             var right = _alignRollAxisWCam ? _childTrans.right : FlatRight();
@@ -169,8 +186,8 @@ namespace CinematographyPlugin.Cinematography
         {
             var independentDeltaTime = IndependentDeltaTimeManager.GetDeltaTime();
 
-            var focusDir = InputManager.GetAxis(AxisName.Zoom);
-            _orbitDistance += focusDir * CinCamSettings.OrbitDistanceMoveSpeedDefault;
+            var focusDir = KeyBindInputManager.GetAxis(AxisName.Zoom);
+            _orbitDistance += focusDir * CinemaCamSettings.OrbitDistanceMoveSpeedDefault;
 
             var focusPosition = _orbitTarget.transform.position;
             _targetPos = focusPosition - _fpsCamera.transform.forward * _orbitDistance;
@@ -193,9 +210,9 @@ namespace CinematographyPlugin.Cinematography
             var independentDeltaTime = IndependentDeltaTimeManager.GetDeltaTime();
 
             // get directional vectors
-            var x = InputManager.GetAxis(AxisName.PosX);
-            var y = InputManager.GetAxis(AxisName.PosY);
-            var z = InputManager.GetAxis(AxisName.PosZ);
+            var x = KeyBindInputManager.GetAxis(AxisName.PosX);
+            var y = KeyBindInputManager.GetAxis(AxisName.PosY);
+            var z = KeyBindInputManager.GetAxis(AxisName.PosZ);
 
             var delta = Vector3.zero;
 
@@ -215,15 +232,15 @@ namespace CinematographyPlugin.Cinematography
             var localTrans = _childTrans;
             
             // get directional vectors
-            var pitch = InputManager.GetAxis(AxisName.RotX);
-            var yaw = InputManager.GetAxis(AxisName.RotY);
-            var roll = InputManager.GetAxis(AxisName.RotZ);
+            var pitch = KeyBindInputManager.GetAxis(AxisName.RotX);
+            var yaw = KeyBindInputManager.GetAxis(AxisName.RotY);
+            var roll = KeyBindInputManager.GetAxis(AxisName.RotZ);
 
             var upsideDown = Math.Sign(Vector3.Dot(localTrans.up, Vector3.up));
             yaw *= upsideDown; // invert yaw controls when upside down to keep mose directions consistent
 
             // calculate speed and smoothing time
-            var speed = _rotationSpeed * CinCamSettings.SensitivityScaling;
+            var speed = _rotationSpeed * CinemaCamSettings.SensitivityScaling;
 
             var deltaEuler = new Vector3(pitch, yaw, roll);
             deltaEuler *= independentDeltaTime * speed;
@@ -236,6 +253,7 @@ namespace CinematographyPlugin.Cinematography
             {
                 _targetWorldRot *= deltaWorld;
             }
+            
             if (!IsPitchRotationFlippedByNewRotation(deltaLocal))
             {
                 _targetLocalRot *= deltaLocal;
@@ -260,7 +278,7 @@ namespace CinematographyPlugin.Cinematography
             var preAngle = Vector3.SignedAngle(currRot, preTargetForward, rotAxis);
             var aftAngle = Vector3.SignedAngle(currRot, aftTargetForward, rotAxis);
 
-            return Math.Abs(preAngle) >= CinCamSettings.RotationDiffMax && Math.Sign(preAngle) != Math.Sign(aftAngle);
+            return Math.Abs(preAngle) >= CinemaCamSettings.RotationDiffMax && Math.Sign(preAngle) != Math.Sign(aftAngle);
         }
         
         private bool IsPitchRotationFlippedByNewRotation(Quaternion delta)
@@ -273,7 +291,7 @@ namespace CinematographyPlugin.Cinematography
             var preAngle = Vector3.SignedAngle(currRot, preTargetForward, rotAxis);
             var aftAngle = Vector3.SignedAngle(currRot, aftTargetForward, rotAxis);
 
-            return Math.Abs(preAngle) >= CinCamSettings.RotationDiffMax && Math.Sign(preAngle) != Math.Sign(aftAngle);
+            return Math.Abs(preAngle) >= CinemaCamSettings.RotationDiffMax && Math.Sign(preAngle) != Math.Sign(aftAngle);
         }
         
         // Pitch causes more trouble than good so it is commented out
@@ -289,17 +307,17 @@ namespace CinematographyPlugin.Cinematography
             // var forward = _mouseCtrlAltitude ? localTrans.forward : FlatForward();
             
             var velocityXZ = Vector3.ProjectOnPlane(_movementVelocity, up);
-            var vector = velocityXZ * (_dynamicRotationSpeed * CinCamSettings.DynamicRotationSpeedScale);
+            var vector = velocityXZ * (_dynamicRotationSpeed * CinemaCamSettings.DynamicRotationSpeedScale);
 
             // var pitchDir = Mathf.Sign(Vector3.Dot(vector, forward));
             var rollDir = Mathf.Sign(Vector3.Dot(vector, right));
 
             // var pitch = Mathf.Clamp(Vector3.Project(vector, forward).magnitude, 0, DynamicRotationPitchMax) * pitchDir;
-            var roll = Mathf.Clamp(Vector3.Project(vector, right).magnitude, 0, CinCamSettings.DynamicRotationRollMax) * rollDir;
+            var roll = Mathf.Clamp(Vector3.Project(vector, right).magnitude, 0, CinemaCamSettings.DynamicRotationRollMax) * rollDir;
             // var targetPitch = worldTrans.rotation * Quaternion.Euler(pitch, 0 , 0);
             var targetRoll = worldTrans.rotation * Quaternion.Euler(0, 0 , roll);
 
-            var t = 1.0f - Mathf.Pow(CinCamSettings.DynamicRotationSmoothFactor, independentDeltaTime);
+            var t = 1.0f - Mathf.Pow(CinemaCamSettings.DynamicRotationSmoothFactor, independentDeltaTime);
             // var newLocalRot = Quaternion.Slerp(localTrans.localRotation, targetPitch, t);
             var newWorldRot = Quaternion.Slerp(worldTrans.localRotation, targetRoll, t);
 
@@ -307,14 +325,27 @@ namespace CinematographyPlugin.Cinematography
             worldTrans.localRotation = newWorldRot;
         }
 
+        /// <summary>
+        /// The cam controller hijacks the original camera at its default rotation and position
+        /// but some functions of the game can change those values like dimensional warps and needs
+        /// to be rest periodically
+        /// </summary>
+        private void CheckAndResetFpsCamRotation()
+        {
+            if (_fpsCamera.transform.parent.localRotation != Quaternion.identity)
+            {
+                _fpsCamera.transform.parent.localRotation = Quaternion.identity;
+            }
+        }
+
         private void UpdateZoom()
         {
             var independentDeltaTime = IndependentDeltaTimeManager.GetDeltaTime();
 
-            var dir = InputManager.GetAxis(AxisName.Zoom);
-            var speed = _zoomSpeed * CinCamSettings.ZoomScaling;
+            var dir = KeyBindInputManager.GetAxis(AxisName.Zoom);
+            var speed = _zoomSpeed * CinemaCamSettings.ZoomScaling;
             
-            _targetZoom = Mathf.Clamp(_targetZoom + independentDeltaTime * speed * dir, CinCamSettings.ZoomMin, CinCamSettings.ZoomMax);
+            _targetZoom = Mathf.Clamp(_targetZoom + independentDeltaTime * speed * dir, CinemaCamSettings.ZoomMin, CinemaCamSettings.ZoomMax);
             
             var t = 1.0f - Mathf.Pow(_zoomSmoothFactor, independentDeltaTime);
             var newZoom = Mathf.Lerp(_currZoom, _targetZoom, t);
@@ -335,7 +366,7 @@ namespace CinematographyPlugin.Cinematography
 
         private void CheckReset()
         {
-            if (InputManager.GetMiddleMouse())
+            if (KeyBindInputManager.GetMiddleMouse())
             {
                 OnReset();
             }
@@ -343,9 +374,9 @@ namespace CinematographyPlugin.Cinematography
         
         private void OnReset()
         {
-            _targetZoom = CinCamSettings.ZoomDefault;
+            _targetZoom = CinemaCamSettings.ZoomDefault;
             _targetWorldRot = Quaternion.Euler(0, _targetWorldRot.eulerAngles.y, 0);
-            _orbitDistance = CinCamSettings.OrbitDistanceDefault;
+            _orbitDistance = CinemaCamSettings.OrbitDistanceDefault;
 
             if (_inOrbit)
             {
@@ -428,6 +459,8 @@ namespace CinematographyPlugin.Cinematography
             CinemaUIManager.Current.Toggles[UIOption.ToggleAlignRollAxisWCam].OnValueChanged -= SetAlignRollAxisWCam;
             CinemaUIManager.Current.Toggles[UIOption.ToggleDynamicRoll].OnValueChanged -= SetDynamicRotation;
             CinemaUIManager.Current.Sliders[UIOption.DynamicRollIntensitySlider].OnValueChanged -= SetDynamicRotationSpeed;
+            
+            DimensionManager.OnDimensionWarp -= OnDimensionWarp;
         }
     }
 }
