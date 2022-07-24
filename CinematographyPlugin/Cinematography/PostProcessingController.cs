@@ -2,7 +2,6 @@
 using CinematographyPlugin.UI.Enums;
 using Player;
 using UnityEngine;
-using UnityEngine.PostProcessing;
 using UnityEngine.Rendering.PostProcessing;
 
 namespace CinematographyPlugin.Cinematography

@@ -1,7 +1,6 @@
 ﻿using CinematographyPlugin.UI;
 using CinematographyPlugin.UI.Enums;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace CinematographyPlugin.Cinematography;
 

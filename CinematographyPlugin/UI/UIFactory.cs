@@ -1,7 +1,5 @@
-﻿using CinematographyPlugin.Cinematography;
-using CinematographyPlugin.Cinematography.Settings;
+﻿using CinematographyPlugin.Cinematography.Settings;
 using CinematographyPlugin.UI.Enums;
-using MonoMod.Utils;
 using UnityEngine;
 
 namespace CinematographyPlugin.UI
