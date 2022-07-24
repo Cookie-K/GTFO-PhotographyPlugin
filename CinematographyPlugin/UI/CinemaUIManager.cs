@@ -3,6 +3,7 @@ using BepInEx.IL2CPP.Utils.Collections;
 using CinematographyPlugin.Cinematography.Networking;
 using CinematographyPlugin.UI.Enums;
 using CinematographyPlugin.UI.UiInput;
+using CinematographyPlugin.Util;
 using GTFO.API;
 using Player;
 using TMPro;
@@ -220,7 +221,7 @@ namespace CinematographyPlugin.UI
 
             while (_window.transform.localScale != finalScale)
             {
-                var newX = Mathf.MoveTowards(_window.transform.localScale.x, 0, Time.deltaTime * 10f);
+                var newX = Mathf.MoveTowards(_window.transform.localScale.x, 0, IndependentDeltaTimeManager.GetDeltaTime() * 10f);
                 _window.transform.localScale = new Vector3(newX, 1, 1);
 
                 yield return null;
@@ -234,7 +235,7 @@ namespace CinematographyPlugin.UI
             
             while (_window.transform.localScale != finalScale)
             {
-                var newX = Mathf.MoveTowards(_window.transform.localScale.x, 1, Time.deltaTime * 10f);
+                var newX = Mathf.MoveTowards(_window.transform.localScale.x, 1, IndependentDeltaTimeManager.GetDeltaTime() * 10f);
                 _window.transform.localScale = new Vector3(newX, 1, 1);
 
                 yield return null;

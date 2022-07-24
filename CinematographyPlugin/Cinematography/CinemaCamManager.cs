@@ -4,7 +4,6 @@ using CinematographyPlugin.UI;
 using CinematographyPlugin.UI.Enums;
 using CinematographyPlugin.UI.UiInput;
 using Enemies;
-using FluffyUnderware.DevTools.Extensions;
 using Player;
 using UnityEngine;
 
@@ -18,31 +17,32 @@ namespace CinematographyPlugin.Cinematography
         private const float RayCastRadius = 0.5f;
         private const float OrbitReselectDelay = 0.5f;
         private const float PlayerBodyOffset = 2f;
-        private const float GodModeDisableDelay = 3f;
+        private const float RaycastTimeScaleThreshold = 0.05f;
 
         private readonly int _playerLayerMask = LayerMask.GetMask("PlayerSynced");
         private readonly int _enemyLayerMask = LayerMask.GetMask("EnemyDamagable");
         private readonly int _enemyLayer = LayerMask.NameToLayer("EnemyDamagable");
+        private readonly Dictionary<String, SphereCollider> _shieldSphereByAgentName = new ();
 
         private bool _freeCamEnabled;
         private bool _inOrbit;
+        private bool _inOrbitLock;
         private bool _orbitTargetSet;
         private string _orbitTargetName;
         private float _lastOrbitDeselect;
-        private float _lastFreeCamEnded;
         private Vector3 _originalPlayerPos;
         private RaycastHit _cameraHit;
         private GameObject _prevHit = new ();
         private FPSCamera _fpsCamera;
         private Agent _orbitTarget;
         private Transform _prevParent;
+        private Transform _orbitLockObj;
         private Transform _cinemaCamCtrlHolder;
         private Transform _cinemaCam;
         private Transform _fpsCamHolderSubstitute;
         private PlayerAgent _playerAgent;
         private PlayerLocomotion _playerLocomotion;
         private CinemaCamController _cinemaCamController;
-        private Dictionary<String, SphereCollider> _shieldSphereByAgentName = new ();
 
         private void Awake()
         {
@@ -58,11 +58,13 @@ namespace CinematographyPlugin.Cinematography
             var cinemaCamCamRotation = new GameObject("CinemaCamRotation").transform;
             _fpsCamHolderSubstitute = new GameObject("FPSCamHolderSubstitute").transform;
             _cinemaCamCtrlHolder = new GameObject("CinemaCamControl").transform;
-			
+            _orbitLockObj = new GameObject("CinemaCamOrbitLock").transform;
+
             _fpsCamHolderSubstitute.parent = cinemaCamCamRotation;
             cinemaCamCamRotation.parent = _cinemaCamCtrlHolder;
-            _cinemaCamCtrlHolder.parent = _cinemaCam;
-
+            _cinemaCamCtrlHolder.parent = _orbitLockObj;
+            _orbitLockObj.parent = _cinemaCam;
+                
             _cinemaCamController = _cinemaCamCtrlHolder.gameObject.AddComponent<CinemaCamController>();
             _cinemaCamController.enabled = false;
         }
@@ -78,23 +80,23 @@ namespace CinematographyPlugin.Cinematography
         {
             if (_freeCamEnabled)
             {
+                if (_inOrbit && !_inOrbitLock)
+                {
+                    CounterParentRotation();
+                }
+                
                 CheckAndForceUiHidden();
                 DivertEnemiesAwayFromCameraMan();
                 UpdateOrbitCamState();
                 CheckPlayerWarp();
             }
-            
+
             CheckFreeCamHotKey();
         }
 
         public bool FreeCamEnabled()
         {
             return _freeCamEnabled;
-        }
-        
-        public bool InGodMode()
-        {
-            return _freeCamEnabled && Time.realtimeSinceStartup - _lastFreeCamEnded < GodModeDisableDelay;
         }
 
         public Vector3 GetOriginalPlayerPosition()
@@ -118,7 +120,7 @@ namespace CinematographyPlugin.Cinematography
                 _prevParent.gameObject.active = false;
                 _cinemaCamController.enabled = true;
 
-                UpdatePlayerPositionAndShield(_playerAgent, true);
+                UpdatePlayerShield(_playerAgent, true);
             }
             else
             {
@@ -136,9 +138,7 @@ namespace CinematographyPlugin.Cinematography
                     DisconnectOrbit();
                 }
                 
-                _lastFreeCamEnded = Time.realtimeSinceStartup;
-                
-                UpdatePlayerPositionAndShield(_playerAgent, false);
+                UpdatePlayerShield(_playerAgent, false);
                 
                 _playerLocomotion.DisableFallDamageTemporarily = true;
             }
@@ -146,21 +146,19 @@ namespace CinematographyPlugin.Cinematography
             CinematographyCore.log.LogMessage(enable ? "Cinema cam enabled" : "Cinema cam disabled");
         }
 
-        private void UpdatePlayerPositionAndShield(PlayerAgent agent, bool setUp)
+        private void UpdatePlayerShield(PlayerAgent agent, bool setUp)
         {
-            UpdatePlayerPositionAndShield(agent, agent.transform.position, setUp);
+            UpdatePlayerShield(agent, agent.transform.position, setUp);
         }
 
-        public void UpdatePlayerPositionAndShield(PlayerAgent agent, Vector3 playerPosition, bool setUp)
+        public void UpdatePlayerShield(PlayerAgent agent, Vector3 playerPosition, bool setUp)
         {
+            CinematographyCore.log.LogMessage($"{agent.name} - setup: {setUp} - updated");
+
             if (setUp)
             {
                 _originalPlayerPos = playerPosition;
             }
-            
-            var newPlayerPosition = new Vector3(playerPosition.x, playerPosition.y + (setUp ? -PlayerBodyOffset : +PlayerBodyOffset), playerPosition.z);
-            agent.transform.position = newPlayerPosition;
-            _playerAgent.TryCast<LocalPlayerAgent>()?.PlayerCharacterController.ManualMoveTo(newPlayerPosition);
             
             var agentName = agent.Sync.name;
             if (!_shieldSphereByAgentName.ContainsKey(agentName))
@@ -170,7 +168,7 @@ namespace CinematographyPlugin.Cinematography
                 _shieldSphereByAgentName[agentName].transform.localScale = new Vector3(3f, 3f, 3f);
             }
             
-            _shieldSphereByAgentName[agentName].transform.position = newPlayerPosition;
+            _shieldSphereByAgentName[agentName].transform.position = playerPosition;
             _shieldSphereByAgentName[agentName].enabled = setUp;
         }
 
@@ -199,40 +197,20 @@ namespace CinematographyPlugin.Cinematography
 
         private void UpdateOrbitCamState()
         {
+            if (KeyBindInputManager.ChangeOrbitLockState())
+            {
+                _inOrbitLock = !_inOrbitLock;
+            }
+            
             if (KeyBindInputManager.GetOrbitTargetSelect() && Time.realtimeSinceStartup - _lastOrbitDeselect > OrbitReselectDelay)
             {
-                if (Physics.SphereCast(_fpsCamera.m_camRay, RayCastRadius, out _cameraHit, RayCastMax, _playerLayerMask | _enemyLayerMask))
-                {
-                    if (_prevHit.GetInstanceID() != _cameraHit.collider.gameObject.GetInstanceID())
-                    {
-                        var agent = _cameraHit.collider.GetComponentInParent<Agent>();
-                        _orbitTarget = agent;
-                        
-                        if (_cameraHit.collider.gameObject.layer == _enemyLayer)
-                        {
-                            _orbitTargetName = agent.TryCast<EnemyAgent>()!.EnemyData.name;
-                        }
-                        else
-                        {
-                            _orbitTargetName = agent.TryCast<PlayerAgent>()!.PlayerName;
-                        }
-
-                    }
-
-                    _prevHit = _cameraHit.collider.gameObject;
-                    _orbitTargetSet = true;
-                    CinemaUIManager.Current.ShowTextOnScreen(_orbitTargetName);
-                }
-                else
-                {
-                    CinemaUIManager.Current.ShowNoTargetTextOnScreen();
-                    _orbitTargetSet = false;
-                }
-                
                 if (_inOrbit)
                 {
                     DisconnectOrbit();
+                    return;
                 }
+                
+                FindAndSetOrbitTarget();
             }
             else
             {
@@ -249,28 +227,65 @@ namespace CinematographyPlugin.Cinematography
             }
         }
 
+        private void FindAndSetOrbitTarget()
+        {
+            if (Physics.SphereCast(_fpsCamera.m_camRay, RayCastRadius, out _cameraHit, RayCastMax, _playerLayerMask | _enemyLayerMask))
+            {
+                if (_prevHit.GetInstanceID() != _cameraHit.collider.gameObject.GetInstanceID())
+                {
+                    var agent = _cameraHit.collider.GetComponentInParent<Agent>();
+                    _orbitTarget = agent;
+                    
+                    if (_cameraHit.collider.gameObject.layer == _enemyLayer)
+                    {
+                        _orbitTargetName = agent.TryCast<EnemyAgent>()!.EnemyData.name;
+                    }
+                    else
+                    {
+                        _orbitTargetName = agent.TryCast<PlayerAgent>()!.PlayerName;
+                    }
+                }
+
+                _prevHit = _cameraHit.collider.gameObject;
+                _orbitTargetSet = true;
+                CinemaUIManager.Current.ShowTextOnScreen(_orbitTargetName);
+            }
+            else
+            {
+                CinemaUIManager.Current.ShowNoTargetTextOnScreen();
+                _orbitTargetSet = false;
+            }
+        }
+        
+
         private void SetOrbit()
         {
-            _cinemaCamCtrlHolder.transform.parent = _orbitTarget.transform;
+            _orbitLockObj.transform.parent = _orbitTarget.transform;
             _cinemaCamController.SetOrbit(_orbitTarget);
             _inOrbit = true;
         }
 
         private void DisconnectOrbit()
         {
-            _cinemaCamCtrlHolder.transform.parent = _cinemaCam;
+            _orbitLockObj.transform.parent = _cinemaCam;
             _cinemaCamController.DisableOrbit();
             _inOrbit = false;
             _orbitTargetSet = false;
             _lastOrbitDeselect = Time.realtimeSinceStartup;
         }
 
+        private void CounterParentRotation()
+        {
+            _orbitLockObj.transform.rotation = Quaternion.identity;
+        }
+
         private void OnOtherPlayerEnterOrExitFreeCam(PlayerAgent playerAgent, bool enter)
         {
-            var enterExitTxt = enter ? "entering" : "exiting";
-            CinematographyCore.log.LogInfo($"{playerAgent.Sync.PlayerNick} {enterExitTxt} free cam");
+            if (playerAgent.IsLocallyOwned) return;
+
+            CinematographyCore.log.LogInfo($"{playerAgent.Sync.PlayerNick} {(enter ? "entering" : "exiting")} free cam");
             ScreenClutterController.GetInstance().ToggleClientVisibility(playerAgent, !enter);
-            UpdatePlayerPositionAndShield(playerAgent, enter);
+            UpdatePlayerShield(playerAgent, enter);
         }
 		
         private void DivertEnemiesAwayFromCameraMan()
@@ -305,6 +320,15 @@ namespace CinematographyPlugin.Cinematography
                 _playerAgent.TryCast<LocalPlayerAgent>()!.PlayerCharacterController.ManualMoveTo(pos);
                 _fpsCamera.SetLookDirection(lookDir);
                 _fpsCamera.TransitionFX.Play();
+
+                // disabled bringing bots over since they are not affected by gravity and just float around 
+                // foreach (var agent in PlayerManager.PlayerAgentsInLevel)
+                // {
+                //     if (agent.gameObject.GetComponent<PlayerAIBot>() != null)
+                //     {
+                //         agent.TryWarpTo(_playerAgent.DimensionIndex, pos, Vector3.forward);
+                //     }
+                // }
             }
         }
 

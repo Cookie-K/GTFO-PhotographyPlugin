@@ -1,5 +1,4 @@
-﻿using MS.Internal.Xml.XPath;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -20,8 +19,6 @@ namespace CinematographyPlugin.UI
         
         private bool _prevValue;
         
-        private int _nDisabled;
-
         public ToggleOption(GameObject go, bool initialValue, bool startActive, bool activeWhenParentOff = false) : base(go, startActive, activeWhenParentOff)
         {
             Toggle = go.GetComponentInChildren<Toggle>();
@@ -67,7 +64,6 @@ namespace CinematographyPlugin.UI
 
         public override void Disable(bool state)
         {
-            _nDisabled++;
             Toggle.Set(state);
             Toggle.enabled = false;
             _tmp.text = $"<s>{_tmp.text}</s>";
@@ -80,25 +76,22 @@ namespace CinematographyPlugin.UI
 
         public override void Enable(bool state)
         {
-            if (_nDisabled != 0 && --_nDisabled == 0)
+            Toggle.enabled = true;
+            
+            if (_prevValueSet)
             {
-                Toggle.enabled = true;
-                
-                if (_prevValueSet)
+                SetPreviousValue();
+                foreach (var option in SubOptions)
                 {
-                    SetPreviousValue();
-                    foreach (var option in SubOptions)
-                    {
-                        option.SetPreviousValue();
-                    }
+                    option.SetPreviousValue();
                 }
-                else
+            }
+            else 
+            {
+                OnReset();
+                foreach (var option in SubOptions)
                 {
-                    OnReset();
-                    foreach (var option in SubOptions)
-                    {
-                        option.OnReset();
-                    }
+                    option.OnReset();
                 }
             }
         }
@@ -115,14 +108,24 @@ namespace CinematographyPlugin.UI
 
         public override void OnSetActive(bool state)
         {
-            if (state || !Go.active) return;
+            if (state)
+            {
+                if (_prevValueSet)
+                {
+                    SetPreviousValue();
+                }
+            }
+            else
+            {
+                _prevValue = Toggle.isOn;
+                _prevValueSet = true;
 
-            _prevValue = Toggle.isOn;
-            _prevValueSet = true;
+                OnReset();
+            }
             
             foreach (var option in SubOptions)
             {
-                option.OnSetActive(false);
+                option.OnSetActive(state);
             }
         }
 

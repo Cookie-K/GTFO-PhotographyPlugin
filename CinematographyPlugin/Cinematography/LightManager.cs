@@ -1,7 +1,6 @@
 ﻿using CinematographyPlugin.Cinematography.Settings;
 using CinematographyPlugin.UI;
 using CinematographyPlugin.UI.Enums;
-using CinematographyPlugin.UI.UiInput;
 using UnityEngine;
 
 namespace CinematographyPlugin.Cinematography;
@@ -59,6 +58,7 @@ public class LightManager : MonoBehaviour
             _spotLight.range = _currSpotLightRange;
             _spotLight.intensity = _currSpotLightIntensity;
             _spotLight.spotAngle = _currSpotLightAngle;
+            _spotLight.color = Color.white;
         }
     }    
 

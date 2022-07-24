@@ -1,6 +1,4 @@
-﻿using CinematographyPlugin.UI;
-using CinematographyPlugin.UI.Enums;
-using CinematographyPlugin.UI.UiInput;
+﻿using CinematographyPlugin.UI.UiInput;
 using Player;
 using UnityEngine;
 
@@ -58,7 +56,7 @@ public class DimensionManager : MonoBehaviour
             _currentIndex = 0;
         }
 
-        CinemaCamManager.Current.UpdatePlayerPositionAndShield(player, target, true);
+        CinemaCamManager.Current.UpdatePlayerShield(player, target, true);
         OnDimensionWarp.Invoke(target);
     }
 }

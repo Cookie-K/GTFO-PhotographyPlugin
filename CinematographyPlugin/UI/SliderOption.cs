@@ -18,7 +18,7 @@ namespace CinematographyPlugin.UI
         
         private float _prevValue;
 
-        private int _nDisabled;
+        // private int _nDisabled;
 
         public SliderOption(GameObject go, bool startActive, float initialValue, float minValue, float maxValue) : base(go, startActive)
         {
@@ -46,7 +46,6 @@ namespace CinematographyPlugin.UI
 
         public override void Disable(bool state)
         {
-            _nDisabled++;
             OnReset();
             Slider.enabled = false;
             Slider.interactable = false;
@@ -54,18 +53,15 @@ namespace CinematographyPlugin.UI
 
         public override void Enable(bool state)
         {
-            if (--_nDisabled == 0)
+            Slider.enabled = true;
+            Slider.interactable = true;
+            if (_prevValueSet)
             {
-                Slider.enabled = true;
-                Slider.interactable = true;
-                if (_prevValueSet)
-                {
-                    SetPreviousValue();
-                }
-                else
-                {
-                    OnReset();
-                }
+                SetPreviousValue();
+            }
+            else
+            {
+                OnReset();
             }
         }
 

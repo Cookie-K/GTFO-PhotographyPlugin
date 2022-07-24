@@ -4,7 +4,6 @@ using CinematographyPlugin.Cinematography;
 using CinematographyPlugin.Cinematography.Networking;
 using CinematographyPlugin.UI;
 using Enemies;
-using Gear;
 using HarmonyLib;
 using Player;
 using UnityEngine;
@@ -98,15 +97,29 @@ namespace CinematographyPlugin
         
         [HarmonyPrefix]
         [HarmonyPatch(typeof(EnemyDetection), nameof(EnemyDetection.IsTargetValid), typeof(AgentTarget))]
-        private static bool Postfix_Prefix_SetTargetDivertAwayFromCameraMan(AgentTarget agentTarget)
+        private static void Prefix_SetTargetDivertAwayFromCameraMan(AgentTarget agentTarget, ref EnemyDetection __instance, ref bool __result)
         {
-            var playerAgent = agentTarget.m_agent as PlayerAgent;
-            return playerAgent == null || CinemaNetworkingManager.GetPlayersInFreeCam().All(p => p.Sync.PlayerNick != playerAgent.Sync.PlayerNick);
+            if (agentTarget.m_agent.m_type == AgentType.Player)
+            {
+                __result = CinemaNetworkingManager.GetPlayersInFreeCam().All(p => p.GetInstanceID() != agentTarget.m_agent.GetInstanceID());
+            }
+        }
+        
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(EnemyCourseNavigation), nameof(EnemyCourseNavigation.SetTarget), typeof(AgentTarget))]
+        private static bool Prefix_SetTargetDivertAwayFromCameraMan(AgentTarget target)
+        {
+            if (target.m_agent.m_type == AgentType.Player)
+            {
+                return CinemaNetworkingManager.GetPlayersInFreeCam().All(p => p.GetInstanceID() != target.m_agent.GetInstanceID());
+            }
+
+            return true;
         }
         
         [HarmonyPrefix]
         [HarmonyPatch(typeof(PlayerSync), nameof(PlayerSync.WantsToWieldSlot), typeof(InventorySlot), typeof(bool))]
-        private static bool Postfix_Prefix_DisableWeaponChange(InventorySlot slot, bool broadcastOnly, PlayerSync __instance)
+        private static bool Prefix_DisableWeaponChange(InventorySlot slot, bool broadcastOnly, PlayerSync __instance)
         {
             return !Entry.Init || !CinemaCamManager.Current.FreeCamEnabled() || !__instance.m_agent.IsLocallyOwned;
         }
@@ -141,10 +154,11 @@ namespace CinematographyPlugin
         
         [HarmonyPrefix]
         [HarmonyPatch(typeof(Dam_PlayerDamageBase), nameof(Dam_PlayerDamageBase.OnIncomingDamage))]
-        private static void Postfix_IgnoreAllDamage(ref float damage, ref bool triggerDialog, Dam_PlayerDamageBase __instance)
+        private static void Prefix_IgnoreAllDamage(ref float damage, ref bool triggerDialog, Dam_PlayerDamageBase __instance)
         {
-            if (__instance.TryCast<Dam_PlayerDamageBase>() != null && CinemaCamManager.Current.InGodMode())
+            if (Entry.Init && CinemaNetworkingManager.GetPlayersInFreeCam().Any() && CinemaNetworkingManager.GetPlayersInFreeCam().Any(p => p.Sync.PlayerNick == __instance.Owner.Sync.PlayerNick))
             {
+                CinematographyCore.log.LogInfo($"nullifying damage for {__instance.Owner.Sync.PlayerNick}");
                 damage = 0;
                 triggerDialog = false;
             }

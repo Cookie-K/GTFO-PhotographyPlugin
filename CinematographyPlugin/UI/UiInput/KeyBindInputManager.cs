@@ -117,6 +117,12 @@ namespace CinematographyPlugin.UI.UiInput
             if (_disableInputs) return false;
             return Input.GetKey(OrbitTargetSelect);
         }
+        
+        public static bool ChangeOrbitLockState()
+        {
+            if (_disableInputs) return false;
+            return Input.GetMouseButtonDown(0);
+        }
 
         public static bool GetPlayerWarp()
         {

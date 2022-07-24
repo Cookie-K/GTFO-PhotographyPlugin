@@ -11,7 +11,7 @@ namespace CinematographyPlugin.Cinematography
 {
     public class CinemaCamController : MonoBehaviour
     {
-        private readonly Vector3 _warpOffset = new (0, 0.8f, 0);
+        private readonly Vector3 _warpOffset = new(0, 0.8f, 0);
 
         private bool _alignPitchAxisWCam = true;
         private bool _alignRollAxisWCam;
@@ -46,7 +46,7 @@ namespace CinematographyPlugin.Cinematography
         {
             CinemaUIManager.Current.Sliders[UIOption.MovementSpeedSlider].OnValueChanged += SetMovementSpeed;
             CinemaUIManager.Current.Sliders[UIOption.MovementSmoothingSlider].OnValueChanged += SetMovementSmoothTime;
-            
+
             CinemaUIManager.Current.Sliders[UIOption.RotationSpeedSlider].OnValueChanged += SetRotationSpeed;
             CinemaUIManager.Current.Sliders[UIOption.RotationSmoothingSlider].OnValueChanged += SetRotationSmoothTime;
 
@@ -61,7 +61,7 @@ namespace CinematographyPlugin.Cinematography
             DimensionManager.OnDimensionWarp += OnDimensionWarp;
 
             _playerAgent = PlayerManager.GetLocalPlayerAgent();
-            
+
             _fpsCamera = FindObjectOfType<FPSCamera>();
             _childTrans = transform.GetChild(0);
             _orbitOffsetTrans = _childTrans;
@@ -82,10 +82,10 @@ namespace CinematographyPlugin.Cinematography
         private void Update()
         {
             if (Cursor.lockState != CursorLockMode.Locked) return;
-            
+
             UpdateRotation();
             CheckAndResetFpsCamRotation();
-            
+
             if (_inOrbit)
             {
                 UpdateOrbitPosition();
@@ -95,17 +95,17 @@ namespace CinematographyPlugin.Cinematography
             {
                 UpdatePosition();
                 UpdateZoom();
-                
+
                 if (_dynamicRotation)
                 {
                     CalculateDynamicRotationDelta();
                 }
             }
-            
+
             UpdateCuller();
             CheckReset();
         }
-        
+
         public void OnDimensionWarp(Vector3 targetPos)
         {
             // Reset the camera back to where the player will be warped to 
@@ -113,7 +113,7 @@ namespace CinematographyPlugin.Cinematography
             targetPos += _warpOffset; // move warp pos up a bit since target is on the ground
             transform.position = targetPos;
             _targetPos = targetPos;
-            
+
             _targetWorldRot = Quaternion.Euler(0, rot.y, rot.z);
             _targetLocalRot = Quaternion.Euler(rot.x, 0, 0);
         }
@@ -123,7 +123,7 @@ namespace CinematographyPlugin.Cinematography
             _orbitTarget = targetAgent.transform;
             _orbitOffset = targetAgent.AimTarget.position - _orbitTarget.position;
             _orbitOffsetTrans.localPosition = _orbitOffset;
-            
+
             var euler = transform.localRotation.eulerAngles;
             _targetWorldRot = Quaternion.Euler(0, euler.y, 0);
             _targetLocalRot = Quaternion.Euler(euler.x, 0, 0);
@@ -134,14 +134,14 @@ namespace CinematographyPlugin.Cinematography
 
         public void DisableOrbit()
         {
-            transform.position += _orbitOffsetTrans.localPosition; 
+            transform.position += _orbitOffsetTrans.localPosition;
             _orbitOffsetTrans.localPosition = Vector3.zero;
-            
+
             var euler = transform.localRotation.eulerAngles;
             _targetWorldRot = Quaternion.Euler(0, euler.y, 0);
             _targetLocalRot = Quaternion.Euler(euler.x, 0, 0);
             _targetPos = transform.position;
-            
+
             _inOrbit = false;
         }
 
@@ -153,12 +153,13 @@ namespace CinematographyPlugin.Cinematography
             var x = KeyBindInputManager.GetAxis(AxisName.PosX);
             var y = KeyBindInputManager.GetAxis(AxisName.PosY);
             var z = KeyBindInputManager.GetAxis(AxisName.PosZ);
-                
+
             var delta = Vector3.zero;
 
             // calculate speed and smoothing time
             var speedAxis = KeyBindInputManager.GetAxis(AxisName.Speed);
-            var speedScale = CinemaCamSettings.MovementSpeedScale * (speedAxis > 0 ? CinemaCamSettings.FastSpeedScale : speedAxis < 0 ? CinemaCamSettings.SlowSpeedScale : 1);
+            var speedScale = CinemaCamSettings.MovementSpeedScale *
+                             (speedAxis > 0 ? CinemaCamSettings.FastSpeedScale : speedAxis < 0 ? CinemaCamSettings.SlowSpeedScale : 1);
             var speed = _movementSpeed * speedScale;
 
             var right = _alignRollAxisWCam ? _childTrans.right : FlatRight();
@@ -169,19 +170,19 @@ namespace CinematographyPlugin.Cinematography
             delta += independentDeltaTime * speed * x * right;
             delta += independentDeltaTime * speed * y * up;
             delta += independentDeltaTime * speed * z * forward;
-            
+
             _targetPos += delta;
-            
+
             var currPos = transform.position;
             var t = 1.0f - Mathf.Pow(_movementSmoothFactor, independentDeltaTime);
             var newPos = Vector3.Lerp(currPos, _targetPos, t);
 
-            _movementVelocity = (newPos - _prevPos)/independentDeltaTime;
+            _movementVelocity = (newPos - _prevPos) / independentDeltaTime;
             _prevPos = newPos;
-            
+
             transform.position = newPos;
         }
-        
+
         private void UpdateOrbitPosition()
         {
             var independentDeltaTime = IndependentDeltaTimeManager.GetDeltaTime();
@@ -196,12 +197,12 @@ namespace CinematographyPlugin.Cinematography
             var t = 1.0f - Mathf.Pow(_orbitSmoothFactor, independentDeltaTime);
             var newPos = Vector3.Lerp(currPos, _targetPos, t);
 
-            _movementVelocity = (newPos - _prevPos)/independentDeltaTime;
+            _movementVelocity = (newPos - _prevPos) / independentDeltaTime;
             _prevPos = newPos;
-            
+
             transform.position = newPos;
         }
-        
+
         /// <summary>
         ///  Sets minor adjustments to the orbit center offset via regular controls
         /// </summary>
@@ -220,7 +221,7 @@ namespace CinematographyPlugin.Cinematography
             delta += independentDeltaTime * 1f * x * Vector3.right;
             delta += independentDeltaTime * 1f * y * Vector3.up;
             delta += independentDeltaTime * 1f * z * Vector3.forward;
-            
+
             _orbitOffsetTrans.localPosition += delta;
         }
 
@@ -234,7 +235,7 @@ namespace CinematographyPlugin.Cinematography
             // get directional vectors
             var pitch = KeyBindInputManager.GetAxis(AxisName.RotX);
             var yaw = KeyBindInputManager.GetAxis(AxisName.RotY);
-            var roll = KeyBindInputManager.GetAxis(AxisName.RotZ);
+            var roll = _inOrbit ? 0 : KeyBindInputManager.GetAxis(AxisName.RotZ);
 
             var upsideDown = Math.Sign(Vector3.Dot(localTrans.up, Vector3.up));
             yaw *= upsideDown; // invert yaw controls when upside down to keep mose directions consistent
