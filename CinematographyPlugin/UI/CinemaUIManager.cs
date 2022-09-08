@@ -1,5 +1,5 @@
 ﻿using System.Collections;
-using BepInEx.IL2CPP.Utils.Collections;
+using BepInEx.Unity.IL2CPP.Utils.Collections;
 using CinematographyPlugin.Cinematography.Networking;
 using CinematographyPlugin.UI.Enums;
 using CinematographyPlugin.UI.UiInput;
@@ -190,7 +190,7 @@ namespace CinematographyPlugin.UI
 
         public void OpenUI()
         {
-            if (!CinemaNetworkingManager.AssertAllPlayersHasPlugin()) return;
+            if (!CinemaNetworkingManager.AssertAllPlayersHasPlugin()) return; 
 
             CursorLockLastMode = Cursor.lockState;
             CursorLastVisible = Cursor.visible;

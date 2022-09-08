@@ -24,17 +24,23 @@
       <Reference Include="AssetPrefabs-ASM">
         <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\BepInEx\interop\AssetPrefabs-ASM.dll</HintPath>
       </Reference>
+      <Reference Include="AssetRipper.VersionUtilities">
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\BepInEx\core\AssetRipper.VersionUtilities.dll</HintPath>
+      </Reference>
       <Reference Include="Assets-ASM">
         <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\BepInEx\interop\Assets-ASM.dll</HintPath>
       </Reference>
       <Reference Include="BepInEx.Core">
         <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\BepInEx\core\BepInEx.Core.dll</HintPath>
       </Reference>
-      <Reference Include="BepInEx.IL2CPP">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\BepInEx\core\BepInEx.IL2CPP.dll</HintPath>
-      </Reference>
       <Reference Include="BepInEx.Preloader.Core">
         <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\BepInEx\core\BepInEx.Preloader.Core.dll</HintPath>
+      </Reference>
+      <Reference Include="BepInEx.Unity.Common">
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\BepInEx\core\BepInEx.Unity.Common.dll</HintPath>
+      </Reference>
+      <Reference Include="BepInEx.Unity.IL2CPP">
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\BepInEx\core\BepInEx.Unity.IL2CPP.dll</HintPath>
       </Reference>
       <Reference Include="BlendEnv">
         <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\BepInEx\interop\BlendEnv.dll</HintPath>
@@ -62,9 +68,6 @@
       </Reference>
       <Reference Include="DissonanceVoip">
         <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\BepInEx\interop\DissonanceVoip.dll</HintPath>
-      </Reference>
-      <Reference Include="dotnet-Microsoft.XmlSerializer.Generator">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\dotnet-Microsoft.XmlSerializer.Generator.dll</HintPath>
       </Reference>
       <Reference Include="DropServerSDK-ASM">
         <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\BepInEx\interop\DropServerSDK-ASM.dll</HintPath>
@@ -166,136 +169,40 @@
         <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\BepInEx\interop\LogUtils.dll</HintPath>
       </Reference>
       <Reference Include="Microsoft.Bcl.AsyncInterfaces">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
       </Reference>
       <Reference Include="Microsoft.CSharp">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.CSharp.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.Caching.Abstractions">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.Caching.Memory">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.Caching.Memory.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.Configuration">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.Configuration.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.Configuration.Abstractions">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.Configuration.Abstractions.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.Configuration.Binder">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.Configuration.Binder.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.Configuration.CommandLine">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.Configuration.CommandLine.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.Configuration.EnvironmentVariables">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.Configuration.EnvironmentVariables.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.Configuration.FileExtensions">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.Configuration.FileExtensions.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.Configuration.Ini">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.Configuration.Ini.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.Configuration.Json">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.Configuration.Json.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.Configuration.UserSecrets">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.Configuration.UserSecrets.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.Configuration.Xml">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.Configuration.Xml.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\Microsoft.CSharp.dll</HintPath>
       </Reference>
       <Reference Include="Microsoft.Extensions.DependencyInjection">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\Microsoft.Extensions.DependencyInjection.dll</HintPath>
       </Reference>
       <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.DependencyModel">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.DependencyModel.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.FileProviders.Abstractions">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.FileProviders.Abstractions.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.FileProviders.Composite">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.FileProviders.Composite.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.FileProviders.Physical">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.FileProviders.Physical.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.FileSystemGlobbing">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.FileSystemGlobbing.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.Hosting">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.Hosting.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.Hosting.Abstractions">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.Hosting.Abstractions.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.Hosting.Systemd">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.Hosting.Systemd.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.Hosting.WindowsServices">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.Hosting.WindowsServices.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.Http">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.Http.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
       </Reference>
       <Reference Include="Microsoft.Extensions.Logging">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.Logging.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\Microsoft.Extensions.Logging.dll</HintPath>
       </Reference>
       <Reference Include="Microsoft.Extensions.Logging.Abstractions">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.Logging.Configuration">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.Logging.Configuration.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.Logging.Console">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.Logging.Console.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.Logging.Debug">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.Logging.Debug.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.Logging.EventLog">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.Logging.EventLog.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.Logging.EventSource">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.Logging.EventSource.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.Logging.TraceSource">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.Logging.TraceSource.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
       </Reference>
       <Reference Include="Microsoft.Extensions.Options">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.Options.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.Options.ConfigurationExtensions">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.Options.ConfigurationExtensions.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.Options.DataAnnotations">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.Options.DataAnnotations.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\Microsoft.Extensions.Options.dll</HintPath>
       </Reference>
       <Reference Include="Microsoft.Extensions.Primitives">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Extensions.Primitives.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\Microsoft.Extensions.Primitives.dll</HintPath>
       </Reference>
       <Reference Include="Microsoft.VisualBasic">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.VisualBasic.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\Microsoft.VisualBasic.dll</HintPath>
       </Reference>
       <Reference Include="Microsoft.VisualBasic.Core">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.VisualBasic.Core.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\Microsoft.VisualBasic.Core.dll</HintPath>
       </Reference>
       <Reference Include="Microsoft.Win32.Primitives">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Win32.Primitives.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\Microsoft.Win32.Primitives.dll</HintPath>
       </Reference>
       <Reference Include="Microsoft.Win32.Registry">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Win32.Registry.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Win32.Registry.AccessControl">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Win32.Registry.AccessControl.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Win32.SystemEvents">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\Microsoft.Win32.SystemEvents.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\Microsoft.Win32.Registry.dll</HintPath>
       </Reference>
       <Reference Include="Modules-ASM">
         <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\BepInEx\interop\Modules-ASM.dll</HintPath>
@@ -319,10 +226,7 @@
         <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\BepInEx\core\MonoMod.Utils.dll</HintPath>
       </Reference>
       <Reference Include="mscorlib">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\mscorlib.dll</HintPath>
-      </Reference>
-      <Reference Include="MTFO">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\BepInEx\plugins\dakkhuza-MTFO\MTFO.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\mscorlib.dll</HintPath>
       </Reference>
       <Reference Include="NativeHeap">
         <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\BepInEx\interop\NativeHeap.dll</HintPath>
@@ -332,6 +236,9 @@
       </Reference>
       <Reference Include="Newtonsoft.Json">
         <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\BepInEx\interop\Newtonsoft.Json.dll</HintPath>
+      </Reference>
+      <Reference Include="Notification-ASM">
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\BepInEx\interop\Notification-ASM.dll</HintPath>
       </Reference>
       <Reference Include="PlayFab-ASM">
         <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\BepInEx\interop\PlayFab-ASM.dll</HintPath>
@@ -373,595 +280,475 @@
         <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\BepInEx\interop\SteamWorks_ASM.dll</HintPath>
       </Reference>
       <Reference Include="System">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.dll</HintPath>
       </Reference>
       <Reference Include="System.AppContext">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.AppContext.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.AppContext.dll</HintPath>
       </Reference>
       <Reference Include="System.Buffers">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Buffers.dll</HintPath>
-      </Reference>
-      <Reference Include="System.CodeDom">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.CodeDom.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Buffers.dll</HintPath>
       </Reference>
       <Reference Include="System.Collections">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Collections.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Collections.dll</HintPath>
       </Reference>
       <Reference Include="System.Collections.Concurrent">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Collections.Concurrent.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Collections.Concurrent.dll</HintPath>
       </Reference>
       <Reference Include="System.Collections.Immutable">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Collections.Immutable.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Collections.Immutable.dll</HintPath>
       </Reference>
       <Reference Include="System.Collections.NonGeneric">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Collections.NonGeneric.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Collections.NonGeneric.dll</HintPath>
       </Reference>
       <Reference Include="System.Collections.Specialized">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Collections.Specialized.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Collections.Specialized.dll</HintPath>
       </Reference>
       <Reference Include="System.ComponentModel">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.ComponentModel.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.ComponentModel.dll</HintPath>
       </Reference>
       <Reference Include="System.ComponentModel.Annotations">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.ComponentModel.Annotations.dll</HintPath>
-      </Reference>
-      <Reference Include="System.ComponentModel.Composition">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.ComponentModel.Composition.dll</HintPath>
-      </Reference>
-      <Reference Include="System.ComponentModel.Composition.Registration">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.ComponentModel.Composition.Registration.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.ComponentModel.Annotations.dll</HintPath>
       </Reference>
       <Reference Include="System.ComponentModel.DataAnnotations">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.ComponentModel.DataAnnotations.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.ComponentModel.DataAnnotations.dll</HintPath>
       </Reference>
       <Reference Include="System.ComponentModel.EventBasedAsync">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.ComponentModel.EventBasedAsync.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.ComponentModel.EventBasedAsync.dll</HintPath>
       </Reference>
       <Reference Include="System.ComponentModel.Primitives">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.ComponentModel.Primitives.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.ComponentModel.Primitives.dll</HintPath>
       </Reference>
       <Reference Include="System.ComponentModel.TypeConverter">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.ComponentModel.TypeConverter.dll</HintPath>
-      </Reference>
-      <Reference Include="System.Composition.AttributedModel">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Composition.AttributedModel.dll</HintPath>
-      </Reference>
-      <Reference Include="System.Composition.Convention">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Composition.Convention.dll</HintPath>
-      </Reference>
-      <Reference Include="System.Composition.Hosting">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Composition.Hosting.dll</HintPath>
-      </Reference>
-      <Reference Include="System.Composition.Runtime">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Composition.Runtime.dll</HintPath>
-      </Reference>
-      <Reference Include="System.Composition.TypedParts">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Composition.TypedParts.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.ComponentModel.TypeConverter.dll</HintPath>
       </Reference>
       <Reference Include="System.Configuration">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Configuration.dll</HintPath>
-      </Reference>
-      <Reference Include="System.Configuration.ConfigurationManager">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Configuration.ConfigurationManager.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Configuration.dll</HintPath>
       </Reference>
       <Reference Include="System.Console">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Console.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Console.dll</HintPath>
       </Reference>
       <Reference Include="System.Core">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Core.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Core.dll</HintPath>
       </Reference>
       <Reference Include="System.Data">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Data.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Data.dll</HintPath>
       </Reference>
       <Reference Include="System.Data.Common">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Data.Common.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Data.Common.dll</HintPath>
       </Reference>
       <Reference Include="System.Data.DataSetExtensions">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Data.DataSetExtensions.dll</HintPath>
-      </Reference>
-      <Reference Include="System.Data.Odbc">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Data.Odbc.dll</HintPath>
-      </Reference>
-      <Reference Include="System.Data.OleDb">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Data.OleDb.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Data.DataSetExtensions.dll</HintPath>
       </Reference>
       <Reference Include="System.Diagnostics.Contracts">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Diagnostics.Contracts.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Diagnostics.Contracts.dll</HintPath>
       </Reference>
       <Reference Include="System.Diagnostics.Debug">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Diagnostics.Debug.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Diagnostics.Debug.dll</HintPath>
       </Reference>
       <Reference Include="System.Diagnostics.DiagnosticSource">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Diagnostics.DiagnosticSource.dll</HintPath>
-      </Reference>
-      <Reference Include="System.Diagnostics.EventLog">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Diagnostics.EventLog.dll</HintPath>
-      </Reference>
-      <Reference Include="System.Diagnostics.EventLog.Messages">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Diagnostics.EventLog.Messages.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Diagnostics.DiagnosticSource.dll</HintPath>
       </Reference>
       <Reference Include="System.Diagnostics.FileVersionInfo">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Diagnostics.FileVersionInfo.dll</HintPath>
-      </Reference>
-      <Reference Include="System.Diagnostics.PerformanceCounter">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Diagnostics.PerformanceCounter.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Diagnostics.FileVersionInfo.dll</HintPath>
       </Reference>
       <Reference Include="System.Diagnostics.Process">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Diagnostics.Process.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Diagnostics.Process.dll</HintPath>
       </Reference>
       <Reference Include="System.Diagnostics.StackTrace">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Diagnostics.StackTrace.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Diagnostics.StackTrace.dll</HintPath>
       </Reference>
       <Reference Include="System.Diagnostics.TextWriterTraceListener">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Diagnostics.TextWriterTraceListener.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Diagnostics.TextWriterTraceListener.dll</HintPath>
       </Reference>
       <Reference Include="System.Diagnostics.Tools">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Diagnostics.Tools.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Diagnostics.Tools.dll</HintPath>
       </Reference>
       <Reference Include="System.Diagnostics.TraceSource">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Diagnostics.TraceSource.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Diagnostics.TraceSource.dll</HintPath>
       </Reference>
       <Reference Include="System.Diagnostics.Tracing">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Diagnostics.Tracing.dll</HintPath>
-      </Reference>
-      <Reference Include="System.DirectoryServices">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.DirectoryServices.dll</HintPath>
-      </Reference>
-      <Reference Include="System.DirectoryServices.AccountManagement">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.DirectoryServices.AccountManagement.dll</HintPath>
-      </Reference>
-      <Reference Include="System.DirectoryServices.Protocols">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.DirectoryServices.Protocols.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Diagnostics.Tracing.dll</HintPath>
       </Reference>
       <Reference Include="System.Drawing">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Drawing.dll</HintPath>
-      </Reference>
-      <Reference Include="System.Drawing.Common">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Drawing.Common.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Drawing.dll</HintPath>
       </Reference>
       <Reference Include="System.Drawing.Primitives">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Drawing.Primitives.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Drawing.Primitives.dll</HintPath>
       </Reference>
       <Reference Include="System.Dynamic.Runtime">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Dynamic.Runtime.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Dynamic.Runtime.dll</HintPath>
       </Reference>
       <Reference Include="System.Formats.Asn1">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Formats.Asn1.dll</HintPath>
-      </Reference>
-      <Reference Include="System.Formats.Cbor">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Formats.Cbor.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Formats.Asn1.dll</HintPath>
       </Reference>
       <Reference Include="System.Globalization">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Globalization.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Globalization.dll</HintPath>
       </Reference>
       <Reference Include="System.Globalization.Calendars">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Globalization.Calendars.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Globalization.Calendars.dll</HintPath>
       </Reference>
       <Reference Include="System.Globalization.Extensions">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Globalization.Extensions.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Globalization.Extensions.dll</HintPath>
       </Reference>
       <Reference Include="System.IO">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.IO.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.IO.dll</HintPath>
       </Reference>
       <Reference Include="System.IO.Compression">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.IO.Compression.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.IO.Compression.dll</HintPath>
       </Reference>
       <Reference Include="System.IO.Compression.Brotli">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.IO.Compression.Brotli.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.IO.Compression.Brotli.dll</HintPath>
       </Reference>
       <Reference Include="System.IO.Compression.FileSystem">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.IO.Compression.FileSystem.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.IO.Compression.FileSystem.dll</HintPath>
       </Reference>
       <Reference Include="System.IO.Compression.ZipFile">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.IO.Compression.ZipFile.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.IO.Compression.ZipFile.dll</HintPath>
       </Reference>
       <Reference Include="System.IO.FileSystem">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.IO.FileSystem.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.IO.FileSystem.dll</HintPath>
       </Reference>
       <Reference Include="System.IO.FileSystem.AccessControl">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.IO.FileSystem.AccessControl.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.IO.FileSystem.AccessControl.dll</HintPath>
       </Reference>
       <Reference Include="System.IO.FileSystem.DriveInfo">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.IO.FileSystem.DriveInfo.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.IO.FileSystem.DriveInfo.dll</HintPath>
       </Reference>
       <Reference Include="System.IO.FileSystem.Primitives">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.IO.FileSystem.Primitives.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.IO.FileSystem.Primitives.dll</HintPath>
       </Reference>
       <Reference Include="System.IO.FileSystem.Watcher">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.IO.FileSystem.Watcher.dll</HintPath>
-      </Reference>
-      <Reference Include="System.IO.Hashing">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.IO.Hashing.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.IO.FileSystem.Watcher.dll</HintPath>
       </Reference>
       <Reference Include="System.IO.IsolatedStorage">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.IO.IsolatedStorage.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.IO.IsolatedStorage.dll</HintPath>
       </Reference>
       <Reference Include="System.IO.MemoryMappedFiles">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.IO.MemoryMappedFiles.dll</HintPath>
-      </Reference>
-      <Reference Include="System.IO.Packaging">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.IO.Packaging.dll</HintPath>
-      </Reference>
-      <Reference Include="System.IO.Pipelines">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.IO.Pipelines.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.IO.MemoryMappedFiles.dll</HintPath>
       </Reference>
       <Reference Include="System.IO.Pipes">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.IO.Pipes.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.IO.Pipes.dll</HintPath>
       </Reference>
       <Reference Include="System.IO.Pipes.AccessControl">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.IO.Pipes.AccessControl.dll</HintPath>
-      </Reference>
-      <Reference Include="System.IO.Ports">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.IO.Ports.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.IO.Pipes.AccessControl.dll</HintPath>
       </Reference>
       <Reference Include="System.IO.UnmanagedMemoryStream">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.IO.UnmanagedMemoryStream.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.IO.UnmanagedMemoryStream.dll</HintPath>
       </Reference>
       <Reference Include="System.Linq">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Linq.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Linq.dll</HintPath>
       </Reference>
       <Reference Include="System.Linq.Expressions">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Linq.Expressions.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Linq.Expressions.dll</HintPath>
       </Reference>
       <Reference Include="System.Linq.Parallel">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Linq.Parallel.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Linq.Parallel.dll</HintPath>
       </Reference>
       <Reference Include="System.Linq.Queryable">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Linq.Queryable.dll</HintPath>
-      </Reference>
-      <Reference Include="System.Management">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Management.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Linq.Queryable.dll</HintPath>
       </Reference>
       <Reference Include="System.Memory">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Memory.dll</HintPath>
-      </Reference>
-      <Reference Include="System.Memory.Data">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Memory.Data.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Memory.dll</HintPath>
       </Reference>
       <Reference Include="System.Net">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Net.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Net.dll</HintPath>
       </Reference>
       <Reference Include="System.Net.Http">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Net.Http.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Net.Http.dll</HintPath>
       </Reference>
       <Reference Include="System.Net.Http.Json">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Net.Http.Json.dll</HintPath>
-      </Reference>
-      <Reference Include="System.Net.Http.WinHttpHandler">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Net.Http.WinHttpHandler.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Net.Http.Json.dll</HintPath>
       </Reference>
       <Reference Include="System.Net.HttpListener">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Net.HttpListener.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Net.HttpListener.dll</HintPath>
       </Reference>
       <Reference Include="System.Net.Mail">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Net.Mail.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Net.Mail.dll</HintPath>
       </Reference>
       <Reference Include="System.Net.NameResolution">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Net.NameResolution.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Net.NameResolution.dll</HintPath>
       </Reference>
       <Reference Include="System.Net.NetworkInformation">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Net.NetworkInformation.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Net.NetworkInformation.dll</HintPath>
       </Reference>
       <Reference Include="System.Net.Ping">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Net.Ping.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Net.Ping.dll</HintPath>
       </Reference>
       <Reference Include="System.Net.Primitives">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Net.Primitives.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Net.Primitives.dll</HintPath>
       </Reference>
       <Reference Include="System.Net.Quic">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Net.Quic.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Net.Quic.dll</HintPath>
       </Reference>
       <Reference Include="System.Net.Requests">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Net.Requests.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Net.Requests.dll</HintPath>
       </Reference>
       <Reference Include="System.Net.Security">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Net.Security.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Net.Security.dll</HintPath>
       </Reference>
       <Reference Include="System.Net.ServicePoint">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Net.ServicePoint.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Net.ServicePoint.dll</HintPath>
       </Reference>
       <Reference Include="System.Net.Sockets">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Net.Sockets.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Net.Sockets.dll</HintPath>
       </Reference>
       <Reference Include="System.Net.WebClient">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Net.WebClient.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Net.WebClient.dll</HintPath>
       </Reference>
       <Reference Include="System.Net.WebHeaderCollection">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Net.WebHeaderCollection.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Net.WebHeaderCollection.dll</HintPath>
       </Reference>
       <Reference Include="System.Net.WebProxy">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Net.WebProxy.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Net.WebProxy.dll</HintPath>
       </Reference>
       <Reference Include="System.Net.WebSockets">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Net.WebSockets.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Net.WebSockets.dll</HintPath>
       </Reference>
       <Reference Include="System.Net.WebSockets.Client">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Net.WebSockets.Client.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Net.WebSockets.Client.dll</HintPath>
       </Reference>
       <Reference Include="System.Numerics">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Numerics.dll</HintPath>
-      </Reference>
-      <Reference Include="System.Numerics.Tensors">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Numerics.Tensors.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Numerics.dll</HintPath>
       </Reference>
       <Reference Include="System.Numerics.Vectors">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Numerics.Vectors.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Numerics.Vectors.dll</HintPath>
       </Reference>
       <Reference Include="System.ObjectModel">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.ObjectModel.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.ObjectModel.dll</HintPath>
       </Reference>
       <Reference Include="System.Private.CoreLib">
         <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Private.CoreLib.dll</HintPath>
       </Reference>
       <Reference Include="System.Private.DataContractSerialization">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Private.DataContractSerialization.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Private.DataContractSerialization.dll</HintPath>
       </Reference>
       <Reference Include="System.Private.Uri">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Private.Uri.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Private.Uri.dll</HintPath>
       </Reference>
       <Reference Include="System.Private.Xml">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Private.Xml.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Private.Xml.dll</HintPath>
       </Reference>
       <Reference Include="System.Private.Xml.Linq">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Private.Xml.Linq.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Private.Xml.Linq.dll</HintPath>
       </Reference>
       <Reference Include="System.Reflection">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Reflection.dll</HintPath>
-      </Reference>
-      <Reference Include="System.Reflection.Context">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Reflection.Context.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Reflection.dll</HintPath>
       </Reference>
       <Reference Include="System.Reflection.DispatchProxy">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Reflection.DispatchProxy.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Reflection.DispatchProxy.dll</HintPath>
       </Reference>
       <Reference Include="System.Reflection.Emit">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Reflection.Emit.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Reflection.Emit.dll</HintPath>
       </Reference>
       <Reference Include="System.Reflection.Emit.ILGeneration">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Reflection.Emit.ILGeneration.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Reflection.Emit.ILGeneration.dll</HintPath>
       </Reference>
       <Reference Include="System.Reflection.Emit.Lightweight">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Reflection.Emit.Lightweight.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Reflection.Emit.Lightweight.dll</HintPath>
       </Reference>
       <Reference Include="System.Reflection.Extensions">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Reflection.Extensions.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Reflection.Extensions.dll</HintPath>
       </Reference>
       <Reference Include="System.Reflection.Metadata">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Reflection.Metadata.dll</HintPath>
-      </Reference>
-      <Reference Include="System.Reflection.MetadataLoadContext">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Reflection.MetadataLoadContext.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Reflection.Metadata.dll</HintPath>
       </Reference>
       <Reference Include="System.Reflection.Primitives">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Reflection.Primitives.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Reflection.Primitives.dll</HintPath>
       </Reference>
       <Reference Include="System.Reflection.TypeExtensions">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Reflection.TypeExtensions.dll</HintPath>
-      </Reference>
-      <Reference Include="System.Resources.Extensions">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Resources.Extensions.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Reflection.TypeExtensions.dll</HintPath>
       </Reference>
       <Reference Include="System.Resources.Reader">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Resources.Reader.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Resources.Reader.dll</HintPath>
       </Reference>
       <Reference Include="System.Resources.ResourceManager">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Resources.ResourceManager.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Resources.ResourceManager.dll</HintPath>
       </Reference>
       <Reference Include="System.Resources.Writer">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Resources.Writer.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Resources.Writer.dll</HintPath>
       </Reference>
       <Reference Include="System.Runtime">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Runtime.dll</HintPath>
-      </Reference>
-      <Reference Include="System.Runtime.Caching">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Runtime.Caching.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Runtime.dll</HintPath>
       </Reference>
       <Reference Include="System.Runtime.CompilerServices.Unsafe">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
       </Reference>
       <Reference Include="System.Runtime.CompilerServices.VisualC">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Runtime.CompilerServices.VisualC.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Runtime.CompilerServices.VisualC.dll</HintPath>
       </Reference>
       <Reference Include="System.Runtime.Extensions">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Runtime.Extensions.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Runtime.Extensions.dll</HintPath>
       </Reference>
       <Reference Include="System.Runtime.Handles">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Runtime.Handles.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Runtime.Handles.dll</HintPath>
       </Reference>
       <Reference Include="System.Runtime.InteropServices">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Runtime.InteropServices.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Runtime.InteropServices.dll</HintPath>
       </Reference>
       <Reference Include="System.Runtime.InteropServices.RuntimeInformation">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
       </Reference>
       <Reference Include="System.Runtime.Intrinsics">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Runtime.Intrinsics.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Runtime.Intrinsics.dll</HintPath>
       </Reference>
       <Reference Include="System.Runtime.Loader">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Runtime.Loader.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Runtime.Loader.dll</HintPath>
       </Reference>
       <Reference Include="System.Runtime.Numerics">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Runtime.Numerics.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Runtime.Numerics.dll</HintPath>
       </Reference>
       <Reference Include="System.Runtime.Serialization">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Runtime.Serialization.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Runtime.Serialization.dll</HintPath>
       </Reference>
       <Reference Include="System.Runtime.Serialization.Formatters">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Runtime.Serialization.Formatters.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Runtime.Serialization.Formatters.dll</HintPath>
       </Reference>
       <Reference Include="System.Runtime.Serialization.Json">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Runtime.Serialization.Json.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Runtime.Serialization.Json.dll</HintPath>
       </Reference>
       <Reference Include="System.Runtime.Serialization.Primitives">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Runtime.Serialization.Primitives.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Runtime.Serialization.Primitives.dll</HintPath>
       </Reference>
       <Reference Include="System.Runtime.Serialization.Xml">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Runtime.Serialization.Xml.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Runtime.Serialization.Xml.dll</HintPath>
       </Reference>
       <Reference Include="System.Security">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Security.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Security.dll</HintPath>
       </Reference>
       <Reference Include="System.Security.AccessControl">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Security.AccessControl.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Security.AccessControl.dll</HintPath>
       </Reference>
       <Reference Include="System.Security.Claims">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Security.Claims.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Security.Claims.dll</HintPath>
       </Reference>
       <Reference Include="System.Security.Cryptography.Algorithms">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Security.Cryptography.Algorithms.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Security.Cryptography.Algorithms.dll</HintPath>
       </Reference>
       <Reference Include="System.Security.Cryptography.Cng">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Security.Cryptography.Cng.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Security.Cryptography.Cng.dll</HintPath>
       </Reference>
       <Reference Include="System.Security.Cryptography.Csp">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Security.Cryptography.Csp.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Security.Cryptography.Csp.dll</HintPath>
       </Reference>
       <Reference Include="System.Security.Cryptography.Encoding">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Security.Cryptography.Encoding.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Security.Cryptography.Encoding.dll</HintPath>
       </Reference>
       <Reference Include="System.Security.Cryptography.OpenSsl">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Security.Cryptography.OpenSsl.dll</HintPath>
-      </Reference>
-      <Reference Include="System.Security.Cryptography.Pkcs">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Security.Cryptography.Pkcs.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Security.Cryptography.OpenSsl.dll</HintPath>
       </Reference>
       <Reference Include="System.Security.Cryptography.Primitives">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Security.Cryptography.Primitives.dll</HintPath>
-      </Reference>
-      <Reference Include="System.Security.Cryptography.ProtectedData">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Security.Cryptography.ProtectedData.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Security.Cryptography.Primitives.dll</HintPath>
       </Reference>
       <Reference Include="System.Security.Cryptography.X509Certificates">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Security.Cryptography.X509Certificates.dll</HintPath>
-      </Reference>
-      <Reference Include="System.Security.Cryptography.Xml">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Security.Cryptography.Xml.dll</HintPath>
-      </Reference>
-      <Reference Include="System.Security.Permissions">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Security.Permissions.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Security.Cryptography.X509Certificates.dll</HintPath>
       </Reference>
       <Reference Include="System.Security.Principal">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Security.Principal.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Security.Principal.dll</HintPath>
       </Reference>
       <Reference Include="System.Security.Principal.Windows">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Security.Principal.Windows.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Security.Principal.Windows.dll</HintPath>
       </Reference>
       <Reference Include="System.Security.SecureString">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Security.SecureString.dll</HintPath>
-      </Reference>
-      <Reference Include="System.ServiceModel.Syndication">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.ServiceModel.Syndication.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Security.SecureString.dll</HintPath>
       </Reference>
       <Reference Include="System.ServiceModel.Web">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.ServiceModel.Web.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.ServiceModel.Web.dll</HintPath>
       </Reference>
       <Reference Include="System.ServiceProcess">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.ServiceProcess.dll</HintPath>
-      </Reference>
-      <Reference Include="System.ServiceProcess.ServiceController">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.ServiceProcess.ServiceController.dll</HintPath>
-      </Reference>
-      <Reference Include="System.Speech">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Speech.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.ServiceProcess.dll</HintPath>
       </Reference>
       <Reference Include="System.Text.Encoding">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Text.Encoding.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Text.Encoding.dll</HintPath>
       </Reference>
       <Reference Include="System.Text.Encoding.CodePages">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Text.Encoding.CodePages.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Text.Encoding.CodePages.dll</HintPath>
       </Reference>
       <Reference Include="System.Text.Encoding.Extensions">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Text.Encoding.Extensions.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Text.Encoding.Extensions.dll</HintPath>
       </Reference>
       <Reference Include="System.Text.Encodings.Web">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Text.Encodings.Web.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Text.Encodings.Web.dll</HintPath>
       </Reference>
       <Reference Include="System.Text.Json">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Text.Json.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Text.Json.dll</HintPath>
       </Reference>
       <Reference Include="System.Text.RegularExpressions">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Text.RegularExpressions.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Text.RegularExpressions.dll</HintPath>
       </Reference>
       <Reference Include="System.Threading">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Threading.dll</HintPath>
-      </Reference>
-      <Reference Include="System.Threading.AccessControl">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Threading.AccessControl.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Threading.dll</HintPath>
       </Reference>
       <Reference Include="System.Threading.Channels">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Threading.Channels.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Threading.Channels.dll</HintPath>
       </Reference>
       <Reference Include="System.Threading.Overlapped">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Threading.Overlapped.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Threading.Overlapped.dll</HintPath>
       </Reference>
       <Reference Include="System.Threading.Tasks">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Threading.Tasks.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Threading.Tasks.dll</HintPath>
       </Reference>
       <Reference Include="System.Threading.Tasks.Dataflow">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Threading.Tasks.Dataflow.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Threading.Tasks.Dataflow.dll</HintPath>
       </Reference>
       <Reference Include="System.Threading.Tasks.Extensions">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Threading.Tasks.Extensions.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Threading.Tasks.Extensions.dll</HintPath>
       </Reference>
       <Reference Include="System.Threading.Tasks.Parallel">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Threading.Tasks.Parallel.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Threading.Tasks.Parallel.dll</HintPath>
       </Reference>
       <Reference Include="System.Threading.Thread">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Threading.Thread.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Threading.Thread.dll</HintPath>
       </Reference>
       <Reference Include="System.Threading.ThreadPool">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Threading.ThreadPool.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Threading.ThreadPool.dll</HintPath>
       </Reference>
       <Reference Include="System.Threading.Timer">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Threading.Timer.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Threading.Timer.dll</HintPath>
       </Reference>
       <Reference Include="System.Transactions">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Transactions.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Transactions.dll</HintPath>
       </Reference>
       <Reference Include="System.Transactions.Local">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Transactions.Local.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Transactions.Local.dll</HintPath>
       </Reference>
       <Reference Include="System.ValueTuple">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.ValueTuple.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.ValueTuple.dll</HintPath>
       </Reference>
       <Reference Include="System.Web">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Web.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Web.dll</HintPath>
       </Reference>
       <Reference Include="System.Web.HttpUtility">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Web.HttpUtility.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Web.HttpUtility.dll</HintPath>
       </Reference>
       <Reference Include="System.Windows">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Windows.dll</HintPath>
-      </Reference>
-      <Reference Include="System.Windows.Extensions">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Windows.Extensions.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Windows.dll</HintPath>
       </Reference>
       <Reference Include="System.Xml">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Xml.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Xml.dll</HintPath>
       </Reference>
       <Reference Include="System.Xml.Linq">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Xml.Linq.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Xml.Linq.dll</HintPath>
       </Reference>
       <Reference Include="System.Xml.ReaderWriter">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Xml.ReaderWriter.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Xml.ReaderWriter.dll</HintPath>
       </Reference>
       <Reference Include="System.Xml.Serialization">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Xml.Serialization.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Xml.Serialization.dll</HintPath>
       </Reference>
       <Reference Include="System.Xml.XDocument">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Xml.XDocument.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Xml.XDocument.dll</HintPath>
       </Reference>
       <Reference Include="System.Xml.XmlDocument">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Xml.XmlDocument.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Xml.XmlDocument.dll</HintPath>
       </Reference>
       <Reference Include="System.Xml.XmlSerializer">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Xml.XmlSerializer.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Xml.XmlSerializer.dll</HintPath>
       </Reference>
       <Reference Include="System.Xml.XPath">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Xml.XPath.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Xml.XPath.dll</HintPath>
       </Reference>
       <Reference Include="System.Xml.XPath.XDocument">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\System.Xml.XPath.XDocument.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\System.Xml.XPath.XDocument.dll</HintPath>
       </Reference>
       <Reference Include="ToolBuddy.Curvy">
         <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\BepInEx\interop\ToolBuddy.Curvy.dll</HintPath>
@@ -1182,8 +969,11 @@
       <Reference Include="WasmDisassembler">
         <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\BepInEx\core\WasmDisassembler.dll</HintPath>
       </Reference>
+      <Reference Include="Windows-ASM">
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\BepInEx\interop\Windows-ASM.dll</HintPath>
+      </Reference>
       <Reference Include="WindowsBase">
-        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\corlib\WindowsBase.dll</HintPath>
+        <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\dotnet\WindowsBase.dll</HintPath>
       </Reference>
       <Reference Include="Wwise-ASM">
         <HintPath>..\..\..\r2modman-plus-local\GTFO\profiles\PlayGround\BepInEx\interop\Wwise-ASM.dll</HintPath>
