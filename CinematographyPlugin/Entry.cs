@@ -2,7 +2,6 @@
 using CinematographyPlugin.Cinematography.Networking;
 using CinematographyPlugin.UI;
 using CinematographyPlugin.Util;
-using Globals;
 using HarmonyLib;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -20,16 +19,12 @@ namespace CinematographyPlugin
         [HarmonyPatch(typeof(GameStateManager), "ChangeState", typeof(eGameStateName))]
         private static void Postfix_InitOrDestroyCinematographyPlugin(eGameStateName nextState)
         {
+            CinematographyCore.log.LogMessage("Next state " + nextState);
+
             switch (nextState)
             {
                 case eGameStateName.InLevel:
                 {
-                    if (Global.RundownIdToLoad > 1)
-                    {
-                        // This plugin is only for modded rundowns with ID 1
-                        return;
-                    }
-
                     CinematographyCore.log.LogMessage("Initializing " + CinematographyCore.NAME);
 
                     var gameObject = new GameObject(CinematographyCore.AUTHOR + " - " + CinematographyCore.NAME);

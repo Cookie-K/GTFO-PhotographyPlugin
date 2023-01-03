@@ -17,7 +17,7 @@ namespace CinematographyPlugin
         public static event Action<bool> OnLocalPlayerDieOrRevive;
 
         private static readonly List<int> PrevRequiredTeamScanIDs = new ();
-   
+        
         [HarmonyPrefix]
         [HarmonyPatch(typeof (InputMapper), nameof(InputMapper.DoGetButton))]
         [HarmonyPatch(typeof (InputMapper), nameof(InputMapper.DoGetButtonUp))]
@@ -113,7 +113,7 @@ namespace CinematographyPlugin
             {
                 return CinemaNetworkingManager.GetPlayersInFreeCam().All(p => p.GetInstanceID() != target.m_agent.GetInstanceID());
             }
-
+        
             return true;
         }
         
@@ -144,7 +144,7 @@ namespace CinematographyPlugin
                 PrevRequiredTeamScanIDs.Remove(__instance.GetInstanceID());
             } 
         }
-
+        
         [HarmonyPrefix]
         [HarmonyPatch(typeof(PostProcessingAdapter), nameof(PostProcessingAdapter.SetDOF), typeof(float), typeof(float), typeof(float))]
         private static bool Prefix_OverrideDoF(ref float focusDistance, ref float aperture, ref float focalLength)
@@ -158,7 +158,7 @@ namespace CinematographyPlugin
         {
             if (Entry.Init && CinemaNetworkingManager.GetPlayersInFreeCam().Any() && CinemaNetworkingManager.GetPlayersInFreeCam().Any(p => p.Sync.PlayerNick == __instance.Owner.Sync.PlayerNick))
             {
-                CinematographyCore.log.LogInfo($"nullifying damage for {__instance.Owner.Sync.PlayerNick}");
+                // CinematographyCore.log.LogInfo($"nullifying damage for {__instance.Owner.Sync.PlayerNick}");
                 damage = 0;
                 triggerDialog = false;
             }

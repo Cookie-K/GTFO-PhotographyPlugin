@@ -98,6 +98,16 @@ While in free cam:
 ---
 ### Patches
 
+- 1.2.4:
+    - Updated for Alt R2 (finally eh?)
+    - Updated for Bepinex 3.2.0
+	
+- 1.2.3:
+    - Updated for Bepinex 3.0.0
+
+- 1.2.2:
+	- Nothing happened. I totally did not push the old .dll file by accident and not update in the last patch...
+
 - 1.2.1:
     - Added a rotation lock feature to the targeting cam
     - Fixed a bug where the first input of time pause would not register
