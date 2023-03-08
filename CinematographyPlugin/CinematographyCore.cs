@@ -5,7 +5,6 @@ using CinematographyPlugin.Cinematography;
 using CinematographyPlugin.Cinematography.Networking;
 using CinematographyPlugin.UI;
 using CinematographyPlugin.Util;
-using Globals;
 using HarmonyLib;
 using Il2CppInterop.Runtime.Injection;
 
@@ -21,7 +20,7 @@ namespace CinematographyPlugin
             MODNAME = "Cinematography",
             AUTHOR = "Cookie_K",
             GUID = "com." + AUTHOR + "." + MODNAME,
-            VERSION = "1.2.4";
+            VERSION = "1.2.5";
 
         public static ManualLogSource log;
 
@@ -29,12 +28,6 @@ namespace CinematographyPlugin
 
         public override void Load()
         {
-             
-            if (Global.RundownIdToLoad > 1)
-            {
-                // This plugin is only for modded rundowns with ID 1
-                return;
-            }
             
             log = Log;
 
