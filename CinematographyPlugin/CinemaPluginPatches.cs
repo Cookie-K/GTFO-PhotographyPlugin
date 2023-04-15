@@ -151,18 +151,7 @@ namespace CinematographyPlugin
         {
             return !PostProcessingController.IsDoFSet();
         }
-        
-        [HarmonyPrefix]
-        [HarmonyPatch(typeof(Dam_PlayerDamageBase), nameof(Dam_PlayerDamageBase.OnIncomingDamage))]
-        private static void Prefix_IgnoreAllDamage(ref float damage, Dam_PlayerDamageBase __instance)
-        {
-            if (Entry.Init && CinemaNetworkingManager.GetPlayersInFreeCam().Any() && CinemaNetworkingManager.GetPlayersInFreeCam().Any(p => p.Sync.PlayerNick == __instance.Owner.Sync.PlayerNick))
-            {
-                // CinematographyCore.log.LogInfo($"nullifying damage for {__instance.Owner.Sync.PlayerNick}");
-                damage = 0;
-            }
-        }
-        
+
         [HarmonyPrefix]
         [HarmonyPatch(typeof(PlayerDialogManager), nameof(PlayerDialogManager.WantToStartDialog), typeof(uint), typeof(PlayerAgent))]
         private static bool Postfix_IgnorePlayerDialog(uint dialogID, PlayerAgent source)

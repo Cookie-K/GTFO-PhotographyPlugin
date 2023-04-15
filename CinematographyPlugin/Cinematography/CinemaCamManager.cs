@@ -13,6 +13,7 @@ namespace CinematographyPlugin.Cinematography
     {
         public static CinemaCamManager Current;
 
+        private const float CameraManMaxHealth = 999999999999;
         private const float RayCastMax = 50;
         private const float RayCastRadius = 0.5f;
         private const float OrbitReselectDelay = 0.5f;
@@ -30,6 +31,7 @@ namespace CinematographyPlugin.Cinematography
         private bool _orbitTargetSet;
         private string _orbitTargetName;
         private float _lastOrbitDeselect;
+        private float _playerOrigMax;
         private Vector3 _originalPlayerPos;
         private RaycastHit _cameraHit;
         private GameObject _prevHit = new ();
@@ -67,6 +69,8 @@ namespace CinematographyPlugin.Cinematography
                 
             _cinemaCamController = _cinemaCamCtrlHolder.gameObject.AddComponent<CinemaCamController>();
             _cinemaCamController.enabled = false;
+
+            _playerOrigMax = _playerAgent.Damage.HealthMax;
         }
 
         private void Start()
@@ -107,7 +111,8 @@ namespace CinematographyPlugin.Cinematography
         public void EnableOrDisableCinemaCam(bool enable)
         {
             ScreenClutterController.GetInstance().ToggleAllScreenClutter(!enable);
-
+            UpdateCameramanHealth(_playerAgent, enable);
+            
             if (enable)
             {
                 _playerLocomotion.enabled = false;
@@ -146,6 +151,21 @@ namespace CinematographyPlugin.Cinematography
             CinematographyCore.log.LogMessage(enable ? "Cinema cam enabled" : "Cinema cam disabled");
         }
 
+        private void UpdateCameramanHealth(PlayerAgent agent, bool setUp)
+        {
+            if (setUp)
+            {
+                agent.Damage.HealthMax = CameraManMaxHealth;
+                agent.Damage.Health = CameraManMaxHealth;
+            }
+            else
+            {
+                agent.Damage.HealthMax = _playerOrigMax;
+                agent.Damage.Health = _playerOrigMax;
+            }
+            
+        }
+
         private void UpdatePlayerShield(PlayerAgent agent, bool setUp)
         {
             UpdatePlayerShield(agent, agent.transform.position, setUp);
@@ -153,8 +173,6 @@ namespace CinematographyPlugin.Cinematography
 
         public void UpdatePlayerShield(PlayerAgent agent, Vector3 playerPosition, bool setUp)
         {
-            CinematographyCore.log.LogMessage($"{agent.name} - setup: {setUp} - updated");
-
             if (setUp)
             {
                 _originalPlayerPos = playerPosition;
