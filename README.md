@@ -87,6 +87,22 @@ While in free cam:
 - `C`: Target lock/unlock on agent
 
 ---
+### Building from source
+
+Copy the `BepInEx` folder from a r2mm profile with the `BepInExPack_GTFO` mod installed, *that has been fully started at least once*, into the `lib` folder.
+
+To automatically copy the plugin into your r2mm profile of choice,
+add a file called `CinematographyPlugin.csproj.user` next to the existing `CinematographyPlugin.csproj` file and add the following contents
+with the path to your profile set:
+```xml
+<Project>
+    <PropertyGroup>
+        <ProfilePath>%appdata%\r2modmanPlus-local\GTFO\profiles\VanillaTesting</ProfilePath>
+    </PropertyGroup>
+</Project>
+```
+
+---
 ### Credits
 
 - Developed by `Cookie_K`
