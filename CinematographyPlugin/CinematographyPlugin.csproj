@@ -12,12 +12,13 @@
         <LatestGeneratedGameAssembliesPath>$(LibPath)\BepInEx\interop\</LatestGeneratedGameAssembliesPath>
         <LoaderRootPath>$(LibPath)\BepInEx\core\</LoaderRootPath>
         <PluginsPath>$(LibPath)\BepInEx\plugins\</PluginsPath>
-    </PropertyGroup>
 
-    <PropertyGroup>
+        <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+        <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
+        <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     </PropertyGroup>
-    
+
     <Target Name="CopyDLLTask" AfterTargets="Build" Condition="'$(ProfilePath)' != ''">
         <Message Importance="High" Text="Copying dll into profile path: $(ProfilePath)" />
         <Exec Command="xcopy &quot;$(OutputPath)$(AssemblyName).dll&quot; &quot;$(ProfilePath)\BepInEx\plugins\&quot; /F /Y" />

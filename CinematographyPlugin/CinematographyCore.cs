@@ -7,7 +7,14 @@ using CinematographyPlugin.UI;
 using CinematographyPlugin.Util;
 using HarmonyLib;
 using Il2CppInterop.Runtime.Injection;
+using System.Reflection;
 using UnityEngine;
+
+[assembly: AssemblyVersion(CinematographyPlugin.CinematographyCore.VERSION)]
+[assembly: AssemblyFileVersion(CinematographyPlugin.CinematographyCore.VERSION)]
+[assembly: AssemblyInformationalVersion(CinematographyPlugin.CinematographyCore.VERSION)]
+[assembly: AssemblyTitle(nameof(CinematographyPlugin))]
+[assembly: AssemblyProduct(nameof(CinematographyPlugin))]
 
 namespace CinematographyPlugin
 {
