@@ -7,6 +7,7 @@ using CinematographyPlugin.UI;
 using CinematographyPlugin.Util;
 using HarmonyLib;
 using Il2CppInterop.Runtime.Injection;
+using UnityEngine;
 
 namespace CinematographyPlugin
 {
@@ -25,6 +26,11 @@ namespace CinematographyPlugin
         public static ManualLogSource log;
 
         private Harmony HarmonyPatches { get; set; }
+
+        private const string PrefabPath = "assets/ui/cinemaui.prefab";
+        private static AssetBundle _bundle;
+
+        internal static GameObject CinemaUIPrefab;
 
         public override void Load()
         {
@@ -47,6 +53,26 @@ namespace CinematographyPlugin
 
             HarmonyPatches = new Harmony(GUID);
             HarmonyPatches.PatchAll();
+        }
+
+        internal static void LoadBundle()
+        {
+            if (_bundle != null)
+                return;
+
+            log.LogDebug($"Loading internal {nameof(AssetBundle)} from resources ...");
+
+            _bundle = AssetBundle.LoadFromMemory(Properties.Resources.chinematographyplugin);
+
+            UnityEngine.Object.DontDestroyOnLoad(_bundle);
+            _bundle.hideFlags = HideFlags.HideAndDontSave | HideFlags.DontUnloadUnusedAsset;
+
+            CinemaUIPrefab = _bundle.LoadAsset(PrefabPath).TryCast<GameObject>();
+
+            UnityEngine.Object.DontDestroyOnLoad(CinemaUIPrefab);
+            CinemaUIPrefab.hideFlags = HideFlags.HideAndDontSave | HideFlags.DontUnloadUnusedAsset;
+
+            log.LogDebug("Internal bundle loaded!");
         }
     }
 }

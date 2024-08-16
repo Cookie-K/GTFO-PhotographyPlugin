@@ -23,6 +23,9 @@ namespace CinematographyPlugin
 
             switch (nextState)
             {
+                case eGameStateName.Offline:
+                    CinematographyCore.LoadBundle();
+                    break;
                 case eGameStateName.InLevel:
                 {
                     CinematographyCore.log.LogMessage("Initializing " + CinematographyCore.NAME);

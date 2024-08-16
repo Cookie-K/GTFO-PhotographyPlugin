@@ -19,7 +19,6 @@ namespace CinematographyPlugin.UI
         public static event Action OnUIStart;
 
         private readonly KeyCode UIOpenKey = ConfigManager.MenuKey;
-        private const string PrefabPath = "Assets/UI/CinemaUI.prefab";
 
         internal Dictionary<UIOption, Option> Options { get; set; }
         internal Dictionary<UIOption, ToggleOption> Toggles; 
@@ -42,9 +41,8 @@ namespace CinematographyPlugin.UI
         public void Awake()
         {
             Current = this;
-            var loadedAsset = AssetAPI.GetLoadedAsset(PrefabPath);
             
-            var instantiate = Instantiate(loadedAsset);
+            var instantiate = Instantiate(CinematographyCore.CinemaUIPrefab);
             _cinemaUIgo = instantiate.TryCast<GameObject>();
             
             if (_cinemaUIgo is null)

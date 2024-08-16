@@ -24,6 +24,10 @@
     </Target>
     
     <ItemGroup>
+      <EmbeddedResource Include="Resources\chinematographyplugin" />
+    </ItemGroup>
+    
+    <ItemGroup>
         <None Include="CinematographyPlugin.csproj.user" />
     </ItemGroup>
 
@@ -87,6 +91,10 @@
         </Reference>
         <Reference Include="UnityEngine.InputLegacyModule">
             <HintPath>$(LatestGeneratedGameAssembliesPath)UnityEngine.InputLegacyModule.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="UnityEngine.AssetBundleModule">
+            <HintPath>$(LatestGeneratedGameAssembliesPath)UnityEngine.AssetBundleModule.dll</HintPath>
             <Private>false</Private>
         </Reference>
         <Reference Include="UnityEngine.AnimationModule">
