@@ -2,7 +2,7 @@
 
 namespace CinematographyPlugin.Cinematography.Networking
 {
-    public class CinemaSyncPlayer
+    public record class CinemaSyncPlayer
     {
         public PlayerAgent Agent { get; }
 
