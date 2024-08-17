@@ -194,6 +194,9 @@ namespace CinematographyPlugin.Cinematography
         {
             if (KeyBindInputManager.GetFreeCamToggle())
             {
+                if (!CinemaNetworkingManager.AssertAllPlayersHasPlugin())
+                    return;
+
                 CinemaUIManager.Current.Toggles[UIOption.ToggleFreeCamera].Toggle.isOn = !_freeCamEnabled;
             }
         }
