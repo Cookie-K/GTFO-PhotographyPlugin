@@ -5,6 +5,7 @@ using CinematographyPlugin.Cinematography;
 using CinematographyPlugin.Cinematography.Networking;
 using CinematographyPlugin.UI;
 using CinematographyPlugin.Util;
+using GTFO.API;
 using HarmonyLib;
 using Il2CppInterop.Runtime.Injection;
 using System.Reflection;
@@ -67,19 +68,36 @@ namespace CinematographyPlugin
             if (_bundle != null)
                 return;
 
-            log.LogDebug($"Loading internal {nameof(AssetBundle)} from resources ...");
+            try
+            {
+                log.LogDebug($"Loading internal {nameof(AssetBundle)} from resources ...");
 
-            _bundle = AssetBundle.LoadFromMemory(Properties.Resources.chinematographyplugin);
+                _bundle = AssetBundle.LoadFromMemory(Properties.Resources.chinematographyplugin);
 
-            UnityEngine.Object.DontDestroyOnLoad(_bundle);
-            _bundle.hideFlags = HideFlags.HideAndDontSave | HideFlags.DontUnloadUnusedAsset;
+                DontDestroyAndHideFlags(_bundle);
 
-            CinemaUIPrefab = _bundle.LoadAsset(PrefabPath).TryCast<GameObject>();
+                CinemaUIPrefab = _bundle.LoadAsset(PrefabPath).TryCast<GameObject>();
 
-            UnityEngine.Object.DontDestroyOnLoad(CinemaUIPrefab);
-            CinemaUIPrefab.hideFlags = HideFlags.HideAndDontSave | HideFlags.DontUnloadUnusedAsset;
+                DontDestroyAndHideFlags(CinemaUIPrefab);
 
-            log.LogDebug("Internal bundle loaded!");
+                log.LogDebug("Internal bundle loaded!");
+            }
+            catch(Exception ex)
+            {
+                log.LogWarning("Internal bundle loading failed!");
+                log.LogDebug($"{ex.GetType().FullName}: {ex.Message}");
+                log.LogMessage($"Using GTFO-APIs {nameof(AssetAPI)} to load the prefab instead as a fallback ...");
+
+                CinemaUIPrefab = AssetAPI.GetLoadedAsset<GameObject>(PrefabPath);
+
+                log.LogMessage($"Done!");
+            }
+        }
+
+        private static void DontDestroyAndHideFlags(UnityEngine.Object obj)
+        {
+            UnityEngine.Object.DontDestroyOnLoad(obj);
+            obj.hideFlags = HideFlags.HideAndDontSave | HideFlags.DontUnloadUnusedAsset;
         }
     }
 }
